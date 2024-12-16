@@ -1,0 +1,27 @@
+color:
+  palette:
+    yellow: "rgb(243, 203, 19)"
+    pink: "rgb(243, 160, 197)"
+    red: "rgb(239, 82, 85)"
+    cream: "rgb(255, 248, 240)"
+    black: "rgb(77, 78, 78)"
+  
+  primary: pink
+  secondary: yellow
+  background: cream
+  foreground: red
+
+logo:
+  medium: "inspire_logo2.png"  
+
+typography:
+  fonts:
+    - family: Libre Franklin
+      source: google
+    - family: Merriweather
+      source: google
+  base: Libre Franklin
+  headings: Merriweather
+
+
+
