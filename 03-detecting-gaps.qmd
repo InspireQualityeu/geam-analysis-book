@@ -1,0 +1,5 @@
+# Detecting gender gaps
+
+Examples how to detect gender gaps in selected variables, e.g. working conditions, work-life balance, discrimination / working culture. 
+
+Gap between academic and administrative staff. 

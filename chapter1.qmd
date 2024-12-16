@@ -1,9 +1,0 @@
-# Introduction
-
-This handbook aims to guide in the GEAM statistical analysis including the executable code in R.
-
-See @knuth84 for additional discussion of literate programming.
-
-```{r}
-1 + 1
-```

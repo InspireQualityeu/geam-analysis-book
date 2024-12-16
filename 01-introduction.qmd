@@ -1,0 +1,3 @@
+# Introduction
+
+Introduction to equality data collection and analysis Short description and ref to GEAM tool Target audience and prerequisites for using this book Overview of chapters.

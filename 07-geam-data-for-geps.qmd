@@ -1,0 +1,18 @@
+---
+ author:
+  - name: Ewa Krzaklewska
+    email: ewa.krzaklewska@uj.edu.pl
+    affiliation: 
+      - id: uj
+        name: Uniwersytet Jagielloński
+        city: Krakow
+  - name: Paulina Sekula
+    email: paulina.sekula@uj.edu.pl
+    affiliation: 
+      - id: uj
+        name: Uniwersytet Jagielloński
+        city: Krakow
+        
+---
+
+# Using GEAM data for GEP design and revision

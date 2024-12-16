@@ -2,14 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="INSPIRE Project">
-<meta name="dcterms.date" content="2024-11-27">
+<meta name="author" content="Jörg Müller">
+<meta name="author" content="Dalia Argudo">
+<meta name="dcterms.date" content="2024-12-16">
+<meta name="keywords" content="Gender Equality Plan, Gender Equaliy Audit, Equality Data Monitoring, Intersectionality, Descriptive statistics, Statistical analysis">
 
-<title>GEAM Analysis Handbook</title>
+<title>Statistical Analysis for Inclusive Gender Equality</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,16 +34,16 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./chapter1.html" rel="next">
+<link href="./01-introduction.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ee6067d5e7e2eeba1adf4a0bc7a067cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -69,81 +71,11 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<!--
-
-<style>
-
-  header {
-
-    width: 100%;
-
-    height: auto;
-
-    text-align: center; 
-
-    margin: 0;
-
-    padding: 10px 0; 
-
-  }
-
-  header img {
-
-    height: 100px; 
-
-    width: auto; 
-
-  }
-
-</style>
-
-<header>
-
-  <img src="inspire_logo2.png" alt="Header Logo">
-
-</header>
-
--->
 
 
+</head>
 
-
-
-
-
-<style>
-
-  header {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    padding: 10px 0;
-
-  }
-
-  header img {
-
-    height: 80px;
-
-  }
-
-</style>
-
-</head><body class="nav-sidebar floating"><header>
-
-  <img src="inspire_logo2.png" alt="Logo">
-
-</header>
-
-
-
-
-
-
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -152,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Abstract</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -167,7 +99,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">GEAM Analysis Handbook</a> 
+      <a href="./">Statistical Analysis for Inclusive Gender Equality</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -180,55 +112,49 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Abstract</span></a>
+ <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapter1.html" class="sidebar-item-text sidebar-link">
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapter2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Characterising respondents</span></span></a>
+  <a href="./02-summary-respondents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summarising respondents data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapter3.html" class="sidebar-item-text sidebar-link">
+  <a href="./03-detecting-gaps.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Detecting gender gaps</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapter4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Intersectional, outcome-oriented analysis</span></span></a>
+  <a href="./04-compare-in-time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Compareing progress in time</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapter5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparing progress in time</span></span></a>
+  <a href="./05-compare-organisations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparing organisations</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapter6.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Comparing organisations</span></span></a>
+  <a href="./06-intersectional-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Intersectional and outcome-oriented analysis</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapter7.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Using data for GEP design or revision</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./07-geam-data-for-geps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Using GEAM data for GEP design and revision</span></span></a>
   </div>
 </li>
     </ul>
@@ -241,8 +167,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#preface" id="toc-preface" class="nav-link" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a>
+  <ul class="collapse">
+  <li><a href="#credits" id="toc-credits" class="nav-link" data-scroll-target="#credits">Credits</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -251,51 +179,81 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">GEAM Analysis Handbook</h1>
+<h1 class="title">Statistical Analysis for Inclusive Gender Equality</h1>
+<p class="subtitle lead">Practical Guidance for Analysing GEAM Data</p>
 </div>
 
 
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Jörg Müller <a href="mailto:jmuller@uoc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0001-7727-2117" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="www.gender-ict.net">
+            Universitat Oberta de Catalunya
+            </a>
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Dalia Argudo <a href="mailto:dalia.argudo@notus-asr.org" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="www.notus-asr.org">
+            Notus, S.L.
+            </a>
+          </p>
+      </div>
+  </div>
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>INSPIRE Project </p>
-          </div>
-  </div>
-    
+      
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 27, 2024</p>
+      <p class="date">December 16, 2024</p>
     </div>
   </div>
   
     
   </div>
   
+<div>
+  <div class="abstract">
+    <div class="block-title">Abstract</div>
+    <p>This manual aims to guide the statistical analysis of data generated by the GEAM questionnaire. It seeks to inspire and guide survey users in conducting statistical analysis beyond the basic descriptive. It is aimed at members of gender equality working groups (practitioners, gender specialists, administrative staff) who have collected data with GEAM in their organisation, but are unsure how to analyse it in more detail. Each chapter is a collaboration between equality practitioners and statisticians, allowing examples from different contexts to be included. It also provides a combination of R code, results, and their interpretation for practical use.</p>
+  </div>
+</div>
 
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>Gender Equality Plan, Gender Equaliy Audit, Equality Data Monitoring, Intersectionality, Descriptive statistics, Statistical analysis</p>
+  </div>
+</div>
 
 </header>
 
 
-<section id="abstract" class="level1 unnumbered">
-<h1 class="unnumbered">Abstract</h1>
-<p>This manual aims to guide the statistical analysis of data generated by the GEAM questionnaire. It seeks to inspire and guide survey users in conducting statistical analysis beyond the basic descriptive.</p>
-<p>It is aimed at members of gender equality working groups (practitioners, gender specialists, administrative staff) who have collected data with GEAM in their organisation, but are unsure how to analyse it in more detail.</p>
-<p>Each chapter is a collaboration between equality practitioners and statisticians, allowing examples from different contexts to be included. It also provides a combination of R code, results, and their interpretation for practical use.</p>
-</section>
+
 <section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
+<h1 class="unnumbered">Preface</h1><p><img src="images/cover-faces-abstract-ai.jpg" title="Statistical Analysis for Inclusive Gender Equality" class="quarto-cover-image img-fluid"></p>
 <p>This manual aims to guide the statistical analysis of data generated by the Gender Equality Audit and Monitoring (GEAM) survey. It seeks to inspire and empower users to perform statistical analyses beyond basic descriptive statistics, delving deeper into the underlying dynamics of the collected data.</p>
 <p>It is intended for members of gender equality working groups, including professionals, gender specialists, administrative staff, and other stakeholders who have collected data using GEAM in their organisations but are uncertain about how to analyse it in greater depth.</p>
 <p>Each chapter represents a collaboration between gender equality professionals and statisticians, enabling the inclusion of examples from various types of organisations and contexts. Furthermore, it provides a practical combination of R code, derived results, and their interpretation, facilitating the applicability of the content.</p>
 <p>The statistical analyses presented in this manual encompass methodologies ranging from univariate and bivariate analyses to describe general patterns, to more advanced techniques such as multivariate analysis, logistic and linear regressions, hypothesis testing, and others. Modern data visualisation tools are also covered, enabling results to be represented in a clear and accessible manner. All of this aims to equip users with analytical skills to extract meaningful and evidence-based conclusions, essential for implementing policies and actions to promote gender equality.</p>
 <p>The development of GEAM began during the ACT project <a href="https://www.act-on-gender.eu/">Communities of PrACTice for Accelerating Gender Equality and Institutional Change in Research and Innovation across Europe (2018–2021)</a>.Subsequently, as part of the INSPIRE project <a href="https://www.inspirequality.eu/">Building Europe’s Centre of Excellence on Inclusive Gender Equality in R&amp;I</a>, GEAM has adapted to better address the needs of academics, administrative staff, and university students across various organisations.</p>
 <p>In this manual, users will find not only a technical resource but also a starting point for fostering an organisational culture rooted in gender equality through informed analysis and evidence-based decision-making.</p>
+<section id="credits" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="credits">Credits</h2>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -723,7 +681,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapter1.html" class="pagination-link" aria-label="Introduction">
+      <a href="./01-introduction.html" class="pagination-link" aria-label="Introduction">
         <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
