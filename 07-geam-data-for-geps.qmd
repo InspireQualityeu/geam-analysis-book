@@ -1,5 +1,5 @@
 ---
- author:
+author:
   - name: Ewa Krzaklewska
     email: ewa.krzaklewska@uj.edu.pl
     affiliation: 
@@ -12,7 +12,9 @@
       - id: uj
         name: Uniwersytet Jagielloński
         city: Krakow
-        
+
+abstract: >
+    This is the abstract for this chapter. 
 ---
 
 # Using GEAM data for GEP design and revision
