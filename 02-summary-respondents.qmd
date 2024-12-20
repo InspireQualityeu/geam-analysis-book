@@ -3,9 +3,10 @@ author:
   - name: Jörg Müller
   
 execute: 
-    echo: false
+    echo: true
     warning: false
     message: false
+    
 abstract: >
     This is the abstract for this chapter. 
 ---
@@ -13,11 +14,12 @@ abstract: >
 # Summarising respondents data
 
 ```{r}
+#| echo: false
 
 library(tidyverse)
 library(gpg)
 
-source("util/common.R")
+#source("util/common.R")
 source("util/encrypt.R")
 
 # at the start of the session, need to execute this first time manually to get password callback
@@ -25,36 +27,34 @@ df.geam <- read_gpg("data/df.343696.en.rdata.gpg")
 
 ```
 
-Introduction to the main socio-demographic variables and how to best summarise these. 
+Introduction to the main socio-demographic variables and how to best summarise these.
 
-Recommendations and reflections on disclosure control – when sample is small. 
-Is sample representative of organisation or not
-
+Recommendations and reflections on disclosure control – when sample is small. Is sample representative of organisation or not
 
 ## Sociodemographic variables
 
 ### Gender
 
-+-----------+-----------------------------------------------------------------+----------------------------+
-| Code      | Question                                                        | Responses                  |
-+===========+=================================================================+============================+
-| `SDEM004` | Gender                                                          | [1] A man\                 |
-|           |                                                                 | [2] Non-binary\            |
-|           |                                                                 | [3] A woman\               |
-|           |                                                                 | [4] Prefer not to say      |
-+-----------+-----------------------------------------------------------------+----------------------------+
++----------------+-----------------------------+-------------------------+
+| Code           | Question                    | Responses               |
++================+=============================+=========================+
+| `SDEM004`      | Are you...                  | \[1\] A man\            |
+|                |                             | \[2\] Non-binary\       |
+|                |                             | \[3\] A woman\          |
+|                |                             | \[4\] Prefer not to say |
++----------------+-----------------------------+-------------------------+
 
 See the following figure
 
 ```{r}
-
+#| echo: false
 #| label: fig-sdem004
 #| fig-cap: "SDEM004: Gender"
 #| fig-alt: "Frequency bar plot of gender variable"
 
 cpal <- RColorBrewer::brewer.pal(4, "Set1")
 
-df.geam %>% 
+df.geam |> 
     ggplot(aes(x=SDEM004, fill=SDEM004)) + 
     geom_bar(width=.8) + 
     scale_fill_manual(values=cpal, na.value=cpal[4]) +
@@ -64,6 +64,61 @@ df.geam %>%
 
 ```
 
-Text continues. 
+Text continues.
 
-### Age 
+### Age
+
+The age of respondents is capture as a integer input field (`SDEM001` - "In which year were you born?").
+
+```{r}
+#| echo: false
+#| label: fig-sdem001
+#| fig.cap: "Frequency chart of year of birth"
+
+
+df.geam |>  
+    ggplot(aes(x=SDEM001)) + 
+    geom_bar()+ 
+    labs(title="", y="Total") +
+    theme(axis.title.x = element_blank(), 
+          plot.margin = unit(c(.2,1.3,.2,.2), "cm"))
+```
+
+Most statistical analysis will work with aggregated age groups. The GEAM reporting template generates two groupings: 10 year steps, or 4 age groups: "Junior \< 30 years", "Middle 31-45 years", "Senior 46-65 years", and above "\> 65 years" of age.
+
+::: column-margin
+We know from *the first fundamental theorem of calculus* that for $x$ in $[a, b]$:
+
+$$\frac{d}{dx}\left( \int_{a}^{x} f(u)\,du\right)=f(x).$$
+:::
+
+### Ethnic mayority or minority status
+
+The GEAM inquires about ethnic minority or mayority status in question `SDEM002`:
+
++------------+---------------------------------------------------------------------------------------+-------------------------+
+| Code       | Question                                                                              | Responses               |
++============+=======================================================================================+=========================+
+| `SDEM002`  | Do you currently perceive yourself to be part of a majority or minority ethnic group? | \[1\] Majority\         |
+|            |                                                                                       | \[2\] Minority\         |
+|            |                                                                                       | \[3\] Unsure\           |
+|            |                                                                                       | \[4\] Prefer not to say |
++------------+---------------------------------------------------------------------------------------+-------------------------+
+
+As this question is not mandatory, there are likely to be a larger amount of `NA` entries that need to be removed in subsequent analysis.
+
+```{r}
+#| echo: false
+#| label: fig-sdem002
+#| fig.cap: "Ethnic minority /majority status"
+
+cpal <- RColorBrewer::brewer.pal(5, "Set1")
+
+df.geam |> 
+    ggplot(aes(x=SDEM002, fill=SDEM002)) + 
+    geom_bar(width=.8) + 
+    scale_fill_manual(values=cpal, na.value=cpal[5]) +
+    guides(fill="none") +
+    labs(x="", y="Total")
+
+```
