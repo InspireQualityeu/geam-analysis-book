@@ -1,6 +1,69 @@
+---
+author:
+  - name: Jörg Müller
+  
+execute: 
+    echo: false
+    warning: false
+    message: false
+abstract: >
+    This is the abstract for this chapter. 
+---
+
 # Summarising respondents data
+
+```{r}
+
+library(tidyverse)
+library(gpg)
+
+source("util/common.R")
+source("util/encrypt.R")
+
+# at the start of the session, need to execute this first time manually to get password callback
+df.geam <- read_gpg("data/df.343696.en.rdata.gpg")
+
+```
 
 Introduction to the main socio-demographic variables and how to best summarise these. 
 
 Recommendations and reflections on disclosure control – when sample is small. 
 Is sample representative of organisation or not
+
+
+## Sociodemographic variables
+
+### Gender
+
++-----------+-----------------------------------------------------------------+----------------------------+
+| Code      | Question                                                        | Responses                  |
++===========+=================================================================+============================+
+| `SDEM004` | Gender                                                          | [1] A man\                 |
+|           |                                                                 | [2] Non-binary\            |
+|           |                                                                 | [3] A woman\               |
+|           |                                                                 | [4] Prefer not to say      |
++-----------+-----------------------------------------------------------------+----------------------------+
+
+See the following figure
+
+```{r}
+
+#| label: fig-sdem004
+#| fig-cap: "SDEM004: Gender"
+#| fig-alt: "Frequency bar plot of gender variable"
+
+cpal <- RColorBrewer::brewer.pal(4, "Set1")
+
+df.geam %>% 
+    ggplot(aes(x=SDEM004, fill=SDEM004)) + 
+    geom_bar(width=.8) + 
+    scale_fill_manual(values=cpal, na.value=cpal[4]) +
+    guides(fill="none") +
+    labs(x="", y="") +
+    theme_light()
+
+```
+
+Text continues. 
+
+### Age 
