@@ -7,5 +7,89 @@ abstract: >
 
 # Introduction
 
+## Data Collection and Analysis on Equality
 
-Introduction to equality data collection and analysis Short description and ref to GEAM tool Target audience and prerequisites for using this book Overview of chapters.
+Collecting and analysing gender equality data is essential for designing effective and sustainable policies and interventions to reduce inequalities. This process not only helps to identify existing gaps but also enables the monitoring of progress towards a fairer society.
+
+Gender equality data analysis involves a deep understanding of the social and cultural contexts in which inequalities arise. It goes beyond a binary approach and considers intersectional factors such as age, socioeconomic status, geographical location, and other variables that shape individual and collective experiences. This approach helps highlight different groups' unique experiences and design policies that address their specific needs.
+
+This book seeks to meet these needs by providing a practical guide for analysing data collected through the Gender Equality Audit and Monitoring (GEAM) survey. Using an inclusive and accessible approach, it aims to empower researchers, practitioners, and professionals to use data as a key tool in promoting gender equality.
+
+## What is the GEAM Tool?
+
+The **Gender Equality Audit and Monitoring (GEAM)** is a tool designed to collect robust and reliable data on gender equality, from both employees (academic and administrative) and students in research and innovation organisations. Its goal is to analyse perceptions and experiences related to discrimination, working conditions, harassment, satisfaction, and other key areas, complementing the information provided by traditional administrative data.
+
+GEAM was initially developed as part of the ACT project ACT [Communities of PrACTice for Accelerating Gender Equality and Institutional Change in Research and Innovation across Europe (2018–2021)](https://www.act-on-gender.eu/). During the INSPIRE project [Building Europe’s Centre of Excellence on Inclusive Gender Equality in R&I (2022-2026)](https://www.inspirequality.eu/), the tool was expanded to include a specific questionnaire for students and updated modules to address emerging needs and approaches.
+
+### GEAM Questionnaires
+
+**GEAM v3 for Employees**
+
+The GEAM survey for employees assesses perceptions and experiences related to gender and other inequalities across four main dimensions:
+
+- Socio-demographics: This dimension gathers information on personal characteristics such as age, gender, ethnic minority, sexual orientation, socioeconomic factors, disability, marital status, citizenship, etc. It highlights the importance of intersectionality in capturing the multiple ways these characteristics interact and generate inequalities.
+
+- Working Conditions: Aspects such as current job, pay, contract type, recruitment and promotion practices, training opportunities, work-life balance, and job satisfaction are examined. Special attention is given to factors like flexible work arrangements and parental leave.
+
+- Organisational Culture and Climate: This component addresses perceptions of discrimination, gender equality, and preferential treatment, along with cultural elements such as promotion criteria, recognition, and gender biases, particularly against women in leadership roles.
+
+- Interpersonal Behaviour: Incidents of microaggressions, workplace harassment, and sexual harassment are explored, along with reporting practices and institutional responses to these behaviours. This provides key insights into interpersonal dynamics within workplace settings.
+
+You can see the GEAM v3 employee questionnaire [here](https://surveys.geamtool.eu/index.php/530000?lang=en).
+
+**GEAM v1 for Students**
+
+The GEAM survey for students adapts the approach used in the employee version to the specific context of academic environments, incorporating five key dimensions:
+
+- Socio-demographics: Similar to the employee survey, this dimension collects data on personal characteristics such as age, gender, ethnic identity, sexual orientation, disability, and socioeconomic class. Additionally, it includes linguistic abilities, which are relevant in multicultural academic settings.
+
+- Student Situation: This dimension evaluates aspects related to current studies, including degree or programme, academic progress, financial situation, and work-life balance. It also addresses caregiving responsibilities, study interruptions, and overall satisfaction with the educational experience.
+
+- Educational Experience: This component focuses on academic engagement, obstacles faced by students, and participation in research and innovation activities, which are crucial for assessing inclusion and opportunities in academic settings.
+
+- Campus Culture and Climate: Perceptions of gender equality, preferential treatment, dominant masculinity, and equitable treatment in academic environments are analysed, offering insights into institutional culture.
+
+- Interpersonal Behaviour: Incidents of microaggressions, bullying, and sexual harassment are explored, alongside institutional responses to these issues, providing a comprehensive view of interpersonal dynamics affecting students.
+
+You can access the GEAM v1 student questionnaire [here](https://surveys.geamtool.eu/index.php/100100?lang=en).
+
+### Applications and Scope of GEAM
+
+GEAM is recommended for use in the initial stages of developing a Gender Equality Plan (GEP) to identify specific challenges and conduct baseline audits. Additionally, it can be used to measure progress following the implementation of equality measures, facilitating the design, execution, and monitoring of organisational strategies.
+
+The tool promotes a participatory approach by involving self-assessment teams that integrate diverse perspectives and expertise within the organisation, ensuring that the results translate into effective evidence-based actions.
+
+GEAM has been utilised by over 50 universities and research centres across Europe, generating more than 10,000 responses. The questionnaires are freely available as LimeSurvey files and can be easily installed and deployed on any LimeSurvey platform. As part of the INSPIRE project, the Universitat Oberta de Catalunya offers a GEAM service, including access to a GEAM instance for conducting surveys.
+
+For further information on setting up and launching GEAM in your organisation, visit [https://act-on-gender.eu/geam-manual/](https://act-on-gender.eu/geam-manual/).
+
+## Target Audience and Prerequisites for This Book
+
+The manual is intended for members of gender equality working groups who have collected data using the Gender Equality Audit and Monitoring (GEAM) tool within their organisations. The target audience includes professionals, gender specialists, administrative staff, and other stakeholders interested in promoting gender equality through the appropriate use of data.
+
+Readers are expected to have a basic understanding of statistics, including fundamental concepts such as types of variables, descriptive statistics, and statistical inference. This level of knowledge will enable effective interpretation and application of the techniques presented in the manual.
+
+It is also recommended that teams involved in the analysis consult and collaborate with a statistics expert. Expert guidance can facilitate the interpretation of results and ensure that conclusions drawn from the data are robust and reliable. This collaborative approach will maximise the impact of the analysis and its application in gender equality strategies and policies
+
+## Manual Content Overview
+
+The manual is organised into six chapters, each addressing a specific aspect of gender equality data analysis:
+
+**1.Summarising respondents' data:** This chapter presents the main sociodemographic variables and offers guidelines for characterizing respondents. Recommendations on disclosure control, particularly for small samples, and the representativeness of the sample about the organisation are also discussed.
+
+**2. Detecting Gender Gaps:** A user-friendly approach to identifying gender gaps using ANOVA is presented, focusing on key areas such as working conditions, work-life balance, organisational culture, and more.
+
+**3. Comparing progress in time:** Results from GEAM at two-time points are analysed, evaluating changes in experiences of discrimination and other relevant areas.
+
+**4. Comparing Organisations:** GEAM results across organisations are examined to identify patterns and interactions between organisational and national factors.
+
+**5. Intersectional and Outcome-Oriented Analysis:** This chapter explores how gender and other sociodemographic variables interact with specific outcome variables, such as job satisfaction or harassment experiences, using methods like regression with interaction terms or Latent Class Analysis.
+
+**6. Using GEAM Data for GEP Design or Revision:** This chapter explores how GEAM results can inform the design or revision of interventions within GEPs, highlighting key variables that have been instrumental in these processes.
+
+The statistical analyses presented range from univariate and bivariate methods to describe general patterns, to more advanced techniques such as multivariate analysis, logistic and linear regressions, hypothesis testing, and others. Modern data visualisation tools are also covered to ensure a clear and accessible results representation. The aim is to equip users with analytical skills to derive meaningful, evidence-based conclusions that are essential for implementing gender equality policies and actions.
+
+Each chapter is a collaborative effort between gender professionals and statisticians, incorporating examples from various organisations and contexts where GEAM has been used. Additionally, practical elements such as R code, derived results, and their interpretation are included to enhance applicability.
+
+
+
