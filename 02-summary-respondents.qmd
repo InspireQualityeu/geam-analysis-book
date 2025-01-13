@@ -22,7 +22,7 @@ library(sjmisc)
 library(knitr)
 library(kableExtra)
 
-#source("util/common.R")
+source("util/common.R")
 source("util/encrypt.R")
 
 # at the start of the session, need to execute this first time manually to get password callback
@@ -66,7 +66,8 @@ As the simple frequency table for 'SDEM004' demonstrates, only 2 respondents hav
 
 ```{r}
 #| label: tbl-sdem004
-#| tbl-cap: "Frequency table for SDEM004"
+#| tbl-cap: "Frequency table for SDEM004 - Gender"
+#| cap-location: margin
 
 df.geam |>
   frq(SDEM004) |>
@@ -81,7 +82,7 @@ The R code for producing simple frequency tables is shown for the first table of
 :::
 
 :::{.callout-note}
-The most recent GEAM version (since v3.0), "Other" as answer-option has been replaced with "Prefer to self-identify as" to avoid othering. Some data uses results of previous GEAM versions, the "Other" label still is visible in frequency tables. 
+In the most recent GEAM version (since v3.0) "Other" as answer-option has been replaced with "Prefer to self-identify as" to avoid othering. As some of our data has been collected with previous GEAM versions, the "Other" label might still be visible in frequency tables and illustrations. 
 :::
 
 The frequency table can then be transformed into a bar chart, indicating the absolute counts.
@@ -89,7 +90,7 @@ The frequency table can then be transformed into a bar chart, indicating the abs
 ```{r}
 #| label: fig-sdem004
 #| fig-cap: "SDEM004: Gender"
-#| fig-alt: "Frequency bar plot of gender variable"
+#| fig-alt: "Frequency bar plot of SDEM004 - Gender variable"
 #| cap-location: margin
 
 cpal <- RColorBrewer::brewer.pal(4, "Set1")
@@ -114,6 +115,8 @@ The age of respondents is by default captured as a integer input field (`SDEM001
 #| echo: false
 #| label: fig-sdem001-year
 #| fig.cap: "Frequency chart of year of birth"
+#| fig-alt: "Frequency bar plot of SDEM001 - Age variable"
+#| cap-location: margin
 
 df.geam2 |>  
     filter(!is.na(SDEM001)) |>
@@ -157,6 +160,8 @@ And display the new aggregated age groups:
 #| echo: false
 #| label: fig-sdem001-age-4g
 #| fig.cap: "Frequency chart of aggregated age groups"
+#| fig-alt: "Frequency bar plot of aggregated age variable"
+#| cap-location: margin
 
 df.geam2 |>  
     ggplot(aes(x=age_4g)) + 
@@ -170,6 +175,7 @@ df.geam2 |>
 #| echo: false
 #| label: tbl-age-4g
 #| tbl-cap: "Frequency table of aggregated age groups"
+#| cap-location: margin
 
 df.geam2 |>
   frq(age_4g) |>
@@ -184,6 +190,8 @@ Other GEAM questionnaires have modified 'SDEM001' before the launch and ask for 
 #| echo: false
 #| label: fig-sdem001
 #| fig.cap: "Frequency chart of age groups"
+#| fig-alt: "Frequency bar plot of SDEM001 - aggregated age variable"
+#| cap-location: margin
 
 df.geam |>  
     filter(!is.na(SDEM001)) |>
@@ -215,6 +223,7 @@ df.geam |>
 #| echo: false
 #| label: tbl-partnership
 #| tbl-cap: "Frequency table of martial and partnership status"
+#| cap-location: margin
 
 df.geam2 |>
   frq(SDEM006) |>
@@ -227,6 +236,8 @@ df.geam2 |>
 #| echo: false
 #| label: fig-sdem006
 #| fig.cap: "Bar chart of martial and partnership status"
+#| fig-alt: "Frequency bar plot of SDEM006 - martial and partnership status"
+#| cap-location: margin
 
 cpal <- RColorBrewer::brewer.pal(6, "Set1")
 
@@ -261,6 +272,7 @@ As this question is not mandatory, there are likely to be a larger amount of `NA
 #| echo: false
 #| label: tbl-ethnic
 #| tbl-cap: "Frequency table of ethnic mayority / minority status"
+#| cap-location: margin
 
 df.geam |>
   frq(SDEM002) |>
@@ -273,6 +285,8 @@ df.geam |>
 #| echo: false
 #| label: fig-sdem002
 #| fig.cap: "Ethnic minority /majority status"
+#| fig-alt: "Frequency bar plot of SDEM002 - Ethnic minority / majority status"
+#| cap-location: margin
 
 cpal <- RColorBrewer::brewer.pal(5, "Set1")
 
@@ -293,7 +307,8 @@ df.geam |>
 ```{r}
 #| echo: false
 #| label: tbl-country-birth
-#| tbl-cap: "Frequency table of country of birth"
+#| tbl-cap: "Frequency table of SDEM012 - Country of birth"
+#| cap-location: margin
 
 df.geam |>
   frq(SDEM012) |>
@@ -308,7 +323,8 @@ df.geam |>
 ```{r}
 #| echo: false
 #| label: tbl-transgender
-#| tbl-cap: "Frequency table of trans history"
+#| tbl-cap: "Frequency table of SDEM005 - Trans history"
+#| cap-location: margin
 
 df.geam2 |>
   frq(SDEM005) |>
@@ -323,7 +339,8 @@ df.geam2 |>
 ```{r}
 #| echo: false
 #| label: tbl-sexorientation
-#| tbl-cap: "Frequency table of sexual orientation"
+#| tbl-cap: "Frequency table of SDEM007 - Sexual orientation"
+#| cap-location: margin
 
 df.geam |>
   frq(SDEM007) |>
@@ -338,7 +355,8 @@ df.geam |>
 ```{r}
 #| echo: false
 #| label: tbl-disability
-#| tbl-cap: "Frequency table of disability and health impairments"
+#| tbl-cap: "Frequency table of SDEM009 - Disability and health impairments"
+#| cap-location: margin
 
 df.geam |>
   frq(SDEM009) |>
@@ -354,13 +372,13 @@ df.geam |>
 ```{r}
 #| echo: false
 #| label: tbl-edu-level
-#| tbl-cap: "Frequency table of highest educational level of respondent"
+#| tbl-cap: "Frequency table of SDEM016 - Highest educational level of respondent"
+#| cap-location: margin
 
 df.geam |>
   frq(SDEM016) |>
   kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
   kable_styling()
-
 ```
 
 
@@ -371,7 +389,8 @@ Composed of SDEM017 and SDEM018.
 ```{r}
 #| echo: false
 #| label: tbl-socioeco
-#| tbl-cap: "Frequency table of "
+#| tbl-cap: "Frequency table of SDEM017 - Educational level"
+#| cap-location: margin
 
 df.geam |>
   frq(SDEM017) |>
@@ -389,7 +408,8 @@ The socio-demographic variables can then be explored in relation to working cond
 ```{r}
 #| echo: false
 #| label: tbl-wcjc001
-#| tbl-cap: "Frequency table of "
+#| tbl-cap: "Frequency table of WCJC001 - Job position"
+#| cap-location: margin
 
 df.geam |>
   frq(WCJC001) |>
@@ -409,7 +429,8 @@ Leadership positions.
 ```{r}
 #| echo: false
 #| label: tbl-wcjc010
-#| tbl-cap: "Frequency table of part-time/full-time contract"
+#| tbl-cap: "Frequency table of WCJC010 part-time/full-time contract"
+#| cap-location: margin
 
 df.geam |>
   frq(WCJC010) |>
@@ -428,7 +449,8 @@ Fixed-term WCJC011 has not be used in this dataset.
 ```{r}
 #| echo: false
 #| label: tbl-wcjc005
-#| tbl-cap: "Frequency table of "
+#| tbl-cap: "Frequency table of WCJC005 - Salary"
+#| cap-location: margin
 
 df.geam |>
   frq(WCJC005) |>
