@@ -13,3 +13,6 @@ The development of GEAM began during the ACT project [Communities of PrACTice fo
 In this manual, users will find not only a technical resource but also a starting point for fostering an organisational culture rooted in gender equality through informed analysis and evidence-based decision-making.
 
 ## Credits {.unnumbered}
+
+
+## Acknowledgements {.unnumbered}

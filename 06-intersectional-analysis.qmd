@@ -1,3 +1,18 @@
-# Intersectional and outcome-oriented analysis
+---
+author:
+  - name: TBA
+  
+execute: 
+    echo: true
+    warning: false
+    message: false
+    
+abstract: >
+    This is the abstract for the intersectional chapter
+---
+
+# Intersectional and outcome-oriented analysis {#sec-intersectional-ch06}
+
+
 
 
