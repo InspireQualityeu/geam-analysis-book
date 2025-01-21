@@ -45,6 +45,8 @@ keywords:
 
 
 bibliography: references.bib
+reference-location: margin
+citation-location: margin
 
 cover-image: images/stat-landscape-1.jpg
 
