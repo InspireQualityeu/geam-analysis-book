@@ -15,6 +15,7 @@ book:
     - 05-compare-organisations.qmd
     - 06-intersectional-analysis.qmd
     - 07-geam-data-for-geps.qmd
+    - 10-annex-i-desc-variables.qmd
   author:
   - name: Jörg Müller
     orcid: 0000-0001-7727-2117
@@ -46,7 +47,7 @@ keywords:
 
 bibliography: references.bib
 reference-location: margin
-citation-location: margin
+citation-location: document
 
 cover-image: images/stat-landscape-1.jpg
 

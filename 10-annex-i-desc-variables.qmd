@@ -1,0 +1,270 @@
+---
+author:
+  - name: Jörg Müller
+  
+execute: 
+    echo: true
+    warning: false
+    message: false
+    eval: false
+
+abstract: >
+    Annex I provides an overivew of all GEAM variables as chart and frequency table.  
+
+keywords:
+  - Descriptive statistics
+---
+
+# Annex - I - Overview of GEAM variables
+
+```{r}
+#| label: setup 
+#| echo: false
+
+library(tidyverse)
+
+library(sjPlot)
+library(sjmisc)
+
+library(gpg)         # use encryption
+
+library(knitr)
+library(kableExtra)
+
+source("util/common.R")
+source("util/encrypt.R")
+
+# at the start of the session, need to execute this first time manually to get password callback
+df.geam <-read_gpg("data/df.349312.en.rdata.gpg")
+
+
+```
+
+
+
+## Socio-demographic variables
+
+### Gender
+
+```{r}
+#| label: tbl-annex-i-sdem004-gender
+#| tbl-cap: "Frequency table of SDEM004 - Gender"
+#| cap-location: margin
+
+df.geam |>
+  data_tabulate(SDEM004)
+
+```
+
+
+### Sexual orienation
+
+```{r}
+#| label: tbl-annex-i-sdem007-sexorient
+#| tbl-cap: "Frequency table of SDEM007 - Sexual orientation"
+#| cap-location: margin
+
+df.geam |>
+  data_tabulate(SDEM007)
+
+```
+
+
+### Socioeconomic status
+
+**Socio-economic status** is calculated based upon `SDEM0017` and `SDEM0018` on parents/legal tutor highest educational level. 
+
+```{r}
+#| label: code-annex-i-sdem01718-comp
+#| code-fold: true
+
+
+# create new SES variable based upon the higher value of SDEM017 vs. SDEM018
+df.geam <- df.geam |>
+  mutate(SDEM017.comp = if_else(SDEM017 == "Prefer not to say" | 
+                                SDEM017 == "Other" | 
+                                is.na(SDEM017), -99, as.numeric(SDEM017)), 
+         SDEM018.comp = if_else(SDEM018 == "Prefer not to say" |
+                                SDEM018 == "Other" | 
+                                is.na(SDEM018), -99, as.numeric(SDEM018)), 
+         higher_ses = if_else(SDEM017.comp >= SDEM018.comp, SDEM017.comp, SDEM018.comp))
+
+# create three SES groups
+df.geam <- df.geam |>
+  mutate(ses_3g = case_when(
+    higher_ses >0 & higher_ses <=3 ~ "Lower SES", 
+    higher_ses >3 & higher_ses <=5 ~ "Medium SES",
+    higher_ses >5 & higher_ses <=9 ~ "Higher SES",
+    .default = NA
+  ))
+
+
+# reconvert to factor
+df.geam$ses <- factor(df.geam$ses_3g)
+
+```
+
+
+
+
+## Working conditions - Work-life balance
+
+
+### Job satisfaction
+
+Job satisfaction is measured via two variables in the GEAM, a global job satisfaction score `EWCS88JobSatisfact1` and three additional items used in `EWCS89JobSatisfact8` capturing career prospects, motivation, and job security.
+
+
+```{r}
+#| label: fig-ewcs3-overview
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam |>
+  select(starts_with("EWCS89JobSatisfact8.SQ")) |>  
+  sjPlot::plot_likert(values="hide", 
+              show.prc.sign = F, 
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 10, 
+              geom.colors = cpal, 
+              catcount = 4, 
+              cat.neutral = 3
+              )
+
+```
+
+
+Aggregations for job satisfaction
+
+```{r}
+#| label: code-mean-EWCS89JobSatisfact8
+#| code-fold: true
+
+df.geam <- df.geam |>
+  rowwise() |>
+  mutate(jobsatis2 = mean(as.numeric(c_across(c(EWCS89JobSatisfact8.SQ001.,EWCS89JobSatisfact8.SQ002.))), na.rm=T), 
+         jobsatis3 = jobsatis2 * as.numeric(EWCS88JobSatisfact1))
+
+
+```
+
+
+
+## Organisational Culture and Climate - Working Culture
+
+
+### Glick Masculinity Contest Culture
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("GlickMasculCont8.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal
+)
+
+```
+
+
+### Bias against women leadership
+
+
+Diel leader 1 
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("DiehlBiasLeaderAgree.SQ")) |>
+  sjPlot::plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal
+)
+
+```
+
+Diehl leader 2 
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("DiehlBiasLeaderFreq.SQ")) |>
+  sjPlot::plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal
+)
+
+```
+
+
+
+
+## Bullying, Harassment, Microagressions
+
+
+### Microaggressions {#sec-annex-i-microaggression}
+
+By microaggressions we mean brief and commonplace verbal, behavioral, and environmental indignities, whether intentional or unintentional, that communicate hostile, derogatory, or negative slights and insults to the target person or group. They might be related to race or the colour of one's skin, gender, sexual orientation, age, ethnic group, or religion.
+
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("BIMA001.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(.4,1.4),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              geom.colors = cpal
+)
+
+```
+
+
+```{r}
+# create outcome varible of interest
+df.geam <- df.geam |>
+  rowwise() |>
+  mutate(microscore = mean(as.numeric(c_across(starts_with("BIMA001.SQ"))), na.rm=T))
+```
+
+
+
+

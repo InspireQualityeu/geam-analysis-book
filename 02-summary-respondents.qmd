@@ -15,7 +15,7 @@ keywords:
   - Socio-demographic variables
 ---
 
-# Summarising respondents data
+# Summarising respondents data {#sec-ch02-respondents}
 
 ```{r}
 #| label: setup 
@@ -23,6 +23,7 @@ keywords:
 
 library(tidyverse)
 library(gpg)
+library(datawizard)
 library(sjmisc)
 library(knitr)
 library(kableExtra)
@@ -51,7 +52,29 @@ In what follows, we briefly introduce each of the available socio-demographic va
 For the following chapter we use two real-world datasets, marked in the code as `df.geam01` (Organisation 1) and `df.geam02` (Organisation 2) respectively. The main difference between these datasets concerns the way how some variables have been modified and adapted to the specific organisational context. However, this does not affect their interpretability for the descriptive statistics explained in this chapter.
 :::
 
+
 ## Socio-demographic variables
+
+As a preparatory step it makes sense to observe the number of partial submissions of the GEAM questionnaire. Partial submissions create many `NA` entries that can be filtered out before the start of the actual analysis. 
+
+A simple way of identifying incomplete questionnaires, consists of looking at the `lastpage` meta-data field in the questionnaire. 
+
+An alternative consists of examining the submission date variable `submitdate`. This field is set to `NA` if the respondent did not reach the final page and press the submit button of the questionnaire. 
+
+```{r}
+#| label: check-partial
+
+df.geam01 |>
+  group_by(submitdate) |>
+  summarise(Total = n()) |>
+  mutate(Complete = c("Yes", "No"))
+
+df.geam <- df.geam01 |>
+  filter(!is.na(submitdate))
+
+```
+
+
 
 ### Gender
 
@@ -81,9 +104,8 @@ The R code for producing simple frequency tables is shown for the first table of
 #| cap-location: margin
 
 df.geam01 |>
-  frq(SDEM004) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_styling(bootstrap_options = c("striped"))
+  data_tabulate(SDEM004) |>
+  kbl()
 
 ```
 
@@ -127,7 +149,7 @@ df.geam01 <- df.geam01 |>
 
 ```
 
-### Age
+### Age {#sec-summary-ch02-age}
 
 The age of respondents is by captured as an integer variable (`SDEM001` - "In which year were you born?").
 
@@ -202,9 +224,8 @@ Here is the corresponding frequency table:
 #| cap-location: margin
 
 df.geam02 |>
-  frq(age_4g) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-   kable_styling(bootstrap_options = c("striped"))
+  data_tabulate(age_4g) |>
+  kbl()
 
 ```
 
@@ -249,9 +270,8 @@ Question `SDEM006` asks about marital or partnership status which becomes especi
 #| cap-location: margin
 
 df.geam02 |>
-  frq(SDEM006) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_styling(bootstrap_options = c("striped"))
+  data_tabulate(SDEM006) |>
+  kbl()
 
 ```
 
@@ -487,7 +507,7 @@ df.geam01 |>
 The answer questions then can be re-coded as desired (show example).
 
 
-### Socioeconomic status
+### Socioeconomic status {#sec-ch02-ses}
 
 Educational attainment is among the most widely used indicator for socioeconomic status (SES). Differences in SES have important implications in terms of health- or educational outcomes and thus provide an important indicator of social inequalities [@stadlerDiversifiedInnovationsHealth2023; @APAsesstatus2007]. Current SES is measured by respondents educational level (`SDEM016`). In order to track SES of entry level positions in the organisation, including early career researchers, the educational attainment of parents and/or legal guardians should be used.
 
@@ -636,6 +656,8 @@ One would expect that women are overrepresented among administrative personnel w
 #| label: fig-cross-gender-by-job
 #| fig.cap: "Gender by job position bar chart"
 #| cap-location: margin
+#| code-fold: true
+#| code-summary: "Show the code"
 
 cpal <- RColorBrewer::brewer.pal(3, "Set1")
 
@@ -650,7 +672,7 @@ df.geam01 |>
               vjust=-.6) +
     scale_fill_manual(values=cpal) +
     ylim(0,100) +
-    labs(x="", y="", fill="Gender") +
+    labs(x="Job position", y="", fill="Gender") +
     theme_light()
 
 ```
