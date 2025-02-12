@@ -1,5 +1,803 @@
+---
+author:
+  - name: Dalia Argudo
+execute:
+    echo: true
+    warning: false
+    message: false
+    
+abstract: >
+    This chapter provides a comprehensive overview of gender gap identification using GEAM questionnaire data, employing bivariate analysis techniques such as Chi-squared tests, Student’s t-tests, analysis of variance (ANOVA), and Pearson or Spearman correlation. Key aspects including working conditions, work-life balance, and organisational culture are explored, offering practical tools for analysing and understanding gender inequalities in various contexts.
+
+keywords:
+   - Gender gaps
+   - Bivariate analysis
+   - Statistical significance
+   - chi-square
+   - t-test
+   - ANOVA
+   - Contingency table
+
+editor_options: 
+  chunk_output_type: console
+---
+
 # Detecting gender gaps
 
-Examples how to detect gender gaps in selected variables, e.g. working conditions, work-life balance, discrimination / working culture. 
+```{r}
+#| echo: false
 
-Gap between academic and administrative staff. 
+library(tidyverse)
+library(gpg)
+library(sjmisc)
+library(knitr)
+library(kableExtra)
+library(sjPlot)
+
+
+library(dplyr)
+library(forcats)
+library(gtsummary)
+library(rcompanion)  # To calculate Cramer’s V
+library(gt)
+
+source("util/common.R")
+source("util/encrypt.R")
+
+# at the start of the session, need to execute this first time manually to get password callback
+df.geam01 <- read_gpg("data/df.343696.en.rdata.gpg")
+
+df.geam02 <-read_gpg("data/df.784191.en.rdata.gpg")
+
+df.geam03 <-read_gpg("data/df.349312.en.rdata.gpg")
+
+
+```
+
+The GEAM questionnaire collects information on various aspects of working life, including work-life balance, job satisfaction, organisational culture, and other key factors. Detecting gender gaps with GEAM data involves analysing how responses differ between genders across the dimensions assessed.
+
+Different statistical techniques are used depending on the nature of the variables and the study objectives. The Chapter 2 introduced statistical methods such as frequency distributions, percentages, and contingency tables, which provide an initial overview of the data and help identify potential patterns or differences between genders.
+
+In this chapter, we take the analysis further by assessing whether the observed gender differences are statistically significant; therefore, they are unlikely to be due to chance and instead reflect real disparities.
+
+We begin by applying **bivariate analysis** techniques before progressing to more complex **multivariate analysis techniques** in later chapters. The choice between these approaches depends on the complexity of the analysis required, the type of data available, and the specific research questions. Each method has its advantages and limitations.
+
+In the following sections, we analyse gender gaps across the main GEAM modules, selecting the appropriate statistical technique based on the nature of the variables involved.
+
+
+::: callout-note
+In this chapter, three real databases from three organisations are used. These databases are identified as `df.geam01`, `df.geam02`, and `df.geam03`. The main difference between the databases is the adaptation of some variables (questions) to the respective organisational context, without significantly modifying the statistical analysis of this chapter.
+:::
+
+# Working conditions
+
+## Job position
+
+To identify potential gender gaps, we will begin by assessing whether gender influences the distribution of jobs within the organisation. To do this, we will focus on determining whether there is a statistically significant relationship between gender and job positions.
+
+To explore this relationship, we will first visualise the distribution of these variables using a bar chart. If one gender is observed to be overrepresented in certain job positions, this could suggest that gender-related factors affect the distribution of jobs.
+
+
+```{r}
+#| echo: false
+#| label: binary-sdem004-gender
+
+df.geam01 <- df.geam01 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004
+  ))
+
+```
+
+
+```{r}
+#| echo: true
+#| label: fig-WCJC001-gender
+#| fig.cap: "Bar chart of WCJC001 and SDEM004.bin - Job position and gender"
+#| fig-alt: "Bar chart of WCJC001 and SDEM004.bin - Job position and gender"
+#| cap-location: margin  
+   
+cpal <- RColorBrewer::brewer.pal(3, "Set1")
+
+
+df.geam01 |>  
+    filter(!is.na(WCJC001) & !is.na(SDEM004.bin))|>
+    ggplot(aes(x=WCJC001, fill=SDEM004.bin)) + 
+    geom_bar(width=0.8, position=position_dodge()) + 
+    geom_text(stat='count', 
+              aes(label=after_stat(count)), 
+              position=position_dodge(width=.8), 
+              vjust=-.6, size=3) +
+    scale_fill_manual(values=cpal) +
+    ylim(0,80) +
+    labs(x="", y="", fill="Gender") +
+    theme_light()
+
+```
+
+::: callout-note
+The graph uses the binary gender variable `SDEM004.bin` and remove all `NAs` from both the gender as well as job position.
+:::
+
+In addition to the bar chart, a contingency table will also be used to display the observed frequencies and identify patterns between the variables.
+
+First, we need to clean the database before analysis. To do this, we will create a subsample by filtering out missing values `NAs` from the variables of interest, `SDEM004.bin` and `WCJC001`, and excluding the `Other` category from `WCJC001`. Additionally, we will generate two new variables, `Job Position` and `Gender`, ensuring that only categories with valid values are retained.
+
+::: callout-warning
+Excluding categories with no values is essential, as the `Chi-square test` requires a minimum of observations (at least 5 data) per cell to ensure valid results.
+:::
+
+```{r}
+#| echo: true 
+#| label: sub-tbl-cross-WCJC001
+
+# Filter and clean data
+df.sub <- df.geam01 %>%
+  filter(!is.na(WCJC001) & WCJC001 != "Other" & !is.na(SDEM004.bin)) %>%
+  transmute(
+    "Job Position" = fct_drop(WCJC001),  # Delete unused levels
+    Gender = fct_drop(SDEM004.bin)    
+  )
+
+```
+
+```{r}
+#| echo: false 
+#| label: remove-labels
+
+# Remove the description label from the variables
+attr(df.sub$"Job Position", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+
+```
+
+Since both Gender and Job Position are categorical variables, we will apply the Chi-square test to determine whether the observed differences are statistically significant, indicating a relationship between the variables, or whether they are independent.
+
+```{r}
+#| echo: true 
+#| label: tbl-cross-job-position-gender
+#| tbl-cap: "Contingency table of job position and gender. Note: We use the new variables"
+#| cap-location: margin
+
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Job Position", 
+    col = Gender, 
+    percent = "row"
+  ) |> 
+  add_p()|>
+  bold_labels()
+
+```
+
+The table displays the absolute frequencies, the corresponding row percentages for each category, and the p-value of the Chi-square test.
+
+The distribution of job positions by gender reveals certain trends:
+
+- Among academic/researcher positions, 55.6% were held by women, while 44.4% were occupied by men.
+- In the technician category, the gender distribution was more balanced, with 51.6% women and 48.4% men.
+- Conversely, the administrative roles were predominantly occupied by women (76.9%), whereas men represented 23.1% of these positions.
+
+Additionally, to the chi-square test, we can apply de `Cramer's V` that measures the strength of the association between the both variables, and the `Fisher's exact test`. 
+
+::: column-margin
+Fisher's exact test is used instead of the chi-square test when sample sizes are small and the expected frequencies in any cell of the contingency table are less than 5. Specifically, it is recommended when the total of the table (adding all the cells) is less than 30-40..
+:::
+
+Now, we will generate a separate table with the association tests that can be applied to these categorical variables.
+
+```{r}
+#| echo: true 
+#| label: tlb-test-assoc
+#| tbl-cap: "Statistical test results - Association between job position and gender"
+#| cap-location: margin
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Job Position", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels()  
+  )
+test_table_gt
+
+```
+
+Given that p < 0.05, the relationship between job position and gender is statistically significant at the 5% level, suggesting that the distribution of job positions is not independent of gender. However, Cramér’s V = 0.176 indicates a weak association between the two variables. It suggests there are other factors may also contribute to job position distribution. Further analysis could explore additional variables, such as education level, work experience, or sectoral differences, to gain a more comprehensive understanding of gender disparities in job roles.
+
+## Type of contract
+
+```{r}
+#| echo: false
+#| label: sub-tbl-cross-WCJC011
+
+# Binary-sdem004-gender
+
+# Solo en geam02 existe la variable
+
+df.geam02 <- df.geam02 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004
+  ))
+
+
+# Filter and clean data
+df.sub <- df.geam02 |>
+  filter(!is.na(WCJC011) & WCJC011 != "Other" & !is.na(SDEM004.bin)) %>%
+  transmute(
+    "Type of contract" = fct_drop(WCJC011),  # Delete unused levels
+    Gender = fct_drop(SDEM004.bin)    
+  )
+
+
+# Remove the description label from the variables
+attr(df.sub$"Type of contract", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+
+
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Type of contract", 
+    col = Gender,  
+    percent = "row"
+  ) |>
+  add_p()|>
+  bold_labels()
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Type of contract", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels(everything())  
+  ) 
+
+test_table_gt
+
+```
+
+We did not find sufficient evidence that gender influences the type of contract.
+
+## Parental leave
+
+```{r}
+#| echo: false
+#| label: sub-tbl-cross-WCJC011-geam01
+
+# Binary-sdem004-gender
+
+df.geam01 <- df.geam01 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004
+  ))
+
+
+# Filter and clean data
+df.sub <- df.geam01 |>
+  filter(!is.na(WCWI011a) & WCWI011a != "Prefer not to say" & !is.na(SDEM004.bin)) %>%
+  transmute(
+    "Parental leave" = fct_drop(WCWI011a),  # Delete unused levels
+    Gender = fct_drop(SDEM004.bin)    
+  )
+
+# Remove the description label from the variables
+attr(df.sub$"Parental leave", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Parental leave", 
+    col = Gender,  
+    percent = "row"
+  ) |>
+  add_p()|>
+  bold_labels()
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Parental leave", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels(everything())  
+  ) 
+
+test_table_gt
+
+```
+
+```{r}
+#| echo: false
+#| label: sub-tbl-cross-WCWI011a-geam02
+
+# Binary-sdem004-gender
+
+df.geam02 <- df.geam02 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004
+  ))
+
+
+# Filter and clean data
+df.sub <- df.geam02 |>
+  filter(!is.na(WCWI011a) & WCWI011a != "Prefer not to say" & !is.na(SDEM004.bin)) %>%
+  transmute(
+    "Parental leave" = fct_drop(WCWI011a),  # Delete unused levels
+    Gender = fct_drop(SDEM004.bin)    
+  )
+
+# Remove the description label from the variables
+attr(df.sub$"Parental leave", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Parental leave", 
+    col = Gender,  
+    percent = "row"
+  ) |>
+  add_p()|>
+  bold_labels()
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Parental leave", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels(everything())  
+  ) 
+
+test_table_gt
+
+```
+
+
+```{r}
+#| echo: false
+#| label: sub-tbl-cross-WCWI011a-geam03
+
+# Binary-sdem004-gender
+
+df.geam03 <- df.geam03 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004
+  ))
+
+
+# Filter and clean data
+df.sub <- df.geam03 |>
+  filter(!is.na(WCWI011a) & WCWI011a != "Prefer not to say" & !is.na(SDEM004.bin)) %>%
+  transmute(
+    "Parental leave" = fct_drop(WCWI011a),  # Delete unused levels
+    Gender = fct_drop(SDEM004.bin)    
+  )
+
+# Remove the description label from the variables
+attr(df.sub$"Parental leave", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Parental leave", 
+    col = Gender,  
+    percent = "row"
+  ) |>
+  add_p()|>
+  bold_labels()
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Parental leave", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels(everything())  
+  ) 
+
+test_table_gt
+
+```
+
+We did not find sufficient evidence that gender influences parental leave.
+
+## Care responsabilities
+
+In order to simplify the analysis, we will combine the two variables related to care responsibilities in a single variable.
+
+
+```{r}
+#| echo: false
+#| label: care-resp-WCWI006-WCWI008-geam01
+
+# Variable of care responsibilities
+df.geam01 <- df.geam01 |> 
+  mutate(CareResp = (WCWI006 == "Yes" | WCWI008 == "Yes"))
+
+# Filter and clean data
+df.sub <- df.geam01 |> 
+  filter(!is.na(SDEM004.bin) & !is.na(CareResp)) |>  # Filtra valores NA
+  transmute("Has care responsibilities" = CareResp, Gender = fct_drop(as.factor(SDEM004.bin)))
+
+# Remove the description label from the variables
+attr(df.sub$"Has care responsibilities", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Has care responsibilities", 
+    col = Gender,  
+    percent = "row"
+  ) |> 
+  add_p() |>  
+  bold_labels()
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Has care responsibilities", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels(everything())  
+  ) 
+
+test_table_gt
+
+```
+
+
+```{r}
+#| echo: false
+#| label: care-resp-WCWI006-WCWI008-geam02
+
+# Variable of care responsibilities
+df.geam02 <- df.geam02 |> 
+  mutate(CareResp = (WCWI006 == "Yes" | WCWI008 == "Yes"))
+
+# Filter and clean data
+df.sub <- df.geam02 |> 
+  filter(!is.na(SDEM004.bin) & !is.na(CareResp)) |>  # Filtra valores NA
+  transmute("Has care responsibilities" = CareResp, Gender = fct_drop(as.factor(SDEM004.bin)))
+
+
+# Remove the description label from the variables
+attr(df.sub$"Has care responsibilities", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+ 
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Has care responsibilities", 
+    col = Gender,  
+    percent = "row"
+  ) |> 
+  add_p() |>  
+  bold_labels()
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Has care responsibilities", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels(everything())  
+  ) 
+
+test_table_gt
+
+```
+
+
+```{r}
+#| echo: false
+#| label:  fig-care-resp-WCWI006-gender-geam03
+#| fig.cap: "Bar chart of WCWI006 - Primary carer/assistant to an adult by gender"
+#| fig-alt: "Bar chart of WCWI006 - Primary carer/assistant to an adult by gender"
+#| cap-location: margin
+
+cpal <- RColorBrewer::brewer.pal(3, "Set1")
+
+
+df.geam03 |>  
+    filter(!is.na(WCWI006) & !is.na(SDEM004.bin))|>
+    ggplot(aes(x=WCWI006, fill=SDEM004.bin)) + 
+    geom_bar(width=0.8, position=position_dodge()) + 
+    geom_text(stat='count', 
+              aes(label=after_stat(count)), 
+              position=position_dodge(width=.8), 
+              vjust=-.6, size=3) +
+    scale_fill_manual(values=cpal) +
+    ylim(0,360) +
+    labs(x="", y="", fill="Gender") +
+    theme_light()
+
+```
+
+```{r}
+#| echo: false
+#| label:  fig-care-resp-WCWI008-gender-geam03
+#| fig.cap: "Bar chart of WCWI008 - Parent/legal guardian child by gender"
+#| fig-alt: "Bar chart of WCWI008 - Parent/legal guardian child by gender"
+#| cap-location: margin
+
+cpal <- RColorBrewer::brewer.pal(3, "Set1")
+
+
+df.geam03 |>  
+    filter(!is.na(WCWI008) & !is.na(SDEM004.bin))|>
+    ggplot(aes(x=WCWI008, fill=SDEM004.bin)) + 
+    geom_bar(width=0.8, position=position_dodge()) + 
+    geom_text(stat='count', 
+              aes(label=after_stat(count)), 
+              position=position_dodge(width=.8), 
+              vjust=-.6, size=3) +
+    scale_fill_manual(values=cpal) +
+    ylim(0,300) +
+    labs(x="", y="", fill="Gender") +
+    theme_light()
+
+```
+
+```{r}
+#| echo: true
+#| label: care-resp-WCWI006-WCWI008-geam03
+
+# Variable of care responsibilities
+df.geam03 <- df.geam03 |> 
+  mutate(CareResp = (WCWI006 == "Yes" | WCWI008 == "Yes"))
+```
+
+```{r}
+#| echo: true
+#| label: sub-tbl-cross-CareResp
+
+# Filter and clean data
+df.sub <- df.geam03 |> 
+  filter(!is.na(SDEM004.bin) & !is.na(CareResp)) |>  
+  transmute("Has care responsibilities" = CareResp, Gender = fct_drop(as.factor(SDEM004.bin)))
+
+```
+
+
+```{r}
+#| echo: false
+#| label: remove-labels-CareResp
+
+# Remove the description label from the variables
+attr(df.sub$"Has care responsibilities", "label") <- NULL
+attr(df.sub$Gender, "label") <- NULL
+
+```
+
+```{r}
+#| echo: false
+#| label: tbl-cross-CareResp
+
+# Create the contingency table and apply chi-square test
+df.sub |> 
+  tbl_cross(
+    row = "Has care responsibilities", 
+    col = Gender,  
+    percent = "row"
+  ) |> 
+  add_p() |>  
+  bold_labels()
+
+# Calculate tests of association
+cont_table <- table(df.sub$"Has care responsibilities", df.sub$Gender)
+chi_test <- chisq.test(cont_table)
+cramers_v <- cramerV(cont_table)
+fisher_test <- fisher.test(cont_table)
+
+# Create a table with the test results
+test_table <- tibble(
+  Statistic = c("Chi-square", "Degrees of Freedom (df)", "Cramer's V", "p-value", "Fisher's Exact p-value"),
+  Value = c(round(chi_test$statistic, 3), chi_test$parameter, round(cramers_v, 3), chi_test$p.value, fisher_test$p.value)
+)
+
+# Display the table
+test_table_gt <- test_table |> 
+  gt() |> 
+  fmt_number(
+    columns = "Value", 
+    decimals = 3,
+    rows = Statistic != "Degrees of Freedom (df)" 
+  ) |> 
+  tab_style(
+    style = cell_text(weight = "bold"), 
+    locations = cells_column_labels(everything())  
+  ) 
+
+test_table_gt
+
+```
+
+## Flexible work
+
+```{r}
+#| echo: false
+#| label: flexible-work-WCWI005-geam01
+
+df.geam01 %<>% 
+  modify_at(vars(starts_with("WCWI005.SQ")), as.numeric) %>% 
+  rowwise() %>% 
+  mutate(FlexMean = mean(c_across(starts_with("WCWI005.SQ")), na.rm = T)) 
+
+
+cpal <- RColorBrewer::brewer.pal(3, "Set1")
+
+
+df.geam01 |>  
+    filter(!is.na(WCWI005.SQ001.) & !is.na(SDEM004.bin))|>
+    ggplot(aes(x=WCWI005.SQ001., fill=SDEM004.bin)) + 
+    geom_bar(width=0.8, position=position_dodge()) + 
+    geom_text(stat='count', 
+              aes(label=after_stat(count)), 
+              position=position_dodge(width=.8), 
+              vjust=-.6, size=3) +
+    scale_fill_manual(values=cpal) +
+    ylim(0,300) +
+    labs(x="", y="", fill="Gender") +
+    theme_light()
+
+
+
+```
+
+
+## Work-Family Conflict
+
+The GEAM incorporates the Work-Family Conflict Scale (@article{https://doi.org/10.6102/zis243) to evaluate work-life balance. This scale measures two primary dimensions: the extent to which work interferes with family life (WF) and the degree to which family responsibilities interfere with work (FW).
+
+::: column-margin
+The Work-Family Conflict Scale was also included in the [2002](https://search.gesis.org/research_data/ZA3880?doi=10.4232/1.11564) and [2012](https://search.gesis.org/research_data/ZA5900?doi=10.4232/1.12022) editions of the Family and Changing Gender Roles module of the International Social Survey Programme (ISSP).
+::: 
+
+## Allocation of tasks
+
+## Training
+
+# Organisational Culture and Climate 
+
+## Perceived discrimination
+
+## Masculinity Contest Culture
+
+# Interpersonal Behaviour
+
+
