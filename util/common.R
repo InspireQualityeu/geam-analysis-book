@@ -24,3 +24,34 @@ options(
 )
 
 ggplot2::theme_set(ggplot2::theme_light())
+
+
+# Custom frequency table function
+table_frq <- function(data,var,digits=2){
+  
+  headertxt <- c("N", "Raw %", "Valid %", "Cum %")
+  
+  # calculate frequencies 
+  tblx <- data |> 
+    group_by({{var}}) |>
+    summarise(n = n(), 
+              n_miss = sum(is.na({{ var }})), 
+              n_valid = n - n_miss) |>
+    mutate(raw = n / sum(n), 
+           valid = n_valid / sum(n_valid), 
+           cum = cumsum(valid))
+  
+  # remove tmp calculations
+  # round entries
+  tblx <- tblx |>
+    dplyr::select(-c(n_miss, n_valid)) |>
+    dplyr::rename_with(~ headertxt, 2:5) |>
+    dplyr::mutate(across(where(is.numeric), round, digits))
+  
+
+  tblx
+  
+}
+
+
+

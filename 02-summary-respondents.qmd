@@ -15,7 +15,7 @@ keywords:
   - Socio-demographic variables
 ---
 
-# Summarising respondents data {#sec-ch02-respondents}
+# Summarising respondents {#sec-ch02-respondents}
 
 ```{r}
 #| label: setup 
@@ -41,7 +41,7 @@ df.geam02 <-read_gpg("data/df.784191.en.rdata.gpg")
 The GEAM questionnaire gathers various socio-demographic variables from respondents, including gender, age, sexual orientation, ethnic minority status, disability and/or health impairments, educational level, socio-economic class, partnership status, and transgender status. This socio-demographic information forms the basis for identifying differences between specific groups of respondents concerning selected outcomes, such as experiences of discrimination or job satisfaction. Additionally, combinations of these socio-demographic variables enable the exploration of intersectional analyses of GEAM data, revealing how certain combinations of these variables identify particularly disadvantaged sub-groups.
 
 ::: column-margin
-See @sec-intersectional-ch06 for a more detailed example of how to perform an intersectional, outcome oriented analysis of selected GEAM variables.
+See @sec-ch06-intersectional for a more detailed example of how to perform an intersectional, outcome oriented analysis of selected GEAM variables.
 :::
 
 In addition to socio-demographic variables, the GEAM also contains information on the current job situation of respondents. Variables describe job position, salary, type of contract, scientific discipline among others. These are briefly introduced in section 2 of this chapter. In combination with socio-demographic variables, they provide the basis for detecting wage gaps or differences in precarious working conditions.
@@ -104,9 +104,7 @@ The R code for producing simple frequency tables is shown for the first table of
 #| cap-location: margin
 
 df.geam01 |>
-  data_tabulate(SDEM004) |>
-  kbl()
-
+  table_frq(SDEM004) 
 ```
 
 ::: callout-note
@@ -145,7 +143,6 @@ df.geam01 <- df.geam01 |>
     SDEM004 == "Other" ~ NA,
     .default = SDEM004
   ))
-
 
 ```
 
@@ -224,9 +221,7 @@ Here is the corresponding frequency table:
 #| cap-location: margin
 
 df.geam02 |>
-  data_tabulate(age_4g) |>
-  kbl()
-
+  table_frq(age_4g) 
 ```
 
 Other GEAM questionnaires have modified 'SDEM001' before the launch and ask for aggregate age groups from the start. This might be advisable to protect respondents anonymity. As a consequence, the aggregation into age groups as explained above is not necessary. Here is an example:
@@ -270,9 +265,7 @@ Question `SDEM006` asks about marital or partnership status which becomes especi
 #| cap-location: margin
 
 df.geam02 |>
-  data_tabulate(SDEM006) |>
-  kbl()
-
+  table_frq(SDEM006) 
 ```
 
 ```{r}
@@ -319,10 +312,7 @@ As this question is not mandatory, there are likely to be a larger amount of `NA
 #| cap-location: margin
 
 df.geam01 |>
-  frq(SDEM002) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-   kable_styling(bootstrap_options = c("striped"))
-
+  table_frq(SDEM002) 
 ```
 
 ```{r}
@@ -355,10 +345,7 @@ Variable `SDEM012` asks about the **country of birth** of respondents. Again, de
 #| cap-location: margin
 
 df.geam01 |>
-  frq(SDEM012, sort.frq = "desc") |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-   kable_styling(bootstrap_options = c("striped"))
-
+  table_frq(SDEM012) 
 ```
 
 Variable `SDEM013` inquires about the **main citizenship** of respondents. Combining both variables `SDEM012` and `SDEM013` provides insights into possible migration background of respondents, given the specific country context in which the survey is implemented.
@@ -382,10 +369,7 @@ Question `SDEM005` inquires is a respondent "is trans or has a trans history".
 #| cap-location: margin
 
 df.geam01 |>
-  frq(SDEM005) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-   kable_styling(bootstrap_options = c("striped"))
-
+  table_frq(SDEM005) 
 ```
 
 ### Sexual orientation
@@ -409,10 +393,7 @@ Variable `SDEM007` asks respondents about their sexual orientation - which const
 #| cap-location: margin
 
 df.geam01 |>
-  frq(SDEM007) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-   kable_styling(bootstrap_options = c("striped"))
-
+  table_frq(SDEM007) 
 ```
 
 Questions that allow respondents to indicate their preferred answer category are marked in the data matrix with the question code (here `SDEM007`) and the suffix `.other.` attached. As the @tbl-sexorientation indicates, two respondents indicate an additional option, which can be quickly displayed with the following code:
@@ -451,10 +432,7 @@ Variable `SDEM009` captures disability and health impairments. This is a fairly 
 #| cap-location: margin
 
 df.geam01 |>
-  frq(SDEM009) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_styling()
-
+  table_frq(SDEM009) 
 ```
 
 As can be seen from frequency @tbl-disability, among the respondents, 15 persons indicate a disabilty or health impairment.
@@ -486,9 +464,7 @@ The highest educational level of the respondent is covered in question `SDEM016`
 #| cap-location: margin
 
 df.geam01 |>
-  frq(SDEM016) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_styling()
+  table_frq(SDEM016)
 ```
 
 It is likely that some respondents mark "Other" for SDEM016. These need to be examined and re-classified according to the best fit with existing categories. Examining the `SDEM016.other.` variable we see that 4 out of the 6 respondents have provided an alternative educational category, while 2 respondents have selected the "Other" option but not filled in any alternative text.
@@ -642,9 +618,7 @@ The categorization of staff categories follows Frascati Manual classification of
 #| cap-location: margin
 
 df.geam01 |>
-  frq(WCJC001) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_classic()
+  table_frq(WCJC001) 
 ```
 
 GEAM version 3 has follow-up questions inquiring about more fine-grade categories within each of these job positions (`WCJC024` - for Academics/researchers, `WCJC025` - for Technicians, and `WCJC0026` - for Administrative staff).
@@ -696,9 +670,7 @@ Available datasets do not contain this variable!
 #| cap-location: margin
 
 df.geam01 |>
-  frq(WCJC023) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-   kable_styling(bootstrap_options = c("striped"))
+  table_frq(WCJC023)
 
 ```
 
@@ -740,9 +712,7 @@ The type of contract of respondents is covered by two separate questions. Wherea
 #| cap-location: margin
 
 df.geam02 |>
-  frq(WCJC010) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_classic()
+  table_frq(WCJC010) 
 ```
 
 +----------+---------------------------------------------------------------------+-------------------------------+
@@ -762,9 +732,7 @@ df.geam02 |>
 #| cap-location: margin
 
 df.geam02 |>
-  frq(WCJC011) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_classic()
+  table_frq(WCJC011)
 ```
 
 Type of contract, especially in terms of permanent versus fixed-term should be explored in relation to different socio-demographic variables, as it is an important indicator of precarious working conditions [@europeancommissionMORE4SupportData2021].
@@ -814,9 +782,7 @@ df.geam02 |>
 #| cap-location: margin
 
 df.geam01 |>
-  frq(WCJC005) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid %", "cum %")) |>
-  kable_classic()
+  table_frq(WCJC005)
 ```
 
 
