@@ -5,10 +5,8 @@ execute:
     echo: true
     warning: false
     message: false
-    
 abstract: >
     This chapter provides a comprehensive overview of gender gap identification using GEAM questionnaire data, employing bivariate analysis techniques such as Chi-squared tests, Student’s t-tests, analysis of variance (ANOVA), and Pearson or Spearman correlation. Key aspects including working conditions, work-life balance, and organisational culture are explored, offering practical tools for analysing and understanding gender inequalities in various contexts.
-
 keywords:
    - Gender gaps
    - Bivariate analysis
@@ -17,7 +15,6 @@ keywords:
    - t-test
    - ANOVA
    - Contingency table
-
 editor_options: 
   chunk_output_type: console
 ---
@@ -799,5 +796,3 @@ The Work-Family Conflict Scale was also included in the [2002](https://search.ge
 ## Masculinity Contest Culture
 
 # Interpersonal Behaviour
-
-
