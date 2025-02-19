@@ -104,7 +104,8 @@ The R code for producing simple frequency tables is shown for the first table of
 #| cap-location: margin
 
 df.geam01 |>
-  table_frq(SDEM004) 
+  table_frq(SDEM004)
+
 ```
 
 ::: callout-note
@@ -165,7 +166,7 @@ df.geam02 |>
     theme_light()
 ```
 
-Most statistical analysis will work with aggregated age groups. The GEAM reporting template generates two groupings: 10 year steps, or 4 age groups: "Junior \< 30 years", "Middle 31-45 years", "Senior 46-65 years", and above "\> 65 years" of age.
+Most statistical analysis will work with aggregated age groups. The GEAM reporting template generates two groupings: 10 year steps, or 4 age groups: "Junior \<= 29 years", "Middle 30-44 years", "Senior 45-64 years", and "\>= 65 years" of age.
 
 In R, a small transformation is necessary to convert and aggregated the year of birth into binned age groups:
 
@@ -187,10 +188,10 @@ Now we are ready to assign respondents to the specified age groups using the new
 
 # sub-divde age into 4 age groups:
 df.geam02$age_4g <- cut(df.geam02$age,
-                        c(0,30,45,65,100),
-                        labels=c("Junior (<30)", 
-                                 "Middle (31-45)", 
-                                 "Senior (46-65)", 
+                        c(0,29,44,64,100),
+                        labels=c("Junior (<=29)", 
+                                 "Middle (30-44)", 
+                                 "Senior (45-64)", 
                                  "+65"))
 
 ```

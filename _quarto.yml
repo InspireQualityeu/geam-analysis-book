@@ -77,8 +77,10 @@ format:
     - custom-header.tex
   docx:
     toc: true
+    toc-depth: 2
     number-sections: true
     highlight-style: github
+
 
 editor: source
   
@@ -86,7 +88,7 @@ license: "CC BY NC"
 
 copyright: 
   holder: INSPIRE Project Consortium
-  year: 2024
+  year: 2025
   
 funding: "This work has received funding under the European Union's Horizon Europe research and innovation programme under grant agreement No 101058537."
 

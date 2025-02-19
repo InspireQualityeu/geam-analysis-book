@@ -17,4 +17,4 @@ abstract: >
     This is the abstract for this chapter. 
 ---
 
-# Using GEAM data for GEP design and revision
+# GEP design and revision
