@@ -205,7 +205,7 @@ df.geam |>
 ```
 
 
-Finally, as our **outcome variable** we use items that form part of the **microaggression** scale (`BIMA001`), see @sec-annex-microaggression. For each row/respondent, we calculate the average score across all 11 microaggression items (see @sec-annex-i-microaggression for items) and store the value of each respondent into a new variable called `micagg`. Higher scores on microagression indicate that respondents have been exposed more frequently to mircoragressions than respondents with lower scores. 
+Finally, as our **outcome variable** we use items that form part of the **microaggression** scale (`BIMA001`). For each row/respondent, we calculate the average score across all 11 microaggression items (see @sec-annex-i-microaggression for items) and store the value of each respondent into a new variable called `micagg`. Higher scores on microagression indicate that respondents have been exposed more frequently to mircoragressions than respondents with lower scores. 
 
 ```{r}
 #| label: code-mean-microaggression
@@ -292,7 +292,8 @@ Each respondents has been assigned the strata which correspondes to the responde
 
 df.geam |>
   group_by(gender, disability, age_3g) |>
-  summarise(N_strata=n())
+  summarise(N_strata=n()) |>
+  table_df()
 
 ```
 
@@ -335,8 +336,6 @@ summary(model_1)
 
 # store prediced microaggression scores in data frame
 df.geam$m1Am <- predict(model_1)
-
-#broom::tidy(model_1)
 
 ```
 The null model contains only the intercept, which is interpreted as the overall average microaggression score in our dataset. To be more precise, it is the overall *precision weighted grand mean* (PWGM), which is the mean microaggression score across the mean values of each stratum, weighted by the sample size in each stratum. The PWGM (or intercept) in our example is slightly higher (1.48) than the sample mean calculated previously (1.41). 
@@ -458,11 +457,11 @@ As a summary and to improve readility, model 1 and model 2 can be combined into 
 ```{r}
 #| label: tbl-maihda-mod1-mod2
 
-#only html table. 
-tab_model(model_1, 
-          model_2, 
-          show.reflvl = F, 
-          p.style="stars", 
+# only html table.
+tab_model(model_1,
+          model_2,
+          show.reflvl = F,
+          p.style="stars",
           dv.labels = c("Model 1a", "Model 1b"))
 ```
 
@@ -482,7 +481,7 @@ A good way to present MAIHDA results illustrates the predicted microaggression s
 
 df.stratum_level |>
   dplyr::select(-m1Am, -micagg) |>
-  arrange(desc(rank))
+  arrange(desc(rank)) 
 ```
 Need to remove the first stratum (Man, Disability, Junior) as it only contains one respondent. Similar for other strata with N<10. 
 

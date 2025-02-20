@@ -11,8 +11,6 @@ book:
     - 01-introduction.qmd
     - 02-summary-respondents.qmd
     - 04-compare-in-time.qmd
-    - 03-detecting-gaps.qmd
-    - 05-compare-organisations.qmd
     - 06-intersectional-analysis.qmd
     - 07-geam-data-for-geps.qmd
     - 10-annex-i-desc-variables.qmd

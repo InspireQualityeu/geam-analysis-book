@@ -26,7 +26,7 @@ library(gpg)
 library(datawizard)
 library(sjmisc)
 library(knitr)
-library(kableExtra)
+#library(kableExtra)
 
 source("util/common.R")
 source("util/encrypt.R")
@@ -406,8 +406,7 @@ Questions that allow respondents to indicate their preferred answer category are
 # Extract text entries from .other. input field
 df.geam01 |>
   filter(SDEM007 == "Other") |>
-  select(id, SDEM007, SDEM007.other.) |>
-  kbl()
+  select(id, SDEM007, SDEM007.other.) 
 ```
 
 ::: callout-warning
@@ -477,8 +476,7 @@ It is likely that some respondents mark "Other" for SDEM016. These need to be ex
 # Extract text entries from .other. input field
 df.geam01 |>
   filter(SDEM016 == "Other")|>
-  select(id, SDEM016, SDEM016.other.) |>
-  kbl()
+  select(id, SDEM016, SDEM016.other.) 
 ```
 
 The answer questions then can be re-coded as desired (show example).
@@ -498,23 +496,32 @@ Socioeconomic status is captured by two variables `SDEM017` and `SDEM018`, one f
 | SDEM018    | What is the highest qualification level obtained by your second parent/guardian? | see responses SDEM016    |
 +------------+----------------------------------------------------------------------------------+--------------------------+
 
+Frequency table of first parent or legal tutor of respondent. 
+
 ```{r}
 #| echo: false
-#| eval: false
-#| label: tbl-ses-sdem01718
+#| label: tbl-ses-sdem017
+#| tbl-cap: "Frequency table of SDEM017 - Highest educational level of parent/legal tutor"
+#| cap-location: margin
 
-tbl01 <- df.geam01 |>
-  frq(SDEM017) 
 
-tbl02 <- df.geam01 |>
-  frq(SDEM018) 
+df.geam01 |>
+  table_frq(SDEM017)
 
-tbl01 |>
-  bind_cols(tbl02) |>
-  kbl(col.names=c("label", "short", "count", "%", "valid%", "cum%", 
-                  "label", "short", "count", "%", "valid%", "cum%")) |>
-  add_header_above(c("Educational level first parent"=6, "Educational level second Parent"=6))|>
-  kable_classic()
+```
+
+And second parent / tutor: 
+
+```{r}
+#| echo: false
+#| label: tbl-ses-sdem018
+#| tbl-cap: "Frequency table of SDEM018 - Highest educational level of 1st parent/legal tutor"
+#| cap-location: margin
+#| 
+
+df.geam01 |>
+  table_frq(SDEM018)
+
 ```
 
 In preparing the analysis of the SES of respondents, the educational level is ususally aggregated in fewer groups. This involves combining (or selecting) the educational level of parent 1 and 2. For example, one can select the higher educational level comparing parent 1 and 2 and then aggregate this highest educational level of both parents (or legal guardians) into a single variable SES.
@@ -538,7 +545,7 @@ df.geam01 <- df.geam01 |>
 
 ```
 
-The newly created variable `SES` now contains the hightest educational level considering both parents.
+The newly created variable `SES` now contains the hightest educational level considering both parents. The following code shows the first 6 rows of our dataset, indicating the highest educational level in the last column `SES`. 
 
 ```{r}
 #| echo: false
@@ -547,16 +554,13 @@ The newly created variable `SES` now contains the hightest educational level con
 #| cap-location: margin
 
 df.geam01 |>
-  select(SDEM017, SDEM017.comp, SDEM018, SDEM018.comp, SES) |>
+  dplyr::select(SDEM017, SDEM017.comp, SDEM018, SDEM018.comp, SES) |>
   head() |>
-  kbl(col.names=c("Edu level parent 1 (SDEM017)", 
-                  "Score", 
-                  "Edu level parent 2 (SDEM018)", 
-                  "Score", 
-                  "Highest (SES)"))
+  table_df()
+
 ```
 
-Then it is easy to assign the respondents socioeconomic status to three groups, consisting of "Higher SES", "Medium SES", or "Lower SES"
+Then it is easy to assign the respondents socioeconomic status to three groups, consisting of "Higher SES", "Medium SES", or "Lower SES", for example. 
 
 ```{r}
 #| echo: true
@@ -572,7 +576,7 @@ df.geam01 <- df.geam01 |>
 
 ```
 
-And generate a corresponding frequency table or bar chart. As shown in @fig-ses-3g, most respondents have a high socio-economic background given the science and research context of the organisation. Subsequent analysis could further explore how the SES differs between the job positions captured in variable `WCJC001` (see next section).
+A corresponding frequency table or bar chart is then easily created. As shown in @fig-ses-3g, most respondents have a high socio-economic background given the science and research context of the organisation. Subsequent analysis could further explore how the SES differs between the job positions captured in variable `WCJC001` (see next section).
 
 ```{r}
 #| echo: false
@@ -663,17 +667,6 @@ A simple question asks about teaching duties of resondents (variable `WCJC023`).
 Available datasets do not contain this variable!
 :::
 
-```{r}
-#| echo: false
-#| eval: false
-#| label: tbl-teaching-wcjc023
-#| tbl-cap: "Frequency table of teaching responsibilities - WCJC023"
-#| cap-location: margin
-
-df.geam01 |>
-  table_frq(WCJC023)
-
-```
 
 ### Leadership position
 

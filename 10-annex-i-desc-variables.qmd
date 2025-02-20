@@ -52,7 +52,7 @@ df.geam <-read_gpg("data/df.349312.en.rdata.gpg")
 #| cap-location: margin
 
 df.geam |>
-  data_tabulate(SDEM004)
+  table_frq(SDEM004)
 
 ```
 
@@ -65,8 +65,7 @@ df.geam |>
 #| cap-location: margin
 
 df.geam |>
-  data_tabulate(SDEM007)
-
+  table_frq(SDEM007)
 ```
 
 
@@ -260,9 +259,9 @@ df.geam03 |>
 
 ```{r}
 # create outcome varible of interest
-df.geam <- df.geam |>
-  rowwise() |>
-  mutate(microscore = mean(as.numeric(c_across(starts_with("BIMA001.SQ"))), na.rm=T))
+# df.geam <- df.geam |>
+#   rowwise() |>
+#   mutate(microscore = mean(as.numeric(c_across(starts_with("BIMA001.SQ"))), na.rm=T))
 ```
 
 

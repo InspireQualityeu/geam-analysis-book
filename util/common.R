@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 options(
   dplyr.print_min = 6,
   dplyr.print_max = 6,
+  dplyr.summarise.inform = FALSE,
   pillar.max_footer_lines = 2,
   pillar.min_chars = 15,
   stringr.view_n = 6,
@@ -35,7 +36,7 @@ ggplot2::theme_set(ggplot2::theme_light())
 # @param digits numeric round up to number of digits
 # @param fsize numeric font size for word tables
 # 
-table_frq <- function(data, var, digits=2, fsize=12){
+table_frq <- function(data, var, digits=2, fsize=11){
   
   headertxt <- c("N", "Raw %", "Valid %", "Cum %")
   
@@ -68,18 +69,18 @@ table_frq <- function(data, var, digits=2, fsize=12){
   if (!knitr::is_html_output()) {
 
     caption_txt <- var_label 
-    caption_auto <- officer::run_autonum(seq_id = "tab", 
-                                         pre_label = paste0("Table", " " ))
+    # caption_auto <- officer::run_autonum(seq_id = "tab", 
+    #                                      pre_label = paste0("Table", " " ))
+    
     tnum_rows <- nrow(tblx)
     missing_str <- "(Missing)"
-    fsize <- 12
     
     tblx <- flextable(tblx) |> 
       flextable::font(fontname="Roboto", part="all") |> 
       flextable::fontsize(size=fsize, part = "all") |>
       flextable::bold(bold=T, part = "header") |> 
       flextable::width(j=c(1:5), width=c(3,1,.6,1,1)) |>
-      flextable::set_caption(caption = caption_txt, autonum=caption_auto) |> 
+      #flextable::set_caption(caption = caption_txt, autonum=caption_auto) |> 
       flextable::compose(i = tnum_rows, j = 1, as_paragraph(as_chunk(missing_str)))
   }
   
@@ -88,5 +89,26 @@ table_frq <- function(data, var, digits=2, fsize=12){
   
 }
 
+
+# Generic table print function to switch correctly to flextable for 
+# word documents. 
+# 
+table_df <- function(tblx, digits=2, fsize=11){
+  
+
+  # word document
+  if (!knitr::is_html_output()) {
+    
+    tblx <- flextable(tblx) |> 
+      flextable::font(fontname="Roboto", part="all") |> 
+      flextable::fontsize(size=fsize, part = "all") |>
+      flextable::bold(bold=T, part = "header") |>
+      flextable::autofit()
+  }
+  
+  
+  tblx
+  
+}
 
 
