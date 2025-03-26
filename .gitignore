@@ -2,7 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-
+Quarto Book GEAM.Rproj
 /.quarto/
 /_book/
 /data/
+/archive/

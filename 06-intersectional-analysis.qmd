@@ -38,14 +38,17 @@ library(ggeffects)
 library(lme4)
 library(merTools)
 #library(labelled)
-library(Metrics)
+#library(Metrics)
+
+
+library(gtsummary)
 
 library(sjmisc)
 library(sjPlot)
 library(gpg)         # use encryption
 
 library(knitr)
-library(kableExtra)
+#library(kableExtra)
 
 source("util/common.R")
 source("util/encrypt.R")
@@ -56,17 +59,27 @@ df.geam03 <-read_gpg("data/df.349312.en.rdata.gpg")
 ```
 
 
-The GEAM questionnaire collects a variety of socio-demographic data, including  gender, age, sexual orientation, ethnic minority status among others (see @sec-ch02-respondents) that can be used for an exploration of intersectional inequalities. 
+Although the GEAM questionnaire has been designed for capturing primarily data on *gender inequalities*, it also offers the opportunity to explore inequalities in relation to other socio-demographic variables. As described in @sec-ch02-respondents, questions on other important dimensions of discrimination such as sexual orientation, ethnic minority status, or disability / healh impairments among others are included by default in the GEAM questionnaire. The set of socio-demographic variables can then be explored in relation to experiential variables such as experiences of discrimination, microaggressions, job satisfaction, or bullying and harassment.  
 
-Following an intersectional analytical lens, we want to understand how combination of these socio-demographic categories affect specific outcomes, such as for example experiences of discrimination, harassment, job satisfaction, or other outcomes. 
+When examining inequalities across multiple categories, it is important to use an intersectional analytical lens. Intersectionality, as a critical framework, reveals that although we tend to put people into separate boxes according to their socio-demographic features, they are all affected by interlocking processes of discrimination and marginalization [@collinsIntersectionalitys2015]. Intersectionality urges us to see and address the power relations that push women but also many minoritized groups (trans, ethnic minority, non-binary genders, sexual minorities, people with disabitlies) to the margin of society. 
+
+While most introductions to intersectionality focus on socio-demographic categories such as gender and race, highlighting how these overlap to produce unique locations of oppression - Black Women [crenshawMapping1990] - this is not enough. Intersectionality is never only about overlapping socio-demographic categories but more importantly about the underlying power dynamics of sexism, racism, ableism that advantage and privilege some while they disenfranchise and marginalize many others: 
+
+"Intersectionality is a black feminist theory of power that recognizes how multiple systems of oppression, including racism, patriarchy, capitalism, interact to disseminate disadvantage to and institutionally stratify different groups. Born out of black women’s theorizations of their experiences of racism, sexism, and economic disadvantage from enslavement to Jim Crow to the post-civil rights era, the theory accounts for how systems of oppression reinforce each other, and how their power must be understood not as individually constituted but rather as co-created in concert with each other.” [@robinsonIntersectionality2018, p.69]
+
+Intersectionality, insofar it is a theory of power, requires focussing on structures, systems, and institutions that underly and continuously reproduce social inequalities across very different sets of social groups. Each disenfranchised social group is a manifestation of these interlocking systems of stratification and exclusion. Importantly, intersectionality as a critical analytic perspective on power provides an antidote to fractional identity politics. This constitutes the fundamental contribution of crenshaw: the fight against inequality is not limited to women on the one hand and black men on the other, but happens across these socio-demographic categories, including black women [@crenshawMapping1990].
+
+In the context of the GEAM survey, an intersectional analysis provides an entry point for scrutinizing the organisational culture, processes and power relations that marginalize and discriminate some groups while privileging most white men.  
+
+
 
 ## Introduction to MAIHDA
 
-To do so, we use a relatively recent statistical approach called, **Multilevel Analysis of Individual Heterogeneity and Discriminatory Accuracy (MAIHDA)**. The approach has been pioneered by Clare Evans and others [@evansMultilevel2018, @merloMultilevel2018] to identify intersectional effects, for example with regards to inequalities in health [@axelssonfiskChronic2018], mental health [@evansIntersectionality2019], eating disorders [@becciaEatingrelated2021] or educational outcomes [@kellerEducational2023]. Following an intersectional rationale, the MAIHDA analytical framework allows to understand better how the combination of several dimensions of discrimination can have especially aggravating consequences, for example in terms of health. 
+**Multilevel Analysis of Individual Heterogeneity and Discriminatory Accuracy (MAIHDA)** is a relatively recent approach to carry out an intersectional analysis of quantitative data. It has been pioneered by Clare Evans and others [@evansMultilevel2018, @merloMultilevel2018] to identify intersectional effects, for example with regards to inequalities in health [@axelssonfiskChronic2018], mental health [@evansIntersectionality2019], eating disorders [@becciaEatingrelated2021] or educational outcomes [@kellerEducational2023]. Following an intersectional rationale, the MAIHDA analytical framework allows to understand better how the combination of several dimensions of discrimination can have especially aggravating consequences, for example in terms of health. 
 
-MAIHDA uses an statistical approach that is known as multilevel modelling. Multilevel models are well established in social sciences to model the fact that individuals are not isolated atoms but pertain to nested social groupings such as a particular neighborhood, that is itself part of city which is embedded in a wider region or country. As members of these nested social structures, individuals are exposed to similar living conditions, implied for example when living in a more affluent or more deprived neighborhood, which affects the quality of life of all residents in a similar degree. 
+MAIHDA uses a statistical approach that is known as multilevel modelling. Multilevel models are well established in social sciences to account for the fact that individuals are not isolated atoms but pertain to nested social groupings such as a particular neighbourhood, that is itself part of city which is embedded in a wider region or country. As members of these nested social structures, individuals are exposed to similar living conditions, implied for example when living in a more affluent or more deprived neighbourhood, which affects the quality of life of all residents in a similar degree. 
 
-MAIHDA uses the logic of multilevel modelling and conceives individuals (level 1) as members of certain intersectional strata (level 2). Thus a person might pertain to the strata of "women + high educational level + minority ethnic group", while another person pertains to a different stratum, such as "women + low educational level + majority ethnic group". MAIHDA allows to model how the membership in these intersectional strata affects certain outcomes of interest. This makes it particularly useful for studying inequalities in health, education, and other social outcomes.
+MAIHDA uses the logic of multilevel modelling and conceives individuals (level 1) as members of certain intersectional strata (level 2). Thus, a person might pertain to the stratum of "women + high educational level + minority ethnic group", while another person pertains to a different stratum, such as "women + low educational level + majority ethnic group". MAIHDA allows to model how the membership in these intersectional strata affects certain outcomes of interest. This makes it particularly useful for studying inequalities in health, education, and other outcomes such as experiences of discrimination. 
 
 Whereas traditional regression models can be used for exploring intersectional effects between several socio-demographic variables such as gender, age, race/ethnicity, they are limited in terms of the number of categories to combine, the sample size, model parsimony and scalability [@evansMultilevel2018]. In contrast, the MAIHDA approach partitions the variance within and between these strata, and thus can identify unique intersectional effects and provide precise estimates even for small groups.
 
@@ -77,12 +90,19 @@ An additional tutorial is included in the [ggeffects package]([https://strengeja
 ::: 
 
 ::: callout-note
-While the MAIHDA approach handles small N in each stratum more elegantly than standard regression models, having two few respondents within individual intersectional strata remains an issue. In the original tutorial @evansTutorial2024 generate **384 intersectional strata** combining 2 sex/gender categories x 3 race/ethnicity categories x 4 education categories x 4 income categories x 4 age categories. 
+## Small N
+While the MAIHDA approach handles small N in each stratum more elegantly than standard regression models, having two few respondents within individual intersectional strata remains an issue. 
 
-The MAIHDA analysis is only feasible given the dataset contains 33,000 respondents which keeps the grand majority of individual stratum above a minimum of 10 respondents. @kellerEducational2023 in comparison generate 40 intersectional strata for N=5451 students. 
+In the original tutorial @evansTutorial2024 generate **384 intersectional strata** combining 2 sex/gender categories x 3 race/ethnicity categories x 4 education categories x 4 income categories x 4 age categories. 
+
+The MAIHDA intersectional analysis is only feasible given the dataset contains 33,000 respondents which keeps the grand majority of individual stratum above a minimum of 10 respondents. @kellerEducational2023 in comparison generate 40 intersectional strata for N=5451 students. 
 ::: 
 
-GEAM employee data in higher education typically has less than N<1000 respondents, which sets practical limits on the number of intersectional strata to generate. Given practical limitations of N=632 respondents in our dataset, we limit the construction of the intersectional data to three variables:  **gender** (women/man), **disability/health** (yes/no) and **age** (three age groups), which yields 2x2x3=12 strata. Using MAIHDA approach, analyse how individuals within these strata are differently affected by experiences of microaggressions. We hypothesize that older age in combination with a disability/health condition and gender (being a women) identifies a group of employees that experience higher microaggressions. 
+GEAM employee data in higher education typically has less than N<1000 respondents, which sets practical limits on the number of intersectional strata to generate. Given practical limitations of N=632 respondents in our dataset, we limit the construction of the intersectional data to three variables:  **gender** (women/man), **disability/health** (yes/no) and **age** (three age groups), which yields 2x2x3=12 strata. Using MAIHDA we analyse how individuals within these strata are differently affected by experiences of **microaggressions**. We hypothesize that older age in combination with a disability/health condition and gender (being a women) identifies a group of employees that experience higher microaggressions. 
+
+::: callout-hint
+The MAIHDA approach appears as a promising analytical lens especially for **GEAM student** data which - depending on the size of the higher education institutions - is likely to produce largers samples. 
+:::
 
 
 ## Preprocess data
@@ -91,9 +111,6 @@ First, socio-demographic variables need to be preprocessed as described in @sec-
 
 To start, we remove partial questionnaires. Those respondents who did not reach the end of the survey and press the submit-button have a `NA` entry in the `submitdate` and can be removed. 
 
-::: callout-note
-Partial GEAM submissions might still hold useful data, depending on which page the user abandonded the questionnaire. Depending on which combinations of variables are of interest, a more nuanced filterting should be carried out. Removing incomplete submissions does not guarantee that any of the selected variables used for further analysis does not contain missing data. 
-:::
 
 ```{r}
 #| label: tbl-filter-partial
@@ -110,6 +127,9 @@ df.geam03 |>
 # remove partial submissions
 df.geam <- df.geam03 |>
   filter(!is.na(submitdate))
+
+# df.geam03 |>
+#   tbl_summary(include=c(submitdate))
 
 ```
 
@@ -168,28 +188,58 @@ df.geam <- df.geam |>
                                NA_character_, SDEM009))
 
 # reconvert to factor
-df.geam$disability <- factor(df.geam$SDEM009.bin)
+df.geam$disability <- factor(df.geam$SDEM009.bin, 
+                             levels=c("No", "Yes"), 
+                             labels=c("No-Disab", "Yes-Disab") )
+
+#df.geam$disability <- fct_recode(df.geam$disability, NoDis = "No", YesDis="Yes")
+
+df.geam |>
+  table_frq(disability)
 ```
 
 
-Third, **age**. Introducing a slight variation to the procedure described in [@sec-summary-ch02-age] we have created a variable `age_3g` that aggregates the age of respondents into 3 groups: Junior (<30 years), Middle (31-45 years), and senior (> 46 years). 
+Third, **age**. Examining the age distribution of the organisation in @fig-sdem001-age, we see that it is right-skewed, meaning that most respondents of the questionnaire are senior employees, with four employees indicating 105 years (to be removed, as this represents an data entry error by respondents). Color coding for disability status, we also see that this overall follows the overall age distribution, having fewer employees that are younger and having a disability compared to more senior employees.
 
 ```{r}
+#| label: fig-sdem001-age
+#| code-fold: true
+#| code-summary: Click to see code for age distribution
+#| fig.cap: "Frequency chart of year of birth by disability"
+#| cap-location: margin
+
+cpal <- RColorBrewer::brewer.pal(3, "Set1")
+
+df.geam |>  
+    filter(!is.na(age)) |>
+    ggplot(aes(x=age, fill=disability)) + 
+    geom_bar(width=0.8) + 
+    scale_fill_manual(values=cpal) +
+    labs(x="", y="") +
+    theme_light()
+
+```
+
+Given the senior profiles of most respondents, it is likely that some combinations of strata such as young employees with disabilities will produce too few entries. Hence, we also adjust the thresholds when aggregating the age groups (compared to the procedure described in [@sec-summary-ch02-age]) by shifting the thresholds for junio, middle, and senior profiles slightly up. We create a new variable `age_3g` consisting of Juniors below 40 years of age, Middle career stage employees from 40 to 54 years of age, and Senior profiles with 55 years or older. 
+
+
+```{r} 
 #| label: code-sdem001-age
 #| code-fold: true
 #| code-summary: Click to see preprocessing for age groups
 
-# create three age groups: junior, middle, senior
+#create three age groups: junior, middle, senior
 df.geam <- df.geam |>
   mutate(age_3g = case_when(
-    age <30 ~ "Junior (<=29)", 
-    age >= 30 & age < 45 ~ "Middle (30-44)",
-    age >= 45  ~ "Senior (>=45)",
+    age <=39 ~ "Junior (<=39)",
+    age >= 40 & age < 55 ~ "Middle (40-54)",
+    age >= 55 & age < 80 ~ "Senior (>=55)",
     .default = NA
   ))
 
 # reconvert to factor
 df.geam$age_3g <- factor(df.geam$age_3g)
+
 ```
 
 Which produces the following three age groups. The organisation has relatively few junior employees, with most employees in our sample belonging to the Senior group, with 45 or more years. 
@@ -204,8 +254,7 @@ df.geam |>
  table_frq(age_3g)
 ```
 
-
-Finally, as our **outcome variable** we use items that form part of the **microaggression** scale (`BIMA001`). For each row/respondent, we calculate the average score across all 11 microaggression items (see @sec-annex-i-microaggression for items) and store the value of each respondent into a new variable called `micagg`. Higher scores on microagression indicate that respondents have been exposed more frequently to mircoragressions than respondents with lower scores. 
+Finally, as our *outcome variable* we use items that form part of the **microaggression** scale (`BIMA001`). For each row/respondent, we calculate the average score across all 11 microaggression items (see @sec-annex-i-microaggression for items) and store the value of each respondent into a new variable called `micagg`. Higher scores on microagression indicate that respondents have been exposed more frequently to mircoragressions than respondents with lower scores. 
 
 ```{r}
 #| label: code-mean-microaggression
@@ -225,29 +274,24 @@ This provides the following summary statistics on our three main socio-demograph
 #| label: tbl-stats-sample
 #| 
 
-tbl1 <- df.geam |>
-  count(gender)
-
-tbl2 <- df.geam |>
-  count(disability)
-
-tbl3 <- df.geam |>
-  count(age_3g)
-
+df.geam |>
+  #filter(!is.na(gender) & !is.na(disability) & !is.na(age_3g)) |>
+  tbl_summary(include=c(gender, disability, age_3g, micagg), 
+              missing_text = "(Missing)")
 ```
 
 
 ## Define intersectional strata
 
-Socio-demographic variables need to be **combined to create the intersectional strata** for the MAIHDA intersectional analysis. In total, the combination of 2 categories for gender (woman, man), 2 categories for disability (Yes, No) and three for age generates 2 x 2 x 3 = 12 strata. 
+Socio-demographic variables need to be **combined to create the intersectional strata** for the MAIHDA intersectional analysis. In total, the combination of 2 categories for gender (woman, man), 2 categories for disability (Yes, No) and 2 groups for age generates 2 x 2 x 2 = 8 strata. 
 
 ::: column-margin
-**What are strata?** \n
-As @evansClarifications2024 [p.3] describe, *strata* are descriptors of groups which are theorized as "proxies for the impact of common experiences with social forces" within that group. \n\n
+Strata
+: As @evansClarifications2024 [p.3] describe, *strata* are descriptors of groups which are theorized as "proxies for the impact of common experiences with social forces" within that group.
 
-Strata are different from social groups, however, as they do not imply social cohesion. Rather, strata capture the social forces such as sexism, racism, classism, abelism that affect individuals pertaining to a particular strata. \n\n
+Strata are different from social groups, however, as they do not imply social cohesion. Rather, strata capture the social forces such as sexism, racism, classism, abelism that affect individuals pertaining to a particular strata.
 
-Although strata are defined via the combination of socio-demographic variables including sex/gender, ethnicity/race, socioeconomic status, disabilities, these cease to be individual-level variables in the MAIHDA analysis and become characteristics describing the social forces acting upon these groups. 
+Although strata are defined via the combination of socio-demographic variables including sex/gender, ethnicity/race, socioeconomic status, disabilities and others, these cease to be individual-level variables in the MAIHDA analysis and become characteristics describing the social forces acting upon these groups. 
 :::
 
 The following code creates a unique identifier for each stratum consisting of the combination of labels. `NA` entries in any of the socio-demographic variables causes the row to be removed.   
@@ -279,14 +323,12 @@ low <- df.geam |>
 
 ```
 
-For analysis with larger stratum (e.g. > 100) the combination of variable labels becomes impractical. @evansTutorial2024 recommend to geneate a numeric code where each digit represents the levels of variables.
-
-Each respondents has been assigned the strata which correspondes to the respondents particular combination of gender, disability and age group. Thus 578 respondents (level 1) habe been assigned to 11 strata (level 2), with one stratum (A women, Yes, Junior (<=30) remaining empty. @tbl-overview-strata12 provides an overview of the number of respondents per strata. 
+Each respondent has been assigned the strata which correspondes to the respondents particular combination of gender, disability and age group. Thus 574 respondents (level 1) habe been assigned to 8 strata (level 2). @tbl-overview-strata12 provides an overview of the number of respondents per strata.
 
 ```{r}
 #| label: tbl-overview-strata12
 #| code-fold: true
-#| tbl-cap: "Frequency table of 12 intersectional strata and number of cases"
+#| tbl-cap: "Frequency table of 11 intersectional strata and number of cases"
 #| cap-location: margin
 
 
@@ -297,15 +339,19 @@ df.geam |>
 
 ```
 
-Given the 12 strata, 3 stratum have fewer than 10 respondents - one case even only containing a single respondent. According @evansTutorial2024 (p.4), a lower bound of 10 respondents per stratum has been deemed acceptable, suggesting that the three strata <10 respondents should be removed (?!)
+Given the 8 strata, 1 stratum has fewer than 10 respondents - one case even only containing a single respondent. According @evansTutorial2024 (p.4), a lower bound of 10 respondents per stratum has been deemed acceptable, suggesting that the three strata <10 respondents should be removed (?!)
 
 ::: column-margin
+For analysis with larger stratum (e.g. > 100) the combination of variable labels becomes impractical. @evansTutorial2024 recommend to geneate a numeric code where each digit represents the levels of variables.
+
 For larger strata, @evansTutorial2024 recommend to calculate the percentage of strata that have less than 10 respondents. For the current example, `r round(low*100)`% of our strata have less than 10 respondents.
 :::
 
+
+
 ## MAIHDA Models
 
-Intersectional MAIHDA proceeds in two steps by first, specifing a *null model* and second a *main effects model*. The null model allows to characterise the total inequality in our microaggression score between strata. It provides a global measure of intersectionality via the Variance Partition Coefficient (VPC see below), that measures the proportion of the total variance of the outcome tha lies between-strata. 
+Intersectional MAIHDA proceeds in two steps by first, specifing a *null model* and second a *main effects model*. The null model characterises the total inequality in our microaggression score between strata. It provides a global measure of intersectionality via the Variance Partition Coefficient (VPC see below), that measures the proportion of the total variance of the outcome that lies between-strata. 
 
 The second *main effects model* allows to quantify how much differences in inequality are due to overlapping axis of inequality. In the statistical model, this implies to parition the outcome/inequality variance into into 'additive' (fixed effects) and 'interaction' (random effects) part. As described by @evansClarifications2024, the *main effects* model enables the researcher to "consider inequality patterns in terms of *universality-versus-specifity*": are inequalities in outcomes due to universal category membership (e.g. being Black) or by by specific membership in overlapping categories (e.g. being a Black woman). The *main effects* model specifies to which degree a detected inequality (e.g. wage gap for women) is 'universal' across other axis of comparsion (e.g. is true for all women independent of age, race/ethnicity, socioeconomic status, etc.) or differs according to 'specific' combinatinos of those variables (e.g. black women having lower wages than white women, etc.). The statistic that describes the relative contribution of additive versus interaction effects is the Proportional Change in Variance (PCV see below). 
 
@@ -334,6 +380,18 @@ model_1 <- lmer(micagg ~ (1|strata), data=df.geam)
 
 summary(model_1)
 
+# model_1 |>
+#   tbl_regression(tidy_fun = broom.mixed::tidy)
+
+# model_1 |>
+#   tbl_regression(intercept=T)
+
+
+tab_model(model_1,
+          show.reflvl = F,
+          p.style="stars",
+          dv.labels = c("Null Model"))
+
 # store prediced microaggression scores in data frame
 df.geam$m1Am <- predict(model_1)
 
@@ -349,7 +407,7 @@ Variance Partition Coefficient (VPC)
 VPC values range from 0 to 1, where 0 indicates that strata are not important at all, and 1 that strata explain all differences in outcome. 
 :::
 
-The standard summary model (see above) does not indicate the VPC score for our null model, but we can use the "interclass correlation coefficient (icc)" of the `performence` package to extract this value. As indicated by @evansTutorial2024, the VPC is identical to the ICC, which indicates how similar the microaggression scores are expected to be between two randomly picked individuals from the same stratum. A high VPC/ICC value (close to 1) indicates that the microaggression scores are expected to be very similar, while a low VPC/ICC score (close to 0) indicates that their microaggression scores are very different between individuals in the same stratum. It thus indicates how strongly the intersectional strata discriminate between groups of individuals that differ with regard to the outcome. 
+The standard summary model (see above) does not indicate the VPC score of the null model, but we can use the "interclass correlation coefficient (icc)" of the `performance` package to extract this value. As indicated by @evansTutorial2024, the VPC is identical to the ICC, which indicates how similar the microaggression scores are expected to be between two randomly picked individuals from the same stratum. A high VPC/ICC value (close to 1) indicates that the microaggression scores are expected to be very similar, while a low VPC/ICC score (close to 0) indicates that their microaggression scores are very different between individuals in the same stratum. It thus indicates how strongly the intersectional strata discriminate between groups of individuals that differ with regard to the outcome. 
 
 ```{r}
 #| label: code-maihda-mod1a-icc
@@ -361,12 +419,14 @@ performance::icc(model_1)
 VPC values for the null model tend to be <10% [@evansClarifications2024]. @kellerEducational2023 [p.21] in their systematic review report VPC values ranging from 0.5% to 41.9%, with a median value of 5.5%. Similar, @axelssonfiskChronic2018 proposes the following cut-off values for VPC/ICC values in percent (%): nonexistent (0–1) - poor (> 1 to ≤ 5) - fair (> 5 to ≤ 10) - good (> 10 to ≤ 20) - very good (> 20 to ≤ 30) - excellent (> 30). 
 :::
 
-In our example, the ICC value is 0.068, i.e. around 6.8% of the microaggression variance is explained at the stratum level. According to  @axelssonfiskChronic2018 (see margin), a VPC/ICC score of 6.8% is "fair", indicating that a fair amount of the variance in the outcome is attributable to between strata level differences. For comparison, @evansTutorial2024 obtain a VPC of 9.4%, qualifying it as "a relatively large amoutn of clustering at the stratum-level" (p.9). Hence, our first model and its VPC indicate that the strata are important for explaining differences in microaggression scores between intersectional groups. In order to understand the relative importance of individual socio-demographic variables, a second model is required. 
+In our example, the ICC value is 0.113, i.e. around 11.3% of the microaggression variance is explained at the stratum level. According to  @axelssonfiskChronic2018 (see margin), a VPC/ICC score of 11.3% is "good", indicating that a good amount of the variance in the outcome is attributable to between strata level differences. For comparison, @evansTutorial2024 obtain a VPC of 9.4%, qualifying it as "a relatively large amount of clustering at the stratum-level" (p.9).
+
+Hence, our first model and its VPC indicate that strata are important for explaining differences in microaggression scores between intersectional groups. In order to understand the relative importance of individual socio-demographic variables, a second model is however required. 
 
 
 ### Model 2: main effects model 
 
-The main effects model, also called the 'adjusted intersectional model' quantifies the extend to which differences between strata level microaggression scores are due to additive (main) effects versus interaction (random) effects. 
+The *main effects model*, also called the 'adjusted intersectional model' quantifies the extend to which differences between strata level microaggression scores are due to additive (main) effects versus interaction (random) effects. 
 
 Thus, we fit a new model (model 1b) adding each socio-demographic variable that defines level-2 strata (gender, disability, age categories) as main additive effects (i.e. as level-2 fixed-effects dummy variables). The variables that define our strata are now incorporated into the model specifically to see how it affects the between strata variance.  
 
@@ -376,14 +436,24 @@ Thus, we fit a new model (model 1b) adding each socio-demographic variable that 
 
 model_2 <- lmer(micagg ~ gender + disability + age_3g + (1|strata), data=df.geam)
 
-summary(model_2)
+#summary(model_2)
+
+# model_2 |>
+#   tbl_regression(pvalue_fun=label_style_pvalue(digits = 3)) |>
+#   add_global_p()
+
+
+tab_model(model_2,
+          show.reflvl = F,
+          p.style="stars",
+          dv.labels = c("Main effects model"))
 ```
 
-The coefficients provide a first orientation on how strong the different socio-demographic variables affect each on their own the microaggression score. The larger (in absolute values) the coefficients, the higher the contribution of the variable to the between-stratum variance. In other words, the larger the coefficients, the stronger are the universal effect of a socio-demographic variable that remain relatively uneffected by overlapping axis of inequality.  
+The coefficients provide a first orientation on how strong the each socio-demographic variable affect the microaggression score. The larger (in absolute values) the coefficients, the higher the contribution of the variable to the between-stratum variance. In other words, the larger the coefficients, the stronger are the universal effect of a socio-demographic variable that remain relatively uneffected by overlapping axis of inequality.  
 
-We see that having a disability / health condition has the strongest effect, as it increments the microaggression score by 0.25. Gender has a relatively small effect (0.05), while age has also a comparatively large effect although inverses the direction: the older the respondents, the less they are exposed to microaggressions.  
+We see that having a disability / health condition has the strongest effect, as it increments the microaggression score by 27% compared to the reference category (no disability). Gender has a relatively small effect: women tend to have 9% higher microaggression scores compared to the reference category being "A man". Age has a comparatively large inverse effect: the older the respondents, the less they are exposed to microaggressions when compared to the reference category "Junior < 35 years".
 
-Having incorporated the socio-demographic variables into the second model will affect that VPC/ICC score, as it explains now a portion of the variance (of the outcome) directly. The VPC/ICC score will be lower:  
+Having incorporated the socio-demographic variables into the second model will affect that VPC/ICC score, as it explains now a portion of the variance (of the outcome) directly. The VPC/ICC score will be lower. 
 
 ```{r}
 #| label: code-maihda-mod1b-icc
@@ -395,7 +465,7 @@ performance::icc(model_2)
 In the adjusted, main effects model 2, "The VPC now represents the proportion of the total variance that remains (after adjustment for additive effects) that is attributable to interaction effects. By attributable to interaction effects, we mean that some portion of the between-stratum variance (or inequalities) are not adequately described with consistent, additive patterns." (@evansTutorial2024, p.7)
 :::
 
-Model 2 has a much lower VPC value of 0.006 (0.6%), indicating that the main effects explain a large portion of the between stratum variance, with some stratum inequaity being left unexplained by the additive main effects. To quantify precisely the role of interaction effects, i.e. overlapping axis of inequality, for explaining the variance between strata, we calculate the Proportional Change in Variance (see margin). 
+Model 2, the main effects model, has indeed a much lower VPC value of 6.6%, indicating that the main effects explain a large portion of the between stratum variance, with some stratum inequaity being left unexplained by the additive main effects. To quantify precisely the role of interaction effects, i.e. overlapping axis of inequality, for explaining the variance between strata, we calculate now in addition the Proportional Change in Variance. 
 
 Proportaional Change in Variance (PCV)
 : measures how much between-strata variance observed in the intersectional model is explained by additive main effects vs. interaction effects. The complement of this value 1-PVC quantifies how much of the between-stratum variance remains unexplained by the additive main effects and is therefore attributable to interaction affects.
@@ -448,11 +518,11 @@ PCV1 <- ((vc1a[1,4] - vc1b[1,4]) / vc1a[1,4])*100
 PCV1
 ```
 
-Low PCV values imply that the main effects cannot fully explain the variation in the outcome and that the remaining between-strata variance is due to the existence of interaction effects between the social categories defining the intersectional strata. In contrast, high PCV values indicate that the main additive effects explain a large proportion of the mean-level differences between intersectional strata in the outcome. In our case the PCV indicates that 92.02% of the total variance between strata is accounted for by main additive effects, and less than 10% being accounted for by interaction effects. 
+Low PCV values imply that the main effects cannot fully explain the variation in the outcome and that the remaining between-strata variance is due to the existence of interaction effects between the social categories defining the intersectional strata. In contrast, high PCV values indicate that the main additive effects explain a large proportion of the mean-level differences between intersectional strata in the outcome. In our case the PCV indicates that 41.12% of the total variance between strata is accounted for by main additive effects, leaving 58.88% being accounted for by interaction effects. 
 
-PCV values usually are rather large. @kellerEducational2023 in reviewing several studies determine a median PCV value of 92.9%, while @evansClarifications2024 indicate typical PCV values to range >80% and frequently >90%. This means that additive effects, i.e. gender, race/ethnicity, disability capture to a large extend inequality patterns across strata. It indicates that inequality patterns are largely additive (in the statistical sense), and less intersectional.
+PCV values usually are rather large. @kellerEducational2023 in reviewing several studies determine a median PCV value of 92.9%, while @evansClarifications2024 indicate typical PCV values to range >80% and frequently >90%. This means that additive effects, i.e. gender, race/ethnicity, disability capture to a large extend inequality patterns across strata. It indicates that inequality patterns are largely additive (in the statistical sense), and less intersectional. In our case, the PCV value is comparatively low, indicating that strong interaction effects between gender, disability and age are at play. 
 
-As a summary and to improve readility, model 1 and model 2 can be combined into @tbl-maihda-mod1-mod2. which also incorporates the VPC/ICC values and which coefficients are significant.  
+As a summary and to improve readability, model 1 and model 2 can be combined into @tbl-maihda-mod1-mod2 which also incorporates the VPC/ICC values and which coefficients are significant.  
 
 ```{r}
 #| label: tbl-maihda-mod1-mod2
@@ -462,12 +532,27 @@ tab_model(model_1,
           model_2,
           show.reflvl = F,
           p.style="stars",
-          dv.labels = c("Model 1a", "Model 1b"))
+          dv.labels = c("Null model", "Main effects model"))
+
+
+# m1 <- model_1 |>
+#   tbl_regression(intercept=T)
+# 
+# m2 <- model_2 |>
+#   tbl_regression(tidy_fun = broom.mixed::tidy) |>
+#   add_global_p() |>
+#   add_significance_stars()
+#   
+#   
+# theme_gtsummary_compact()
+# tbl_merge(list(m1,m2), 
+#           tab_spanner = c("Null Model", "Random Effects"))
+
 ```
 
-Age and disability appear to have a significant effect on the microaggression score. Given the above data, the stratum that comprises women only has on average a microagrression score that is 6% higher than the stratum that only contains men. Similar, strata with individuals that indicate a disability or permanent health condition have a 25% higher microaggression score than strata without a disability. And last but not least, individuals that belong to a senior age group (45 years or older) have on average a 25% lower microaggression score than the reference group (Junior 30 years or younger). 
+Age and disability appear to have a significant effect on the microaggression score. Given the above data, the stratum that comprises women only has on average a microagrression score that is 9% higher than the stratum that only contains men. Similar, strata with individuals that indicate a disability or permanent health condition have a 27% higher microaggression score than strata without a disability. And last but not least, individuals that belong to a senior age group (55 years or older) have on average a 18% lower microaggression score than the reference group (Junior 35 years or younger). 
 
-Overall, the model 2 indicates that 92.02% of the between strata variance is explained by these main additive effects of disability and age (and to a lesser degree to gender), with 7.98% of the variance is likely due to interaction effects. 
+Overall, the model 2 indicates that 41.12% of the between strata variance is explained by these main additive effects of disability and age (and to a lesser degree to gender), with 58.88% of the variance is likely due to interaction effects. 
 
 
 ## Visualising & presenting results 
@@ -483,11 +568,9 @@ df.stratum_level |>
   dplyr::select(-m1Am, -micagg) |>
   arrange(desc(rank)) 
 ```
-Need to remove the first stratum (Man, Disability, Junior) as it only contains one respondent. Similar for other strata with N<10. 
+As can be seen, the highest microaggression scores are consistenly reported by individuals which indicate a disability or health impairment, across age groups and genders. A note of caution regarding the strata with small N < 10 - Junior women with disability and Junior men with disabilty. Both have rather high microaggression scores which could change considerabilit with additional respondents in this age and gender group.   
 
-Most affected by microaggressions are then middle and senior women with disability. 
-
-The results of the ranked table can also be ilustrated in @fig-predicted-stratum-means-mod1b. 
+The results of the ranked table can also be illustrated in @fig-predicted-stratum-means-mod1b. 
 
 ```{r}
 #| label: fig-predicted-stratum-means-mod1b
@@ -499,6 +582,7 @@ df.stratum_level |>
   ggplot(aes(x=rank, y=m1Bmfit)) +
   geom_point() +
   geom_pointrange(aes(ymin=m1Bmlwr, ymax=m1Bmupr)) +
+  scale_x_continuous(breaks = c(1:13)) +
   ylab("Predicted micro aggression score, Model 1B") +
   xlab("Stratum Rank") + 
   theme_bw()
@@ -507,7 +591,12 @@ df.stratum_level |>
 
 ## Conclusions 
 
-Need to insert explorations of intersectional strata in a framework to understand power. For example see  [@yangAnalysing2023] for some points. 
+Our analysis indicates intersectional effects of gender, disability and age for the experience of microaggression. Employees with disabilities in general report higher microaggression scores than employees without. This effect is also stronger for women compared to men. However, small N for two stratum suggest that these estimates could change with higher numbers of respondents (>10).  The MAIHA analysis provides in this case a first indication that intersectional effects exist, that warrant further exploration, e.g. with focus groups or interviews with employees with disabilities across different age groups and gender. 
 
+Complementing the quantitative analysis with a qualitative exploration is also warranted to understand better how existing power relations and hierarchies within the organisation produce the observed effects. 
+
+For example see  [@yangAnalysing2023] for some points. 
+
+Expand comments?! 
 
 ## References

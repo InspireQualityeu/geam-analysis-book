@@ -63,7 +63,9 @@ bibliography: references.bib
 reference-location: margin
 citation-location: document
 
-cover-image: images/stat-landscape-1.jpg
+cover-image: images/abstract-landscape-3.jpg
+
+tbl-cap-location: margin
 
 format:
   html:

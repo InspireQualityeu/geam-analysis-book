@@ -23,10 +23,10 @@ keywords:
 
 library(tidyverse)
 library(gpg)
-library(datawizard)
-library(sjmisc)
+library(flextable)
+
 library(knitr)
-#library(kableExtra)
+library(gtsummary)
 
 source("util/common.R")
 source("util/encrypt.R")
@@ -67,7 +67,8 @@ An alternative consists of examining the submission date variable `submitdate`. 
 df.geam01 |>
   group_by(submitdate) |>
   summarise(Total = n()) |>
-  mutate(Complete = c("Yes", "No"))
+  mutate(Complete = c("Yes", "No")) |>
+  table_df()
 
 df.geam <- df.geam01 |>
   filter(!is.na(submitdate))
@@ -646,7 +647,7 @@ df.geam01 |>
     geom_bar(width=.8, 
              position=position_dodge()) +
     geom_text(stat='count', 
-              aes(label=..count..), 
+              aes(label=after_stat(count)), 
               position=position_dodge(width=.8), 
               vjust=-.6) +
     scale_fill_manual(values=cpal) +
@@ -705,9 +706,11 @@ The type of contract of respondents is covered by two separate questions. Wherea
 #| tbl-cap: "Frequency table of WCJC010 part-time/full-time contract"
 #| cap-location: margin
 
-df.geam02 |>
+df.geam01 |>
   table_frq(WCJC010) 
 ```
+
+And fixed-term/temporary contract? 
 
 +----------+---------------------------------------------------------------------+-------------------------------+
 | Code     | Question                                                            | Responses                     |
@@ -733,38 +736,70 @@ Type of contract, especially in terms of permanent versus fixed-term should be e
 
 ```{r}
 #| echo: false
-#| label: tbl-cross-WCJC011
-#| fig.cap: "Cross tab of gender and type of contract. Cells indicate absolute numbers"
+#| label: tbl-cross-wcjc011-sdem004-prepare
+#| code-fold: true
+#| code-summary: "Show preparing code for cross table"
+
+df.sub <- df.geam02 |>
+  filter(!is.na(WCJC011) & !is.na(SDEM004)) |>
+  mutate(
+    Gender = case_when(
+      SDEM004 == "Prefer not to say" ~ NA,
+      SDEM004 == "Non-binary" ~ NA, 
+      SDEM004 == "Other" ~ NA,
+      .default = SDEM004), 
+    Contract = case_when(
+      WCJC011 == "Other" ~ NA,
+      .default = WCJC011) 
+    ) |>
+  transmute(
+    Contract = fct_drop(Contract), 
+    Gender = fct_drop(Gender), 
+    Position = fct_drop(WCJC001)
+  )
+
+```
+
+
+```{r}
+#| echo: false
+#| label: tbl-cross-WCJC011-SDEM004
+#| tbl-cap: "Cross tab of type of contract (WCJC011) and gender (SDEM004). Cells indicate absolute numbers"
 #| cap-location: margin
 
-library(GGally)
 
-df.geam02 |>
-  filter(!is.na(WCJC011) & !is.na(SDEM004)) |>
-  ggally_crosstable(mapping = aes(x = SDEM004, y = WCJC011), cells = c("observed")) +
-  labs(x="", y="")
+# from the gtsummary package. 
+df.sub |>
+  tbl_cross(
+    row = Contract,
+    col = Gender
+  ) |> 
+  bold_labels()
 
 ```
 
 In this particular dataset, more women than men have a temporary contract while also more women than men have a permanent contract. 
 
-Chapter 3 will explore in detail if gender gaps between specific categories are significant or not. 
+Chapter 3 will explore in detail if these differences in type of contract between women and men are statistically significant (or not). 
 
 
 ```{r}
 #| echo: false
-#| label: tbl-cross-wcjc001
-#| fig-cap: "Cross tab of job position (WCJC001) and type of contract (WCJC011)"
+#| label: tbl-cross-wcjc001-sdem004
+#| tbl-cap: "Cross table of job position (WCJC001) and gender (SDEM004)"
 #| cap-location: margin
 
-library(GGally)
 
-df.geam02 |>
-  filter(!is.na(WCJC001) & !is.na(WCJC011)) |>
-  ggally_crosstable(mapping = aes(x = WCJC001, y = WCJC011), cells = c("observed")) +
-  labs(x="", y="")
+df.sub |>
+  tbl_cross(
+    row = Position,
+    col = Gender
+  ) |> 
+  bold_labels()
 
 ```
+
+A final example shows potential gender differences between job position and gender. As can be seen from @tbl-cross-wcjc001-sdem004, clearly more women occupy administrative positions, while the academic research positions are 2 to 3 in favor of women. 
 
 
 ### Salary

@@ -38,7 +38,7 @@ ggplot2::theme_set(ggplot2::theme_light())
 # 
 table_frq <- function(data, var, digits=2, fsize=11){
   
-  headertxt <- c("N", "Raw %", "Valid %", "Cum %")
+  headertxt <- c("N", "Raw%", "Valid%", "Cum%")
   
   # calculate frequencies 
   tblx <- data |> 
@@ -80,7 +80,6 @@ table_frq <- function(data, var, digits=2, fsize=11){
       flextable::fontsize(size=fsize, part = "all") |>
       flextable::bold(bold=T, part = "header") |> 
       flextable::width(j=c(1:5), width=c(3,1,.6,1,1)) |>
-      #flextable::set_caption(caption = caption_txt, autonum=caption_auto) |> 
       flextable::compose(i = tnum_rows, j = 1, as_paragraph(as_chunk(missing_str)))
   }
   
@@ -110,5 +109,4 @@ table_df <- function(tblx, digits=2, fsize=11){
   tblx
   
 }
-
 
