@@ -9,24 +9,6 @@ author:
       name: National Information Processing Institute
       city: Warsaw
       url: https://opi.org.pl/en/
-  - name: Joanna Mirosław
-    email: joanna.miroslaw@opi.org.pl
-    corresponding: FALSE
-    orcid: 0000-0002-8973-1453
-    affiliation: 
-    - id: OPI PIB
-      name: National Information Processing Institute
-      city: Warsaw
-      url: https://opi.org.pl/en/
-  - name: Marta Czarnocka-Cieciura
-    email: marta.czarnocka-cieciura@opi.org.pl
-    corresponding: FALSE
-    orcid: 0000-0002-0168-0410
-    affiliation: 
-    - id: OPI PIB
-      name: National Information Processing Institute
-      city: Warsaw
-      url: https://opi.org.pl/en/
   - name: Anna Łobodzińska
     email: anna.lobodzinska@opi.org.pl
     corresponding: FALSE
@@ -36,10 +18,28 @@ author:
       name: National Information Processing Institute
       city: Warsaw
       url: https://opi.org.pl/en/
+  - name: Joanna Mirosław
+    email: joanna.miroslaw@opi.org.pl
+    corresponding: FALSE
+    orcid: 0000-0002-8973-1453
+    affiliation: 
+    - id: OPI PIB
+      name: National Information Processing Institute
+      city: Warsaw
+      url: https://opi.org.pl/en/
   - name: Agata Roguz
     email: agata.roguz@opi.org.pl
     corresponding: FALSE
     orcid: 0000-0003-0461-6833
+    affiliation: 
+    - id: OPI PIB
+      name: National Information Processing Institute
+      city: Warsaw
+      url: https://opi.org.pl/en/
+  - name: Marta Czarnocka-Cieciura
+    email: marta.czarnocka-cieciura@opi.org.pl
+    corresponding: FALSE
+    orcid: 0000-0002-0168-0410
     affiliation: 
     - id: OPI PIB
       name: National Information Processing Institute
@@ -55,10 +55,10 @@ abstract: >
     This chapter analyses changes in the perception of gender equality at the National Information Processing Institute in Poland between 2020 and 2024. The study is based on two rounds of monitoring conducted using the GEAM tool. Scales that measure work culture, masculinity contest culture, microaggressions, equality practices, and the redistribution of resources and responsibilities were considered. The findings indicate an overall improvement in workplace culture and perceptions of gender equality—although women remain less likely to view the institute as one that ensures equal treatment. Despite the implementation of equality-promoting policies, gender disparities in perceived access to resources and responsibilities persist. No significant changes were observed in the perception of masculinity contest culture and the frequency of microaggressions; however, the data reveals that microaggressive behaviour was less frequent in 2024. These results indicate the potential positive impact of institutional policies and changes in work organisation after the COVID-19 pandemic on perceived equality, which underscores the need for continued monitoring and long-term evaluation.
     
 keywords: 
-  - gender equality plan, 
-  - gender equality audit, 
-  - equality data monitoring, 
-  - GEAM tool, 
+  - gender equality plan 
+  - gender equality audit 
+  - equality data monitoring 
+  - GEAM tool 
   - statistical analysis
 ---
 
@@ -76,41 +76,15 @@ library(knitr)
 library(gtsummary)
 library(outliers)
 library(RNOmni)
-
+library(dplyr)
 library(gpg)         # use encryption
 
 source("util/common.R")
 source("util/encrypt.R")
 
 
-df.geam20 <- read_gpg("data/df.687997.en.rdata.gpg") 
-df.geam24 <- read_gpg("data/df.822152.en.rdata.gpg") 
-
-# remove incomplete questionnaires. don't really need it as we control for NAs when
-# calculating means 
-# 
-# df.geam20 <- df.geam20 |>
-#    filter(!is.na (lastpage),
-#           !lastpage %in% c(0, -1))
-# 
-# df.geam24 <- df.geam24 |>
-#    filter(!is.na (lastpage),
-#           !lastpage %in% c(0, -1))
-
-
-# Comments to discuss
-# 
-# - make R code more tidyverse conform 
-# - make R code produce outputs directly: tables, figs, regressions. 
-# - unification of heading numbering, fig / table numbering and captions
-# - remove filter(!is.na(lastpage)) -> more fine controlled through drop_na anyway?
-# - process variables gender, parent, manager, position only once at the start 
-# - change order of variables analysed: first mcc and then ocwc (workplace culture), as the latter is more complex to pre-process. 
-# - Using en dataset for 2024
-# - When calculating rowMeans, add na.rm = FALSE to calculate mean also in case some items are NA not all
-# - In some 2024 answer options Glick "no opinion" = "neither agree nor disagree" and in others it is "no opinion" = No answer to be set to NA (e.g. OCPER003)
-# - slight differences in mean values due to when drop_na is applied?! 
-# - question item contains opi, its ok. 
+df.geam20 <- read_gpg("data/df.687997.en.rdata.gpg")
+df.geam24 <- read_gpg("data/df.822152.en.rdata.gpg")
 
 ```
 
@@ -130,7 +104,7 @@ In the autumn of 2024, the GEAM survey was repeated, with the primary goal of as
 
 Both waves of the study were conducted using online questionnaires. Invitations to participate were sent by email to all OPI PIB employees, alongside a link to the questionnaires on LimeSurvey.
 
-The two editions differed in terms of their numbers of respondents. In 2020, a total of 152 employees participated in the study, of which sixty-three completed the entire questionnaire. In 2024, 264 respondents participated, with 180 completing the entire questionnaire. This chapter analyses all responses, not only the completed questionnaires. 
+The two editions differed in terms of their numbers of respondents. In 2020, a total of 152 employees participated in the study, of which sixty-three completed the entire questionnaire. In 2024, 308 respondents participated, with 180 completing the entire questionnaire. This chapter analyses all responses, not only the completed questionnaires. 
 
 In a first pre-processing step, the two datasets for 2020 and 2024 need to be merged, unifying variable names in the process. We basically add the rows from 2020 and 2024 into a single dataset, selecting only those predictor variables we are interested in, namely gender, managerial position, parent status, and job position. An additional column `year` is added, to indicate the respective year of a response. 
 
@@ -138,8 +112,7 @@ In a first pre-processing step, the two datasets for 2020 and 2024 need to be me
 #| label: code-merge-datasets
 #| code-fold: true
 #| code-summary: Click to see code for merging datasets 
-
-# variable names are preserved. How to update?  
+# remove variable names
 attr(df.geam20, "variable.labels") <- NULL
 
 # define color palette
@@ -176,9 +149,8 @@ After merging, @tbl-stats-merged-predictors provides a quick overview of the sum
 
 ```{r}
 #| label: tbl-stats-merged-predictors
-#| tbl-cap: "Overview of main predictor variables for both years"
+#| tbl-cap: "Overview of main predictor variables and answer options for both years"
 #| cap-location: margin
-
 df.geam20.24 |>
   tbl_summary(include = c(gender, manager, parent), 
               by=year, 
@@ -190,7 +162,6 @@ However, as we can see in the above table, response options also differ between 
 #| label: code-collapse-factors
 #| code-fold: true
 #| code-summary: Click to see code unifying and matching factor responses 
-
 df.geam20.24 <- df.geam20.24 |>
   mutate(
       gender = case_when(
@@ -207,12 +178,6 @@ df.geam20.24 <- df.geam20.24 |>
       manager == "Senior specialist, experienced specialist" ~ "No",
       manager == "Junior specialist" ~ "No",
       .default = manager),
-    # position = case_when(  #not used?? 
-    #   position == "Group employed in scientific or research positions" ~ "Academic / researcher",
-    #   position == "Group employed in engineering technical positions" ~ "Technician",
-    #   position == "Group employed in administrative positions" ~ "Administrative", 
-    #   .default = position)
-    # ),
       parent = case_when(
       parent == "Prefer not to say" ~ NA, 
       .default = parent)
@@ -220,20 +185,18 @@ df.geam20.24 <- df.geam20.24 |>
   mutate(
     gender = fct_drop(gender),
     manager = fct_drop(manager), 
-    #position = fct_drop(position),
     parent = fct_drop(parent)
   )
 
 ```
 
 
-After matching and thus unifying the response options across both years, @tbl-stats-20-24 now provieds summary statistics of our main predictor variables by years. 
+After matching and thus unifying the response options across both years, @tbl-stats-20-24 now provides summary statistics of our main predictor variables by years. 
 
 ```{r}
 #| label: tbl-stats-20-24
 #| tbl-cap: "Summary statistics of main independent variables, unified across 2020 and 2024"
 #| cap-location: margin
-
 df.geam20.24 |>
   tbl_summary(include = c(gender, manager, parent), 
               by=year, 
@@ -247,11 +210,11 @@ In terms of gender, the 2020 sample was quite evenly split between men and women
 
 ### Dependent Variables
 
+For the purposes of the analysis, we constructed scales that measure: work culture **`OCWC002`**, masculinity contest culture **`MCC`** [@glick_development_2018], respondents’ experiences of microaggressions at work **`BIMA001`**, overall perceptions of equality practices at the institute **`OCPER001`**, and the redistribution of resources and responsibilities **`OCPER003`**. For each scale, we selected items from a relevant group of questions that were adequate and comparable between the two surveys. For comparable items worded in the opposite way, reverse coding was applied. 
+
 ::: aside 
 See @sec-ch04-appendix-i for details for wording of sub-question items in both surveys, the coding applied, and the Cronbach’s alpha values for each case. 
 :::
-
-For the purposes of the analysis, we constructed scales that measure: work culture **`OCWC002`**, masculinity contest culture **`MCC`**; see: @glick_development_2018), respondents’ experiences of microaggressions at work **`BIMA001`**, overall perceptions of equality practices at the institute **`OCPER001`**, and the redistribution of resources and responsibilities **`OCPER003`**. For each scale, we selected items from a relevant group of questions that were adequate and comparable between the two surveys. For comparable items worded in the opposite way, reverse coding was applied. 
 
 There was also a difference in the wording between the two surveys of the questions on respondent’s experiences of microaggressions at work **`BIMA`**: in 2020, we asked about experiences ‘at the workplace’; in 2024, we asked specifically about employees’ experiences at OPI PIB. This nuance must be considered when interpreting the results. The broader scope of the 2020 question might have led to inconsistencies due to possible multiple-employer situations or references to previous jobs. 
 
@@ -265,11 +228,11 @@ This analysis examines the `MCC`, `OCWC002`, `BIMA001`, `OCPER001`, and `OCPER00
 -   OCWC002, MCC, OCPER001, and OCPER003: scale from −2 to 2
 -   BIMA: scale from 0 to 3.
 
-The key demographic variables were coded as follows:
+The key demographic variables included are:
 
--   Gender: 0 = man, 1 = woman
--   Managerial status: 0 = nonmanager, 1 = manager
--   Parental status: 0 = nonparent, 1 = parent.
+-   Gender
+-   Managerial status
+-   Parental status
 
 For each scale, a composite index was calculated by averaging the responses to all relevant survey items for each respondent. This approach created a single numerical measure that represents the overall score for the scale.
 
@@ -280,11 +243,62 @@ To assess trends over time, mean scores were calculated for each group: 1) men (
 
 #### Regression analysis {.unnumbered}
 
-A multiple linear regression model was applied to examine the influence of gender, managerial status, and parental status on each index across survey years. The model’s formula was:
+**Model Specification**
 
-$Index∼gender×year\_2024+manager×year\_2024+parent×year\_2024$
+A progressive modeling approach was adopted to examine how the Index (the dependent variable) was influenced by time and key categorical factors, and whether these relationships changed between 2020 and 2024. The model was constructed in stages with groups of predictors added sequentially. A simple model containing only a time indicator was estimated first, followed by the inclusion of main effects of categorical variables, and finally, interaction terms were incorporated.
 
-Separate regression models were fitted for each scale.
+Because the data consist of two independent cross-sectional samples, a binary indicator variable, year2024, was included to distinguish observations from 2024 (coded 1) versus the 2020 baseline (coded 0). The three models described below were specified to reflect this progression, with the interpretation of model terms outlined accordingly.
+
+*Model 1: Base Model (Year Effect Only)*
+
+The first model was specified with year2024 as the only explanatory variable. This model was used to test whether a difference in Index scores existed between the two survey years, without accounting for any other variables. It was formally expressed as:
+$$
+\text{Index}_i = \beta_0 + \beta_1 \, \text{year2024}_i + \varepsilon_i
+$$
+
+In this specification:
+
+- $\beta_0$ represents the mean *Index* score in 2020 (the reference year),
+
+- $\beta_1$ captures the average difference in the *Index* in 2024 relative to 2020,
+
+- $\varepsilon_i$ denotes the residual error for observation $i$.
+
+
+*Model 2: Main Effects Model*
+
+In the second model, the main effects of gender, managerial role, and parent status were added. This allowed for the assessment of their independent associations with the Index, while also accounting for year. The model was specified as follows:
+$$
+\text{Index}_i = \beta_0 + \beta_1 \, \text{year2024}_i + \beta_2 \, \text{gender}_i + \beta_3 \, \text{manager}_i + \beta_4 \, \text{parent}_i + \varepsilon_i
+$$
+In this model:
+
+- $\beta_0$ corresponds to the mean *Index* score for the reference group (male, non-manager, non-parent) in 2020,
+
+- $\beta_2$, $\beta_3$, and $\beta_4$ represent the differences in *Index* associated with being female, a manager, and a parent, respectively, in 2020,
+
+- $\beta_1$ reflects the effect of year (2024 vs 2020), representing the overall change in *Index* between 2020 and 2024, regardless of demographic characteristics,,
+
+- $\varepsilon_i$ is the error term,  is the error term, accounting for unobserved individual-level variability in *Index*.
+
+
+*Model 3: Final Model with Interaction Terms (Year × Category Effects)*
+
+The final model expanded on Model 2 by incorporating interaction terms between 'year2024' and each of the categorical variables. This allowed the effects of gender, managerial role, and parent status on the Index to vary between 2020 and 2024. The full model is expressed as:
+$$
+\text{Index}_i = \beta_0 + \beta_1 \text{gender}_i + \beta_2 \text{year2024}_i + \beta_3 (\text{gender}_i \times \text{year2024}_i) + \beta_4 \text{manager}_i + \beta_5 (\text{manager}_i \times \text{year2024}_i) + \beta_6 \text{parent}_i + \beta_7 (\text{parent}_i \times \text{year2024}_i) + \varepsilon_i
+$$
+where:
+
+- $\beta_0$ represents the baseline level of *Index* for the reference category of each predictor in 2020.
+
+- $\beta_1$, $\beta_4$, and $\beta_6$ capture the main effects of gender, manager, and parent, respectively, in 2020.
+
+- $\beta_2$ indicates the effect of `year2024`, reflecting whether there is a systematic difference in *Index* between 2020 and 2024, independent of other variables.
+
+- $\beta_3$, $\beta_5$, and $\beta_7$ measure the interaction effects between `year2024` and each categorical predictor. A statistically significant coefficient for these terms would indicate that the relationship between *Index* and the corresponding categorical variable has changed between 2020 and 2024.
+
+- $\varepsilon_i$ represents the error term, capturing unobserved factors affecting *Index*.
 
 #### Model diagnostics {.unnumbered}
 
@@ -295,7 +309,6 @@ For `OCWC002`, `MCC`, `BIMA001`, `OCPER001`, and `OCPER003`, statistically signi
 
 ## Results
 
-
 ### Masculinity contest culture (MCC)
 
 #### Preparation and transformation of data
@@ -304,8 +317,8 @@ The Masculinity Contest Culture scale contains eight items (see @tbl-app-mcc) in
 
 ```{r}
 #| label: code-mcc-scores
-
-# convert mcc answers to numeric and center on 0, then calculate mean across all 8 items
+# convert mcc answers to numeric, center on 0, 
+# then calculate mean across all 8 items
 df20 <- df.geam20 |>
   select(starts_with("GlickMasculCont8"))|>
   map_df(~ {as.numeric(.x) - 3}) |>
@@ -329,7 +342,7 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 
 ```{r}
 #| label: tbl-mean-mcc-score
-#| tbl-cap: "Mean Glick Masculinit Contest Culture scores by gender, manager, and parent status across years"
+#| tbl-cap: "Mean masculinity contest culture (MCC) scores by gender, manager, and parent status across years"
 #| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for producing MCC mean scores table"
@@ -354,14 +367,14 @@ df.geam20.24 |>
 
 ```
 
-The mean values of MCC in both 2020 (−0.87) and 2024 (−0.86) indicate that, in general, the work environment at OPI PIB is not perceived as one that supports male norms. When divided by gender, both women and men tend to view the environment as one that does not support male norms; however, the means are lower for men (−1.03 vs. −0.70 in 2020, and −1.03 vs. −0.75 in 2024), which indicates that men agree with this conclusion slightly more than women do. The results for both parents and nonparents, and for managers and nonmanagers also support the conclusion that OPI PIB is not perceived as a workplace that rewards masculinity. This perception is quite stable: only slight differences can be observed in the means between 2020 and 2024 for the groups discussed above.
+The mean values of MCC in both 2020 (−0.84) and 2024 (−0.86) indicate that, in general, the work environment at OPI PIB is not perceived as one that supports male norms. When divided by gender, both women and men tend to view the environment as one that does not support male norms; however, the means are lower for men (−1.03 vs. −0.68 in 2020, and −1.02 vs. −0.75 in 2024), which indicates that men agree with this conclusion slightly more than women do. The results for both parents and nonparents, and for managers and nonmanagers also support the conclusion that OPI PIB is not perceived as a workplace that rewards masculinity. This perception is quite stable: only slight differences can be observed in the means between 2020 and 2024 for the groups discussed above.
 
 
 ```{r}
 #| label: fig-mcc-mean-df
-#| fig-cap: "Mean MCC scores by year and gender"
+#| fig-cap: "Barchart of mean MCC scores by year and gender"
 #| cap-location: margin
-
+# create barchart of MCC scores by year and gender
 df.geam20.24 |>
   select(year, gender, mcc_mean) |>
   drop_na()|>
@@ -383,17 +396,17 @@ The same information can be presented as a boxplot in @fig-box-mcc-gender.
 #| label: fig-box-mcc-gender
 #| fig-cap: "Boxplots of MCC scores by year and gender"
 #| cap-location: margin
-
+# create boxplots for MCC scores by year and gender
 df.geam20.24 |>
   select(year, gender, mcc_mean) |>
   drop_na() |>
   ggplot(aes(x=gender, y=mcc_mean, fill=as.factor(year))) + 
-  geom_boxplot(width=0.5) + 
-  geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
-  scale_fill_manual(values=cpal) +
-  scale_y_continuous(limits = c(-2, 2)) +
-  labs(x="", y="Mean MCC scores", fill="Year") +
-  theme_light()
+    geom_boxplot(width=0.5) + 
+    geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
+    scale_fill_manual(values=cpal) +
+    scale_y_continuous(limits = c(-2, 2)) +
+    labs(x="", y="Mean MCC scores", fill="Year") +
+    theme_light()
 
 ```
 
@@ -401,29 +414,51 @@ df.geam20.24 |>
 
 
 #### Regression analysis: masculinity contest culture
-
-
 ```{r}
-#| label: tbl-regression-mcc
-#| tbl-cap: "Regression analysis of MCC score"
+#| label: tbl-regression-mcc-base
+#| tbl-cap: "Regression analysis of MCC score - model 1 including year"
 #| cap-location: margin
+mcc_base <- lm(mcc_mean ~ year, data = df.geam20.24) 
 
-mcc_fit <- lm(mcc_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
-
-mcc_fit |>
+mcc_base |>
   tbl_regression(intercept = T, 
                  pvalue_fun = label_style_pvalue(digits = 3),) |>
   modify_column_unhide(column = c(std.error, statistic)) 
 
 ```
 
-Regression analysis revealed no statistically significant effects. Neither gender, year, nor being a manager or a parent had significant effects on perceptions of the work environment in terms of supporting male norms. The interactions between gender and year, year and being a manager, as well as year and being a parent also did not affect the responses. The only statistically significant (p\<0.05) term is an intercept: the expected value of MCC when the values of all predictors are equal to zero.
+```{r}
+#| label: tbl-regression-mcc-main
+#| tbl-cap: "Regression analysis of MCC score - model 2 main effects year, gender, managerial role and parent status"
+#| cap-location: margin
+mcc_main <- lm(mcc_mean ~ year + gender + manager + parent, data = df.geam20.24) 
+
+mcc_main |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+
+```
+
+
+```{r}
+#| label: tbl-regression-mcc-interaction
+#| tbl-cap: "Regression analysis of MCC score - model 3 including interaction terms"
+#| cap-location: margin
+mcc_fit <- lm(mcc_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
+
+mcc_fit |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
+
+Regression analysis accounting for all variables (@tbl-regression-mcc-interaction) revealed no statistically significant effects. Neither gender, year, nor being a manager or a parent had significant effects on perceptions of the work environment in terms of supporting male norms. The interactions between gender and year, year and being a manager, as well as year and being a parent also did not affect the responses. The only statistically significant (p\<0.05) term is an intercept: the expected value of MCC when the values of all predictors are equal to zero. However, when the interactions are omitted, gender has a statistically significant effect on the MCC score.
 
 ```{r}
 #| label: tbl-mcc-breusch-pagan
 #| tbl-cap: "MCC score model homoscedasticity test results"
 #| cap-location: margin
-
 bp_test <- car::ncvTest(mcc_fit)
 
 bp_results <- data.frame(
@@ -445,14 +480,14 @@ bp_results
 In order to carry out our analysis, the `OCWC` items need to be retrieved from our two datasets. Item names do not match exactly. We also only use a subset among all the `OCWC` items available. 
 
 ::: aside
-The R code for matching 2020 and 2024 culture (OCWC002) answer options and mapping them to a numeric score -2 to 2. Note that the numbering / order of sub-question items differs between 2020 and 2024. Also, sub-question SQ019 and SQ020 for 2020 requires reverse coding of the numeric score. 
+The R code for matching 2020 and 2024 culture (OCWC002) answer options and mapping them to a numeric score -2 to 2. Note that the numbering / order of sub-question items differs between 2020 and 2024. Also, sub-questions SQ019 and SQ020 for 2020 require reverse coding of the numeric score. 
 :::
 
 ```{r}
 #| label: code-map-culture-values
 #| code-fold: true
-#| code-summary: Click to see code for merging OCWC / culture scores 
-# for 2020 dataset
+#| code-summary: Click to see code for merging and matching of OCWC / culture scores 
+# merge items for 2020 dataset
 df20 <- df.geam20 |>
   select(num_range("OCWC002_SQ", c(4,13:15, 18:20), width=3)) |>
   map_df(~ {if_else(.x == "Not applicable", NA, .x)}) |>  # replace "Not applicable" with NA
@@ -462,7 +497,7 @@ df20 <- df.geam20 |>
   mutate(culture_mean = rowMeans(across(everything()), na.rm=T)) |> # calculate row mean
   select(culture_mean)
 
-# for 2024 dataset
+# merge items for 2024 dataset
 df24 <- df.geam24 |>
   select(num_range("OCWC002.SQ", c(3:6, 8:10), width=3)) |>
   map_df(~ {if_else(.x == "Not applicable", NA, .x)}) |>  
@@ -481,11 +516,11 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 
 ```{r}
 #| label: tbl-mean-culture-score
-#| tbl-cap: "Mean culture scores by gender, manager, and parent status across years"
+#| tbl-cap: "Mean workplace culture (OCWC) scores by gender, manager, and parent status across years"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: "Click to see code for mean scores table"
-
+#| code-summary: "Click to see code for mean OCWC scores table"
+# summarise mean scores for OCWC
 df.geam20.24 |>
   select(year, gender, manager, parent, culture_mean)|>
   drop_na()|>
@@ -502,64 +537,91 @@ df.geam20.24 |>
     overall_row = T
 ) |>
   add_overall(last=T)|>
-  modify_spanning_header(all_stat_cols() ~ "**Mean culture scores**")
-
+  modify_spanning_header(all_stat_cols() ~ "**Mean workplace culture scores**")
 ```
 
-As can be seen in @tbl-mean-culture-score, the overall mean of the OCWC / Culture score increased from −0.15 in 2020 to 0.09 in 2024. This suggests a general improvement towards agreement with the statements regarding workplace culture. Divided by gender, men had higher average values than women in both years, and this difference widened in 2024. A change in the average values based on parenthood can also be observed. While parents had higher average values (−0,08) than nonparents (−0.21) in 2020, the situation reversed by 2024: 0.07 vs. 0.12. Managers exhibited significantly higher average values (0.21 and 0.17) than nonmanagers (−0.23 and 0.08) in both years, which suggests that holding a leadership role might influence perceptions of workplace culture positively.
+As can be seen in @tbl-mean-culture-score, the overall mean of the OCWC / Culture score increased from −0.07 in 2020 to 0.09 in 2024. This suggests a general improvement towards agreement with the statements regarding workplace culture. Divided by gender, men had higher average values than women in both years, and this difference widened in 2024. A change in the average values based on parenthood can also be observed. While parents had higher average values (0.12) than nonparents (-0.18) in 2020, the situation reversed by 2024: 0.07 vs. 0.12. Managers exhibited significantly higher average values (0.13 and 0.17) than nonmanagers (−0.10 and 0.08) in both years, which suggests that holding a leadership role might influence perceptions of workplace culture positively.
 
 
 ```{r}
 #| label: fig-culture-mean-df
-#| fig-cap: "Mean culture scores for gender by year"
+#| fig-cap: "Barcharts of mean workplace culture scores for gender by year"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure  
-
+#| code-summary: Click to see code producing the barchart
+# barchart of mean workplace culture scores for gender by year
 df.geam20.24 |>
   select(year, gender, culture_mean) |>
   drop_na()|>
   group_by(year, gender) |>
   summarize(mean = mean(culture_mean, na.rm=T)) |>
   ggplot(aes(x=gender, y=mean, fill=year)) + 
-  geom_bar(position="dodge", stat="identity", width=.5) +
-  geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
-  scale_fill_manual(values=cpal) +
-  scale_y_continuous(limits = c(-.5, .5)) +
-  labs(x="", y="Mean culture scores", fill="Year") +
-  theme_light()
-
+    geom_bar(position="dodge", stat="identity", width=.5) +
+    geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
+    scale_fill_manual(values=cpal) +
+    scale_y_continuous(limits = c(-.5, .5)) +
+    labs(x="", y="Mean workplace culture scores", fill="Year") +
+    theme_light()
 ```
 
 ```{r}
 #| label: fig-box-culture-gender
-#| fig-cap: "Boxplots for culture scores by gender and year "
+#| fig-cap: "Boxplots for workplace culture scores by gender and year"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure 
-
+#| code-summary: Click to see code producing the boxplot
+# Boxplots for workplace culture scores by gender and year
 df.geam20.24 |>
   select(year, gender, culture_mean) |>
   drop_na() |>
   ggplot(aes(x=gender, y=culture_mean, fill=as.factor(year))) + 
-  geom_boxplot(width=0.5) + 
-  geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
-  scale_fill_manual(values=cpal) +
-  scale_y_continuous(limits = c(-2, 2)) +
-  labs(x="", y="Mean culture scores", fill="Year") +
-  theme_light()
+    geom_boxplot(width=0.5) + 
+    geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
+    scale_fill_manual(values=cpal) +
+    scale_y_continuous(limits = c(-2, 2)) +
+    labs(x="", y="Mean workplace culture scores", fill="Year") +
+    theme_light()
 
 ```
 
 
 #### Regression analysis: workplace culture
-
 ```{r}
-#| label: tbl-regression-ocwc
-#| tbl-cap: "Regression analysis of the OCWC / Culture score"
+#| label: tbl-regression-ocwc-base
+#| tbl-cap: "Regression analysis of workplace culture score - model 1 by year"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: "Click to see code for linear regression model"
+#| code-summary: "Click to see code for base linear regression model 1 with year only"
+
+owcw_base <- lm(culture_mean ~ year, data = df.geam20.24) 
+
+owcw_base |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
+
+```{r}
+#| label: tbl-regression-ocwc-main
+#| tbl-cap: "Regression analysis of workplace culture score - model 2 main effects year, gender, managerial role and parent status"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 2"
+
+owcw_main <- lm(culture_mean ~ year + gender + manager + parent, data = df.geam20.24) 
+
+owcw_main |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
+
+```{r}
+#| label: tbl-regression-ocwc-interaction
+#| tbl-cap: "Regression analysis of the workplace culture score - model 3 including interaction terms"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 3"
 
 owcw_fit <- lm(culture_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
 
@@ -572,7 +634,7 @@ owcw_fit |>
 
 ```{r}
 #| label: tbl-owco-breusch-pagan
-#| tbl-cap: "OCWC / Culture score homoscedasticity test results"
+#| tbl-cap: "Workplace culture score homoscedasticity test results"
 #| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for homoscedasticity test"
@@ -589,9 +651,7 @@ bp_results <- data.frame(
 bp_results 
 ```
 
-The regression analysis confirms that the timeframe (four years since the last survey) is significant for the perception of workplace culture. The effect of 2024 is positive: the coefficient for the year variable is 0.47, and is statistically significant (p\<0.05), which indicates that 2024 had a significant impact on the dependent variable at the institute. The influence of other factors on perceptions of workplace culture, such as gender, being a manager, or a parent, is insignificant.
-
-In conclusion, 2024 has a statistically significant positive impact on workplace culture at OPI PIB, which might suggest that policies or changes introduced in the time since the previous survey (e.g. remote work, gender equality plan) have had positive effects.
+The regression analysis in @tbl-regression-ocwc-interaction indicates that factors such as timeframe, gender, managerial status, and parenthood are not statistically significant predictors of workplace culture perceptions.
 
 
 
@@ -602,6 +662,8 @@ In conclusion, 2024 has a statistically significant positive impact on workplace
 
 ```{r}
 #| label: code-bima-scores
+#| code-fold: true
+#| code-summary: Click to see code for merging and matching of BIMA items
 
 df20 <- df.geam20 |>
   select(starts_with("BIMA001"))|>
@@ -625,11 +687,11 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 
 ```{r}
 #| label: tbl-mean-bima-score
-#| tbl-cap: "Mean Microaggression scores by gender, manager, and parent status across years"
+#| tbl-cap: "Mean microaggression (BIMA) scores by gender, manager, and parent status across years"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: "Click to see code for producing BIMA mean scores table"
-
+#| code-summary: "Click to see code for producing BIMA mean scores"
+# Mean scores for microaggressions (BIMA)
 df.geam20.24 |>
   select(year, gender, manager, parent, micagg_mean)|>
   drop_na()|>
@@ -646,64 +708,94 @@ df.geam20.24 |>
     overall_row = T
 ) |>
   add_overall(last=T)|>
-  modify_spanning_header(all_stat_cols() ~ "**Mean Microaggression**")
+  modify_spanning_header(all_stat_cols() ~ "**Mean microaggression**")
 
 ```
 
 
-The data reveals that microaggressive behaviour was reported less frequently in 2020 than in 2024. The average value decreased from 0.50 in 2020 to 0.29 in 2024. Women, nonparents, and managers experienced microaggressions more often (in both 2020 and 2024). Although the mean is rather low for both years, it is worth noting that in 2024, the proportion of those who reported that they had experienced kinds of microaggression such as the dismissal or devaluation of their contribution or being ignored by colleagues at least ‘a little or rarely’ was considerable (over 40%).
+The data reveals that microaggressive behaviour was reported less frequently in 2024 than in 2020. The average value decreased from 0.50 in 2020 to 0.37 in 2024. Women, nonparents, and managers experienced microaggressions more often (in both 2020 and 2024). Although the mean is rather low for both years, it is worth noting that in 2024, the proportion of those who reported that they had experienced kinds of microaggression such as the dismissal or devaluation of their contribution or being ignored by colleagues at least ‘a little or rarely’ was considerable (over 40%).
 
 
 ```{r}
 #| label: fig-bima-mean-df
-#| fig-cap: "Mean microaggression scores for gender by year"
+#| fig-cap: "Barcharts of mean microagression scores for gender by year"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure  
-
+#| code-summary: Click to see the code for producing the barchart 
+# Barchart of mean microaggression scores
 df.geam20.24 |>
   select(year, gender, micagg_mean) |>
   drop_na()|>
   group_by(year, gender) |>
   summarize(mean = mean(micagg_mean, na.rm=T)) |>
   ggplot(aes(x=gender, y=mean, fill=year)) + 
-  geom_bar(position="dodge", stat="identity", width=.5) +
-  geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
-  scale_fill_manual(values=cpal) +
-  scale_y_continuous(limits = c(-1, 1)) +
-  labs(x="", y="Mean microaggresion scores", fill="Year") +
-  theme_light()
+    geom_bar(position="dodge", stat="identity", width=.5) +
+    geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
+    scale_fill_manual(values=cpal) +
+    scale_y_continuous(limits = c(-1, 1)) +
+    labs(x="", y="Mean microaggresion scores", fill="Year") +
+    theme_light()
 
 ```
 
 ```{r}
 #| label: fig-box-bima-gender
-#| fig-cap: "Boxplots for microaggression scores by gender and year "
+#| fig-cap: "Boxplots for microagression scores by gender and year"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure 
-
+#| code-summary: Click to see code producing the boxplot
+# Boxplots for microagression scores by gender and year
 df.geam20.24 |>
   select(year, gender, micagg_mean) |>
   drop_na() |>
   ggplot(aes(x=gender, y=micagg_mean, fill=as.factor(year))) + 
-  geom_boxplot(width=0.5) + 
-  geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
-  scale_fill_manual(values=cpal) +
-  scale_y_continuous(limits = c(-0.2, 2.5)) +
-  labs(x="", y="Mean microaggression scores", fill="Year") +
-  theme_light()
+    geom_boxplot(width=0.5) + 
+    geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
+    scale_fill_manual(values=cpal) +
+    scale_y_continuous(limits = c(-0.2, 2.5)) +
+    labs(x="", y="Mean microaggression scores", fill="Year") +
+    theme_light()
 
 ```
 
 
 #### Regression analysis: microaggressions
+```{r}
+#| label: tbl-regression-bima-base
+#| tbl-cap: "Regression analysis of microagression score - model 1 by year"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 1"
 
+micagg_base <- lm(micagg_mean ~ year, data = df.geam20.24) 
+
+micagg_base |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
 
 ```{r}
-#| label: tbl-regression-bima
-#| tbl-cap: "Regression analysis of microaggression score"
+#| label: tbl-regression-bima-main
+#| tbl-cap: "Regression analysis of microagression score - model 2 main effects of year, gender, managerial role and parent status"
 #| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 2"
+
+micagg_main <- lm(micagg_mean ~ year + gender + manager + parent, data = df.geam20.24) 
+
+micagg_main |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
+
+```{r}
+#| label: tbl-regression-bima-interaction
+#| tbl-cap: "Regression analysis of microagression score - model 3 including interaction terms"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 3"
 
 micagg_fit <- lm(micagg_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
 
@@ -711,15 +803,16 @@ micagg_fit |>
   tbl_regression(intercept = T, 
                  pvalue_fun = label_style_pvalue(digits = 3),) |>
   modify_column_unhide(column = c(std.error, statistic)) 
-
 ```
 
-The results of the regression analysis reveal no statistically significant effects of gender, year, nor being a manager or a parent on experiencing microaggressions. No statistically significant combined effects of gender and year, year and being a manager, nor year and being a parent on reporting microaggressions can be observed; the only statistically significant term (p\<0.05) is an intercept.
+The results of the regression analysis as shown in @tbl-regression-bima-main reveal no statistically significant effects of gender, year, nor being a manager or a parent on experiencing microaggressions. No statistically significant combined effects of gender and year, year and being a manager, nor year and being a parent on reporting microaggressions can be observed  as shown in @tbl-regression-bima-interaction; the only statistically significant term (p\<0.05) is an intercept.
 
 ```{r}
 #| label: tbl-micagg-breusch-pagan
-#| tbl-cap: "Microaggression score homoscedasticity test results"
+#| tbl-cap: "Microagression score homoscedasticity test results"
 #| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for homoscedasticity test"
 
 bp_test <- car::ncvTest(micagg_fit)
 
@@ -741,13 +834,16 @@ bp_results
 
 ```{r}
 #| label: code-gender-equality-scores
-
+#| code-fold: true
+#| code-summary: "Click to see code for merging OCPER001 items"
+# merge OCPER001 items for year 2020
 df20 <- df.geam20 |>
   select(starts_with("OCPER001"))|>
   map_df(~ {as.numeric(.x)-3}) |>
   mutate(genequ_mean = rowMeans(across(everything()), na.rm=T)) |>
   select(genequ_mean)
 
+# merge OCPER001 items for year 2024
 df24 <- df.geam24 |>
   select(starts_with("OCPER001"))|>
   map_df(~ {as.numeric(.x)-3}) |>
@@ -761,14 +857,13 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 
 #### Mean analysis: gender equality
 
-
 ```{r}
 #| label: tbl-mean-gender-equality-score
-#| tbl-cap: "Mean Gender Equality (OCPER001) scores by gender, manager, and parent status across years"
+#| tbl-cap: "Mean gender equality (OCPER001) scores by gender, manager, and parent status across years"
 #| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for producing OCPER001 mean scores table"
-
+# Calculate mean scores for OCPER001 by gender, manager, and parent status across years
 df.geam20.24 |>
   select(year, gender, manager, parent, genequ_mean)|>
   drop_na()|>
@@ -788,15 +883,16 @@ df.geam20.24 |>
   modify_spanning_header(all_stat_cols() ~ "**Mean gender equality**")
 
 ```
-In 2020, the average value hovered around zero (4.1E−18), which indicates that OPI PIB employees held no strong opinions on gender equality at the institute. In 2024, the mean had risen to 0.51, which suggests a slight shift towards agreement with the statements. When divided by gender, in the 2020 survey, women disagreed slightly with the notion of gender equality at the institute (−0.20); in 2024, however, they were somewhat more inclined to view it positively (0.31). Meanwhile, male perception of gender equality, which was already positive in 2020 (0.25), improved significantly, reaching 0.79 in 2024.
+
+In 2020, the average value hovered around zero (0.09), which indicates that OPI PIB employees held no strong opinions on gender equality at the institute. In 2024, the mean had risen to 0.41, which suggests a slight shift towards agreement with the statements. When divided by gender, in the 2020 survey, women disagreed slightly with the notion of gender equality at the institute (−0.13); in 2024, however, they were somewhat more inclined to view it positively (0.24). Meanwhile, male perception of gender equality, which was already positive in 2020 (0.34), improved significantly, reaching 0.65 in 2024.
 
 
 ```{r}
 #| label: fig-ocper1-mean-df
-#| fig-cap: "Mean gender equality scores for gender by year"
+#| fig-cap: "Barchart of mean gender equality scores for gender by year"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure  
+#| code-summary: Click to see code producing the barchart 
 
 df.geam20.24 |>
   select(year, gender, genequ_mean) |>
@@ -819,7 +915,7 @@ df.geam20.24 |>
 #| fig-cap: "Boxplots for gender equality scores by gender and year "
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure 
+#| code-summary: Click to see code producing the boxplot
 
 df.geam20.24 |>
   select(year, gender, genequ_mean) |>
@@ -829,7 +925,7 @@ df.geam20.24 |>
   geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
   scale_fill_manual(values=cpal) +
   scale_y_continuous(limits = c(-2, 2)) +
-  labs(x="", y="Mean microaggression scores", fill="Year") +
+  labs(x="", y="Mean gender equality scores", fill="Year") +
   theme_light()
 
 ```
@@ -837,12 +933,40 @@ df.geam20.24 |>
 
 
 #### Regression analysis: gender equality
+```{r}
+#| label: tbl-regression-gender-equality-base
+#| tbl-cap: "Regression analysis of gender equality score - model 1 by year"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 1"
+genequ_base <- lm(genequ_mean ~ year, data = df.geam20.24) 
+
+genequ_base |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
 
 ```{r}
-#| label: tbl-regression-gender-equality
-#| tbl-cap: "Regression analysis of gender equality score"
+#| label: tbl-regression-gender-equality-main
+#| tbl-cap: "Regression analysis of gender equality score - model 2 main effects year, gender, managerial role and parent status"
 #| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 2"
+genequ_main <- lm(genequ_mean ~ year + gender + manager + parent, data = df.geam20.24) 
 
+genequ_main |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
+
+```{r}
+#| label: tbl-regression-gender-equality-interaction
+#| tbl-cap: "Regression analysis of gender equality score - model 3 including interaction terms"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 3"
 genequ_fit <- lm(genequ_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
 
 genequ_fit |>
@@ -854,9 +978,10 @@ genequ_fit |>
 
 ```{r}
 #| label: tbl-gender-equality-breusch-pagan
-#| tbl-cap: "Gender equality homoscedasticity test results"
+#| tbl-cap: "Gender equality score homoscedasticity test results"
 #| cap-location: margin
-
+#| code-fold: true
+#| code-summary: "Click to see code for homoscedasticity test"
 bp_test <- car::ncvTest(genequ_fit)
 
 bp_results <- data.frame(
@@ -871,8 +996,7 @@ bp_results
 
 The regression analysis indicates significant effects (p \< 0.05) of gender and year on the responses. Women rated the situation worse than men—although in 2024, ratings increased significantly compared to 2020. Neither holding a managerial position nor being a parent had any significant impact on the responses. No significant interaction effects between variables over the years were found, meaning that the differences between 2020 and 2024 were similar across different groups.
 
-In summary, the perception of equality at OPI PIB improved significantly in 2024 compared to 2020. However, men were considerably more likely than women to perceive OPI PIB as an organisation that promotes equality. Managerial status or parenthood had no significant impact on the perception of equality.
-
+In summary, the perception of equality at OPI PIB improved significantly in 2024 compared to 2020. However, men were considerably more likely than women to perceive OPI PIB as an organisation that promotes equality. Managerial status or parenthood are not significant for the perception of equality.
 
 
 ### Gender equality: resources or responsibilities (OCPER003)
@@ -881,15 +1005,17 @@ In summary, the perception of equality at OPI PIB improved significantly in 2024
 
 ```{r}
 #| label: code-ocper3-scores
-
+#| code-fold: true
+#| code-summary: "Click to see code for merging OCPER003 items"
+# merge selected OCPER003 items for 2020
 df20 <- df.geam20 |>
-  select(num_range("OCPER003_SQ", c(3,4,6,7,9,10,11,14,16,18,19), width=3)) |>
+  select(num_range("OCPER003_SQ", c(3,4,6,7,9,10,11,14,16,18,19), width=3)) |> # select sub-questions 3, 4, ...
   map_df(~ {if_else(.x == "Not applicable", NA, .x)}) |>  # replace "Not applicable" with NA
   map_df(~ {as.numeric(.x)-3}) |>                         # convert factor to numeric and center on 0
   mutate(ocper3_mean = rowMeans(across(everything()), na.rm=T)) |>
   select(ocper3_mean)
 
-
+# merge selected OCPER003 items for 2024
 df24 <- df.geam24 |>
   select(num_range("OCPER003.SQ", c(1,2,4:8, 10:13), width=3)) |>
   map_df(~ {if_else(.x == "No opinion", NA, .x)}) |>  
@@ -931,15 +1057,15 @@ df.geam20.24 |>
 
 ```
 
-The data indicates a small but persistent trend that the resources and responsibilities mentioned in the question are more often assigned to men than to women (with an average value close to −0.14 in both 2020 and 2024). Women reported lower average values than men (−0.36 vs. 0.08 in 2024), which suggests that they are more likely to perceive inequality to the disadvantage of women. Men perceive that resources are assigned to women slightly more often, but the difference is minimal. Between 2020 and 2024, no significant changes could be observed in the perception of gender equality in resource allocation.
+The data indicates a small but persistent trend that the resources and responsibilities mentioned in the question are more often assigned to men than to women (with an average value close to 0.15 in 2020 and 0.25 in 2024). In 2024 women reported higher average values than men (0.49), which suggests that they are more likely to perceive inequality to the disadvantage of women. Men perceive that resources are assigned to women slightly more often, but the difference is minimal. Between 2020 and 2024, no significant changes could be observed in the perception of gender equality in resource allocation.
 
 
 ```{r}
 #| label: fig-ocper3-mean-df
-#| fig-cap: "Mean resource / responsibility scores for gender by year"
+#| fig-cap: "Barchart of mean resources or responsibilities scores for gender by year"
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure  
+#| code-summary: Click to see code producing the barchart  
 
 df.geam20.24 |>
   select(year, gender, ocper3_mean) |>
@@ -947,22 +1073,22 @@ df.geam20.24 |>
   group_by(year, gender) |>
   summarize(mean = mean(ocper3_mean, na.rm=T)) |>
   ggplot(aes(x=gender, y=mean, fill=year)) + 
-  geom_bar(position="dodge", stat="identity", width=.5) +
-  geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
-  scale_fill_manual(values=cpal) +
-  scale_y_continuous(limits = c(-1, 1)) +
-  labs(x="", y="Mean gender equality scores", fill="Year") +
-  theme_light()
+    geom_bar(position="dodge", stat="identity", width=.5) +
+    geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
+    scale_fill_manual(values=cpal) +
+    scale_y_continuous(limits = c(-1, 1)) +
+    labs(x="", y="Mean resources or responsibilities scores", fill="Year") +
+    theme_light()
 
 ```
 
 
 ```{r}
 #| label: fig-box-ocper3-gender
-#| fig-cap: "Boxplots for resources / responsibilities scores by gender and year "
+#| fig-cap: "Boxplots for resources or responsibilities scores by gender and year "
 #| cap-location: margin
 #| code-fold: true
-#| code-summary: Click to see code producing the following figure 
+#| code-summary: Click to see code producing the boxplot 
 
 df.geam20.24 |>
   select(year, gender, ocper3_mean) |>
@@ -972,18 +1098,47 @@ df.geam20.24 |>
   geom_hline(yintercept = 0, color = "black", linetype = "dashed") + 
   scale_fill_manual(values=cpal) +
   scale_y_continuous(limits = c(-2, 2)) +
-  labs(x="", y="Mean gender equality scores", fill="Year") +
+  labs(x="", y="Mean resources or responsibilities scores", fill="Year") +
   theme_light()
 
 ```
 
 
 #### Regression analysis: resources or responsibilities
+```{r}
+#| label: tbl-regression-ocper003-base
+#| tbl-cap: "Regression analysis of resources or responsibilities score - model 1 by year"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 1"
+ocper3_base <- lm(ocper3_mean ~ year, data = df.geam20.24) 
+
+ocper3_base |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
 
 ```{r}
-#| label: tbl-regression-ocper003
-#| tbl-cap: "Regression analysis of ocper003 score"
+#| label: tbl-regression-ocper003-main
+#| tbl-cap: "Regression analysis of resources or responsibilities score - model 2 main effects year, gender, managerial role and parent status"
 #| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 2"
+ocper3_main <- lm(ocper3_mean ~ year + gender + manager + parent, data = df.geam20.24) 
+
+ocper3_main |>
+  tbl_regression(intercept = T, 
+                 pvalue_fun = label_style_pvalue(digits = 3),) |>
+  modify_column_unhide(column = c(std.error, statistic)) 
+```
+
+```{r}
+#| label: tbl-regression-ocper003-interaction
+#| tbl-cap: "Regression analysis of resources or responsibilities score - model 3 including interaction terms"
+#| cap-location: margin
+#| code-fold: true
+#| code-summary: "Click to see code for model 3"
 
 ocper3_fit <- lm(ocper3_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
 
@@ -995,9 +1150,10 @@ ocper3_fit |>
 
 ```{r}
 #| label: tbl-ocper003-breusch-pagan
-#| tbl-cap: "Gender equality resources / recognition homoscedasticity test results"
+#| tbl-cap: "Resources or responsibilities score homoscedasticity test results"
 #| cap-location: margin
-
+#| code-fold: true
+#| code-summary: "Click to see code for homoscedasticity test"
 bp_test <- car::ncvTest(ocper3_fit)
 
 bp_results <- data.frame(
@@ -1011,7 +1167,31 @@ bp_results
 ```
 
 
-Regression analysis confirms that gender has a significant impact on the allocation of resources and responsibilities: the coefficient for the gender variable is −0.45 and is statistically significant (p \< 0.05). Considering the time frame, the situation has not changed significantly compared to 2020 (p \> 0.05). Being a manager or a parent is also not a significant predictor (p \> 0.4), which means their influence on resource allocation is not pronounced. In conclusion, gender is a key factor: women are more likely to perceive that resources are allocated to men, and this situation has remained consistent between 2020 and 2024.
+Regression analysis confirms that gender is statistically significant factor in the allocation of resources and responsibilities: the coefficient for the gender variable is 0.47 and is statistically significant (p \< 0.05). Considering the time frame, the situation has not changed significantly compared to 2020 (p \> 0.05). Being a manager or a parent is also not a significant predictor (p \> 0.05), which means their influence on resource allocation is not pronounced. In conclusion, gender is a key factor: women are more likely to perceive that resources are allocated to men, and this situation has remained consistent between 2020 and 2024.
+
+
+## Limitations
+
+While this regression model provides valuable insights into potential changes in the factors influencing work culture (OCWC), masculinity contest culture (MCC), respondents’ experiences of microaggressions at work (BIMA), overall perceptions of equality practices at the institute (OCPER001), and the redistribution of resources and responsibilities (OCPER003), several limitations should be considered:
+
+### Cross-sectional nature of the data
+The study relies on cross-sectional data, meaning that different individuals were observed in 2020 and 2024, rather than tracking the same respondents over time. This limits the ability to observe individual changes in perceptions, experiences, and attitudes. For example, the individuals who responded in 2020 may have had different opinions or work experiences compared to those who responded in 2024. Without following the same individuals over time, it is difficult to determine if the change observed in responses reflects a real shift in workplace conditions or if it is simply due to differences in the respondents’ characteristics, such as changes in personnel or new individuals with different attitudes. As a result, temporal shifts in the dependent variables may not be fully captured, and potential unobserved heterogeneity could bias the estimates.
+
+**Potential Solution:** While obtaining longitudinal data is challenging due to strict data protection policies, alternative approaches could be used. For example, synthetic cohort methods could be employed, where groups of individuals with similar characteristics (such as gender, role, or research area) in 2020 and 2024 are compared. This approach allows for approximating longitudinal analysis by creating pseudo-panels based on shared characteristics. 
+
+### Potential omitted variable bias
+Although the model incorporates key predictors, such as gender, managerial role, and parental status, there may be other important factors influencing the dependent variables, such as academic field, department dynamics, or institutional policies. The exclusion of these factors could result in omitted variable bias, leading to inaccurate or biased estimates.
+
+**Potential Solution:** Future studies could include additional control variables related to institutional factors, such as departmental culture or academic field, to reduce omitted variable bias. While data protection concerns limit access to detailed personal or departmental information, collaborating with institutional leadership or using publicly available departmental characteristics may help mitigate this issue.
+
+### Assumption of homogeneous effects
+The model assumes that the effects of gender, managerial role, and other variables are uniform across all respondents. However, the influence of these variables may differ based on factors such as research discipline, tenure status, or other institutional roles. Differences in career trajectories, department cultures, or personal experiences could lead to heterogeneous effects, which may not be fully captured by the model.
+
+**Potential Solution:** Future research could explore these variations by conducting subgroup analyses to examine whether the effects of predictors differ by research discipline, career stage, or department. Additionally, incorporating interaction terms for specific demographic or institutional characteristics could allow for a more nuanced understanding of these variations. 
+
+Despite these limitations, the model offers an important framework for understanding changes in work culture, perceptions of equality, and experiences of microaggressions at the institute over time. Future research could address these limitations by using techniques such as synthetic cohorts, incorporating additional control variables, incorporating retrospective questions, and conducting subgroup analyses to enhance the robustness and validity of the findings. Although longitudinal data may not be feasible due to data protection constraints, these alternative approaches could provide valuable insights into the dynamics of workplace perceptions and experiences.
+
+As an additional option, qualitative data such as interviews or focus groups could be employed alongside the survey data to capture more nuanced changes in perceptions and experiences. This could provide a deeper understanding of the trends observed between 2020 and 2024 and give context to the quantitative findings.
 
 
 
@@ -1032,10 +1212,14 @@ Future studies might involve conducting more detailed analyses of changes in the
 It is also worth exploring the impact of hybrid/remote work models on organisational culture to investigate whether the shift to remote work has mitigated certain issues (such as microaggressions) temporarily, and whether a return to in-person work might reverse those effects. Understanding the long-term sustainability of the changes will be crucial in the shaping of future policies.
 
 
+**Acknowledgements**
+
+The authors are gratefull for the extremely helpful commments provided by Dalia Argudo on the possible limiations of this study. 
+
 
 ## Appendix {#sec-ch04-appendix-i}
 
-### Working Culture (OCWC)
+### Working culture (OCWC)
 
 | Feature                                                                          | 2020     | 2024     |
 |--------------------------------|--------------------|--------------------|
@@ -1056,7 +1240,7 @@ It is also worth exploring the impact of hybrid/remote work models on organisati
 : Working culture / OCWC002 sub-question items {#tbl-app-ocwc}
 
 
-### Masculinity Contest Culture (MCC)
+### Masculinity contest culture (MCC)
 
 | Feature                                                                                                  | 2020     | 2024     |
 |--------------------------------|--------------------|--------------------|
@@ -1100,7 +1284,7 @@ It is also worth exploring the impact of hybrid/remote work models on organisati
 : Microaggressions (BIMA001) sub-question items {#tbl-app-bima}
 
 
-### Gender Equality (OCPER001)
+### Gender equality (OCPER001)
 
 | **Feature**                                                                     | **2020** | **2024** |
 |------------------------------|---------------------|---------------------|
@@ -1117,12 +1301,12 @@ It is also worth exploring the impact of hybrid/remote work models on organisati
 : Gender equality (OCPER001) sub-question items {#tbl-app-ocper001}
 
 
-### Gender Resources & Responsibilities (OCPER003)
+### Gender equality: resources or responsibilities (OCPER003)
 
 | **Feature**                                                                                                                          | **2020** | **2024** |
 |------------------------------|---------------------|---------------------|
 | **Coding**                                                                                                                           |          |          |
-| -2: mainly allocated to men; -1: often allocated to men; 0: no difference; 1: often allocated to women; 2: mainly allocated to women | ✓        | ✓        |
+| -2: mainly allocated to women; -1: often allocated to women; 0: no difference; 1: often allocated to men; 2: mainly allocated to men | ✓        | ✓        |
 | **Items**                                                                                                                            |          |          |
 | The receipt of mentoring and/or guidance in making career decisions                                                                  | ✓        | ✓        |
 | Representation in senior positions                                                                                                   | ✓        | ✓        |
