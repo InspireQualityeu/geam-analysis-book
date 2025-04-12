@@ -110,3 +110,74 @@ table_df <- function(tblx, digits=2, fsize=11){
   
 }
 
+#' Crosstab function to generate a contingency table with a statistical test
+#'
+#' This function creates a contingency table from two categorical variables, displaying
+#' absolute frequencies and row percentages. The table includes statistical tests such as Chi-squared, Cramér’s V, and Fisher’s exact test.
+#'
+#' @param data A data frame containing the variables.
+#' @param var1 The first categorical variable (to appear in rows).
+#' @param var2 The second categorical variable (to appear in columns).
+#' @param var1_label A character string specifying the label for var1.
+#' @param var2_label A character string specifying the label for var2 (will appear as a column header).
+#' @return A formatted contingency table as a `gt` object.
+
+crosstab_report <- function(data, var1, var2, var1_label = var1, var2_label = var2) {
+  
+  # Create contingency table (absolute frequencies)
+  contingency_table <- table(data[[var1]], data[[var2]])
+  
+  # Ensure the table has at least two rows and two columns
+  if (nrow(contingency_table) < 2 | ncol(contingency_table) < 2) {
+    stop("Insufficient data to generate a contingency table.")
+  }
+  
+  # Perform statistical tests
+  chi_test <- chisq.test(contingency_table)
+  cramers_v <- cramerV(contingency_table)
+  fisher_test <- fisher.test(contingency_table)
+  
+  # Convert absolute frequencies to row percentages
+  table_data <- prop.table(contingency_table, margin = 1) * 100  
+  table_formatted <- as.data.frame.matrix(contingency_table)  
+  
+  # Add a "Total" column summing across each row
+  table_formatted$Total <- rowSums(contingency_table)
+  
+  # Format cells as "N (X%)"
+  for (col in colnames(table_formatted)) {
+    if (col != "Total") {
+      table_formatted[[col]] <- paste0(contingency_table[, col], " (", round(table_data[, col], 1), "%)")
+    }
+  }
+  
+  # Add a total row summing across columns
+  total_row <- colSums(contingency_table)
+  total_row <- c(total_row, sum(total_row))  # Add grand total
+  table_formatted <- rbind(table_formatted, total_row)
+  rownames(table_formatted)[nrow(table_formatted)] <- "Total"  # Ensure no asterisks in row names
+  
+  # Convert to gt table and add a column header for var2
+  table_gt <- table_formatted |> 
+    tibble::rownames_to_column(var1_label) |> 
+    gt() |> 
+    tab_spanner(label = var2_label, columns = colnames(contingency_table)) |>  # Group columns under var2_label
+    cols_label(.list = setNames(colnames(table_formatted), colnames(table_formatted))) |> 
+    fmt_markdown(columns = everything()) |> 
+    tab_source_note(
+      source_note = paste0(
+        "Chi-squared = ", round(chi_test$statistic, 3), 
+        " | p-value = ", signif(chi_test$p.value, 3), 
+        " | df = ", chi_test$parameter,
+        " | Cramér's V = ", round(cramers_v, 3),
+        " | Fisher’s p = ", signif(fisher_test$p.value, 3)
+      )
+    )
+  
+  return(table_gt)
+}
+
+
+
+
+

@@ -10,6 +10,7 @@ book:
     - index.qmd
     - 01-introduction.qmd
     - 02-summary-respondents.qmd
+    - 03-detecting-gaps.qmd
     - 04-compare-in-time.qmd
     - 06-intersectional-analysis.qmd
     - 07-geam-data-for-geps.qmd
