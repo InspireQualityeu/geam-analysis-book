@@ -77,7 +77,7 @@ df.geam <- df.geam01 |>
 
 
 
-### Gender
+### Gender {#sec-summary-ch02-gender}
 
 The GEAM includes a standard question about gender identity of the respondent which allows for four answer options. Compared to other recommended approaches to ask about gender especially in the context of health research [@stadlerDiversifiedInnovationsHealth2023], this is a relatively simple yet effective approach to capture the most important differences in an organisational context.
 

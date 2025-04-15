@@ -9,12 +9,18 @@ book:
   chapters:
     - index.qmd
     - 01-introduction.qmd
-    - 02-summary-respondents.qmd
-    - 03-detecting-gaps.qmd
-    - 04-compare-in-time.qmd
-    - 06-intersectional-analysis.qmd
-    - 07-geam-data-for-geps.qmd
+    - part: "Statistical techniques" 
+      chapters: 
+      - 02-summary-respondents.qmd
+      - 03-detecting-gaps.qmd
+      - 04-compare-in-time.qmd
+      - 06-intersectional-analysis.qmd
+    - part: "Thematic Analysis"
+      chapters: 
+      - 07-geam-data-for-geps.qmd
+  appendices:  
     - 10-annex-i-desc-variables.qmd
+    
   author:
   - name: Jörg Müller
     orcid: 0000-0001-7727-2117
