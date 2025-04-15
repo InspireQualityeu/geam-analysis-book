@@ -15,7 +15,7 @@ keywords:
   - Descriptive statistics
 ---
 
-# Annex - I - Overview of GEAM variables
+# Overview of GEAM Employee variables
 
 ```{r}
 #| label: setup 
@@ -29,7 +29,7 @@ library(sjmisc)
 library(gpg)         # use encryption
 
 library(knitr)
-library(kableExtra)
+
 
 source("util/common.R")
 source("util/encrypt.R")
@@ -44,7 +44,7 @@ df.geam <-read_gpg("data/df.349312.en.rdata.gpg")
 
 ## Socio-demographic variables
 
-### Gender
+### Gender {#annex-i-sdem004-gender}
 
 ```{r}
 #| label: tbl-annex-i-sdem004-gender
@@ -76,7 +76,6 @@ df.geam |>
 ```{r}
 #| label: code-annex-i-sdem01718-comp
 #| code-fold: true
-
 
 # create new SES variable based upon the higher value of SDEM017 vs. SDEM018
 df.geam <- df.geam |>

@@ -2,12 +2,12 @@
 author:
   - name: Dalia Argudo
 execute:
+    
     echo: true
     warning: false
     message: false
 abstract: >
     This chapter provides a comprehensive overview of gender gap identification using GEAM questionnaire data, employing bivariate analysis techniques such as Chi-squared tests, Student’s t-tests, and analysis of variance (ANOVA). Key aspects including working conditions, work-life balance, and organisational culture are explored, offering practical tools for analysing and understanding gender inequalities in various contexts.
-
 keywords:
    - Gender gaps
    - Bivariate analysis
@@ -17,33 +17,25 @@ keywords:
    - ANOVA
    - Contingency table
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Detecting gender gaps
 
 ```{r}
 #| echo: false
+#| label: setup-ch03
 
 library(tidyverse)
 library(gpg)
-library(sjmisc)
 library(knitr)
-library(kableExtra)
-library(sjPlot)
 library(sjstats)
 library(ggpubr)
-library(rstatix)
-library(ggplot2)
 library(scales)
+library(car)
 library(RColorBrewer)
-
-
-library(dplyr)
-library(forcats)
 library(gtsummary)
-library(rcompanion)  # To calculate Cramer’s V
-library(gt)
+
 
 source("util/common.R")
 source("util/encrypt.R")
@@ -65,17 +57,18 @@ In this chapter, we take the analysis further by assessing whether the observed 
 
 We begin by applying **bivariate analysis** techniques before progressing to more complex **multivariate analysis techniques** in later chapters. The choice between these approaches depends on the complexity of the analysis required, the type of data available, and the specific research questions. Each method has its advantages and limitations.
 
-In the following sections, we analyse gender gaps across the main GEAM modules, selecting the appropriate statistical technique based on the nature of the variables involved.
-
+In the following sections, we analyse gender gaps across a selection of GEAM variables to demonstrate the different statistical techniques to be applied according to the type of variables used (categorical, quantitative). For a more thematic oriented analysis of working conditions, working climate or bullying and harassment, see part II Of this handbook. 
 
 ::: callout-note
 Three real databases from three organisations are used. These databases are identified as `df.geam01`, `df.geam02`, and `df.geam03`. The main difference between the databases is the adaptation of some variables (questions) to the respective organisational context, without significantly modifying the statistical analysis of this chapter.
 :::
 
-# Working conditions
+## Detecting differences between categorical variables
 
-## Job position
+The GEAM questionnaire contains many questions that yield categorical variables such as gender, job positions, type of contract among others. A categorical variable is a variable that represents categories or groups, rather than numerical values. For example `SDEM004` (Gender) is a categorical variable where answers fall into 4 possible groups (see also @sec-summary-ch02-gender): `A man`, `A women`, `Non-binary` or `Prefer to self-identify as...`. 
 
+Crossing all answer options by two categorical variables produces a contingency table. 
+### Gender differences by job position
 To identify potential gender gaps, we will begin by assessing whether gender influences the distribution of roles within the organisation. To do so, we will focus on determining whether there is a statistically significant relationship between gender and job positions.
 
 To explore this relationship, it is essential to first conduct a visual analysis that allows for a clear comparison of the distribution of gender across different job roles.
@@ -91,7 +84,6 @@ df.geam01 <- df.geam01 |>
     SDEM004 == "Other" ~ NA,
     .default = SDEM004
   ))
-
 ```
 
 A 100% stacked bar chart is a suitable tool for this purpose, as it facilitates the visualisation of gender proportions within each type of position. By stacking the bars to 100%, we can directly observe the relative representation of men and women within each job category, irrespective of the total number of employees. 
@@ -99,17 +91,13 @@ A 100% stacked bar chart is a suitable tool for this purpose, as it facilitates 
 This type of chart helps identify potential gender gaps in the distribution of roles, highlighting whether one gender is overrepresented or underrepresented in specific areas of the organisation, which is crucial for understanding workplace equity and diversity dynamics.
 
 ```{r}
-#| echo: true
 #| label: fig-WCJC001-gender
 #| fig.cap: "Stacked bar chart of WCJC001 and SDEM004.bin – Job position and gender"
 #| fig-alt: "Stacked bar chart of WCJC001 and SDEM004.bin – Job position and gender"
 #| cap-location: margin  
-   
-
 cpal <- RColorBrewer::brewer.pal(5, "Set1")
 
 #  Calculate gender proportions
-
 df.prop.01 <- df.geam01 |> 
   filter(!is.na(WCJC001) & !is.na(SDEM004.bin)) |> 
   group_by(SDEM004.bin, WCJC001) |> 
@@ -121,7 +109,6 @@ df.prop.01 <- df.geam01 |>
   )
 
 # Stacked bar chart
-
 ggplot(df.prop.01, aes(x = SDEM004.bin, y = prop, fill = WCJC001)) +
   geom_col(width = 0.8, position = "stack") +
   geom_text(aes(label = label), 
@@ -143,27 +130,26 @@ The stacked bar chart shows the relative distribution of jobs by gender, highlig
 In addition to the bar chart, a contingency table will also be used to display the observed frequencies and identify patterns between the variables.
 
 ```{r}
-#| echo: true
 #| label: tbl-cross-WCJC001-SDEM004.bin
 #| fig.cap: "Cross tab of job position and gender. Cells indicate absolute numbers"
 #| cap-location: margin
 
-library(GGally)
-
 df.geam01 |>
   filter(!is.na(WCJC001) & !is.na(SDEM004.bin)) |>
-  ggally_crosstable(mapping = aes(x = WCJC001 , y =SDEM004.bin ), cells = c("observed")) +
-  labs(x="", y="")
-
+  tbl_cross(
+    row = SDEM004.bin,
+    col = WCJC001
+  ) |>
+  bold_labels()
 ```
 
-Like the graph, the crosstabulation shows the observed frequencies at the intersection of the variables of interest. This table helps us visualize categories or levels with very small or zero values. for the variables of interest.
+Like the graph, the @tbl-cross-WCJC001-SDEM004.bin crosstab shows the observed frequencies at the intersection of the variables of interest. This table helps us visualize categories or levels with very small or zero values. for the variables of interest.
 
 ::: callout-note
 One cell has a value of `0`, corresponding to the intersection of the `Other` and `A man` categories. Besides filtering out missing values `(NAs)`, it is crucial to exclude categories with no observations before testing for independence between qualitative variables.
 :::
 
-Next, we create a subsample by removing missing values `(NAs)` from `SDEM004.bin` and `WCJC001` and excluding the `Other` category from WCJC001.
+Next, we create a subsample by dropping empty levels for each factor variable `(NAs)` from `SDEM004.bin` and `WCJC001` and excluding the `Other` category from WCJC001.
 
 ::: callout-warning
 Excluding empty categories is essential, as the `Chi-square test` requires at least 5 observations per cell for valid results.
@@ -171,38 +157,46 @@ Excluding empty categories is essential, as the `Chi-square test` requires at le
 
 
 ```{r}
-#| echo: true 
 #| label: sample-job-position-gender
 
 df.sub.01 <- df.geam01 |>
   filter(!is.na(WCJC001) & WCJC001 != "Other" & !is.na(SDEM004.bin)) |>
   transmute(
-    WCJC001 = fct_drop(WCJC001), 
-    SDEM004.bin = fct_drop(SDEM004.bin)
+    Jobpos = fct_drop(WCJC001), 
+    Gender = fct_drop(SDEM004.bin)
   )
 ```
 
 Since both gender and job position are categorical variables, we will apply association tests to determine (Chi-squared, Cramér's V, Fisher) whether the observed differences are statistically significant, indicating a relationship between the variables, or whether they are independent.
 
 ```{r}
-#| echo: true
 #| label: tlb-test-assoc-job-position-gender
 #| tbl-cap: "Statistical test results - Association between job position and gender"
 #| cap-location: margin
 
+# custom function to calculate different test statistics
+statsnote <- crosstab_stats(df.sub.01, "Gender", "Jobpos")
 
-crosstab_report(df.sub.01, "SDEM004.bin", "WCJC001", 
-                var1_label = "Gender", var2_label = "Job Position")
-
+# create the contingency table
+df.sub.01 |>
+  tbl_cross(
+    row = Gender,
+    col = Jobpos,
+    percent = c("row"),
+  ) |> 
+  bold_labels() |>
+  modify_footnote_header(
+    footnote = statsnote[[1]],
+    columns = last_col(), 
+    replace=F
+  )
 ```
 
 The table displays the absolute frequencies, the corresponding row percentages for each category, and several statistical test.
 
 The result of the chi-square test was statistically significant (p < 0.05), the relationship between job position and gender is statistically significant at the 5% level, suggesting that the distribution of job positions is not independent of gender. 
-
 Additionally, to the chi-square test, we observe the `Cramer's V` that measures the strength of the association between the both variables, and the `Fisher's exact test`. 
-
-The Cramér’s V value (0.176) suggests a weak, though statistically significant, association between gender and job position. It suggests there are other factors may also contribute to job position distribution. Further analysis could explore additional variables, such as education level, work experience, or sectoral differences, to gain a more comprehensive understanding of gender disparities in job roles.
+The Cramér’s V value (0.176) suggests a weak, though statistically significant, association between gender and job position. It suggests that other factors may also contribute to job position distribution. Further analysis could explore additional variables, such as education level, work experience, or sectoral differences, to gain a more comprehensive understanding of gender disparities in job roles.
 
 
 ::: column-margin
@@ -211,21 +205,25 @@ Fisher's exact test is used instead of the chi-square test when sample sizes are
 
 ::: callout-note
 Cramér's V values range from 0 to 1: 
- 0 → No association,
- 0.1-0.3 → Weak association,
- 0.3-0.5 → Moderate association,
- >0.5 → Strong association.
+
+| 0       → No association
+| 0.1-0.3 → Weak association
+| 0.3-0.5 → Moderate association
+|   > 0.5 → Strong association.
+
 :::
 
-## Type of contract
+### Gender differences by type of contract
+A second example for detecting significant differences between categotrical variables uses type of contract (`WCJC011`) and gender (`SDEM004`). 
 
 Understanding the distribution of contract types across different genders is essential for identifying potential gender disparities in employment stability. Fixed-term contracts often offer less job security and fewer benefits compared to permanent contracts, which may have implications for career progression and income stability
 
-Now, we will explore whether gender influences the likelihood of holding a fixed-term or permanent contract within the organisation. We will assess whether there is a statistically significant relationship between gender and contract type.
+Let's explore whether gender influences the likelihood of holding a fixed-term or permanent contract within the organisation. We will assess whether there is a statistically significant relationship between gender and contract type.
 
 ```{r}
-#| echo: false
 #| label: binary-sdem004-gender-geam02
+#| code-fold: TRUE
+#| code-summary: Click to see code for making gender binary
 
 df.geam02 <- df.geam02 |>
   mutate(SDEM004.bin = case_when(
@@ -234,20 +232,19 @@ df.geam02 <- df.geam02 |>
     SDEM004 == "Other" ~ NA,
     .default = SDEM004
   ))
-
 ```
 
 ```{r}
-#| echo: false
 #| label: fig-WCJC011-gender
 #| fig.cap: "Stacked bar chart of WCJC011 and SDEM004.bin - Type of contract and gender"
 #| fig-alt: "Stacked bar chart of WCJC011 and SDEM004.bin - Type of contract and gender"
-#| cap-location: margin  
+#| cap-location: margin 
+#| code-fold: TRUE
+#| code-summary: Click to see code for generating stacked barchart 
 
 cpal <- RColorBrewer::brewer.pal(5, "Set1")
 
 #  Calculate gender proportions
-
 df.prop.02 <- df.geam02 |> 
   filter(!is.na(WCJC011) & !is.na(SDEM004.bin)) |> 
   group_by(SDEM004.bin, WCJC011) |> 
@@ -259,7 +256,6 @@ df.prop.02 <- df.geam02 |>
   )
 
 # Stacked bar chart
-
 ggplot(df.prop.02, aes(x = SDEM004.bin, y = prop, fill = WCJC011)) +
   geom_col(width = 0.8, position = "stack") +
   geom_text(aes(label = label), 
@@ -269,287 +265,66 @@ ggplot(df.prop.02, aes(x = SDEM004.bin, y = prop, fill = WCJC011)) +
   scale_y_continuous(labels = percent_format()) +
   labs(x = "", y = "Proportion", fill = "Type of contract") +
   theme_light()
-
-
 ```
 
 The bar chart displays the distribution of contract types by gender, showing the proportion of individuals with fixed-term and permanent contracts. Among men, 41% hold fixed-term contracts and 59% have permanent contracts. Among women, 33% are employed on a fixed-term basis, while 67% hold permanent contracts. Although the difference is moderate, the visual comparison suggests a higher proportion of fixed-term contracts among men relative to women. These figures indicate a potential association between gender and type of employment contract, which warrants further statistical analysis to determine whether the observed variation is statistically significant.
 
 
-Again, we will first clean the database and apply association tests for qualitative variables.
+Again, we will first clean the database and apply association tests for categorical variables.
 
 ```{r}
-#| echo: true 
 #| label: sample-type-of-contract-gender
+#| code-fold: TRUE
+#| code-summary: Click to see pre-processing code to drop unused levels
 
-df.sub2 <- df.geam02 |>
+df.sub.02 <- df.geam02 |>
   filter(!is.na(WCJC011) & !is.na(SDEM004.bin)) |>
   transmute(
-    WCJC011 = fct_drop(WCJC011), 
-    SDEM004.bin = fct_drop(SDEM004.bin)
+    TypeContract = fct_drop(WCJC011), 
+    Gender = fct_drop(SDEM004.bin)
   )
 ```
 
 
 ```{r}
-#| echo: true
 #| label: tlb-test-assoc-contract-type-gender
 #| tbl-cap: "Statistical test results - Association between type of contract and gender"
 #| cap-location: margin
+#| code-fold: TRUE
+#| code-summary: Click to see code to generate contingency table
 
-crosstab_report(df.sub2, "SDEM004.bin", "WCJC011", 
-                var1_label = "Gender", var2_label = "Type of contract")
+# custom function to calculate different test statistics
+statsnote <- crosstab_stats(df.sub.02, "Gender", "TypeContract")
 
+# create the contingency table
+df.sub.02 |>
+  tbl_cross(
+    row = Gender,
+    col = TypeContract,
+    percent = c("row"),
+  ) |> 
+  bold_labels() |>
+  modify_footnote_header(
+    footnote = statsnote[[1]],
+    columns = last_col(), 
+    replace=F
+  )
 ```
 
 A Chi-squared test was conducted to examine whether a significant association exists between gender and contract type. The results indicate no statistically significant relationship between these variables, χ²= 0.181, p = 0.67. Furthermore, the Cramér's V value (0.072) suggests no association, and Fisher’s exact test (p = 0.629) confirms the lack of statistical significance.
 
 These findings imply that contract type does not significantly differ by gender within this sample.
 
-## Parental leave
-
-Parental leave policies play a crucial role in promoting work-life balance and gender equality in the workplace. However, access to and uptake of parental leave can vary by gender, potentially reflecting societal norms, workplace expectations, or policy limitations.
-
-The question `WCWI011a` asks about who has taken parental leave.
-
-+-----------+-------------------------------------------------------+----------------------------------------------+
-| Code      | Question                                              | Responses                                    |
-+===========+=======================================================+==============================================+
-| WCWI011a  | Considering the last 5 years, have you taken or are   |                                              |
-|           |  you currently taking any form or parental leave?     | \[1\] No\                                    |
-|           |                                                       | \[2\] Yes\                                   |
-|           |                                                       | \[3\] Prefer not to say                      | 
-+-----------+-------------------------------------------------------+----------------------------------------------+
-
-```{r}
-#| echo: false
-#| label: binary-sdem004-gender-geam03
-
-df.geam03 <- df.geam03 |>
-  mutate(SDEM004.bin = case_when(
-    SDEM004 == "Prefer not to say" ~ NA,
-    SDEM004 == "Non-binary" ~ NA, 
-    SDEM004 == "Other" ~ NA,
-    .default = SDEM004
-  ))
-
-```
-
-We will follow the process (graphic and test) to evaluate whether gender influences whether or not a person takes parental leave.
-
-```{r}
-#| echo: false
-#| label: fig-WCWI011a-gender
-#| fig.cap: "Stacked bar chart of WCWI011a and SDEM004.bin – Parental leave and gender"
-#| fig-alt: "Stacked bar chart of WCWI011a and SDEM004.bin – Parental leave and gender"
-#| cap-location: margin  
-   
-cpal <- RColorBrewer::brewer.pal(5, "Set1")
-
-#  Calculate gender proportions
-
-df.prop.03 <- df.geam03 |> 
-  filter(!is.na(WCWI011a) & !is.na(SDEM004.bin)) |> 
-  group_by(SDEM004.bin, WCWI011a) |> 
-  summarise(n = n(), .groups = "drop") |> 
-  group_by(SDEM004.bin) |> 
-  mutate(
-    prop = n / sum(n),
-    label = ifelse(prop > 0.01, paste0(n, " (", percent(prop, accuracy = 1), ")"), "")
-  )
-
-# Stacked bar chart
-
-ggplot(df.prop.03, aes(x = SDEM004.bin, y = prop, fill = WCWI011a)) +
-  geom_col(width = 0.8, position = "stack") +
-  geom_text(aes(label = label), 
-            position = position_stack(vjust = 0.5), 
-            color = "white", size = 3.5, lineheight = 0.9) +
-  scale_fill_manual(values = cpal) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(x = "", y = "Proportion", fill = "Parental leave") +
-  theme_light()
 
 
-```
+## Detecting differences between continuous variables
 
-The chart presents the distribution of parental leave uptake by gender, categorised into three response options: ‘Yes’, ‘No’, and ‘Prefer not to say’. Among men, 88% reported not having taken parental leave, 10% reported having taken it, and 2% preferred not to answer. Among women, 86% responded ‘No’, 12% responded ‘Yes’, and 1% selected ‘Prefer not to say’. The distribution indicates a slightly higher reported uptake of parental leave among women compared to men. While the overall proportions are similar, the small increase in reported uptake among women may reflect differences in access, eligibility, or social norms surrounding parental responsibilities. Further statistical analysis would be required to determine whether the observed differences are statistically significant.
-
-```{r}
-#| echo: false 
-#| label: sample-parental-leave-gender
-
-df.sub3 <- df.geam03 |>
-  filter(!is.na(WCWI011a) & WCWI011a != "Prefer not to say" & !is.na(SDEM004.bin)) |>
-  transmute(
-    WCWI011a = fct_drop(WCWI011a), 
-    SDEM004.bin = fct_drop(SDEM004.bin)
-  )
-
-```
-
-```{r}
-#| echo: true
-#| label: tlb-test-assoc-parental-leave-gender
-#| tbl-cap: "Statistical test results - Association between parental leave and gender"
-#| cap-location: margin
-
-crosstab_report(df.sub3, "SDEM004.bin", "WCWI011a", 
-                var1_label = "Gender", var2_label = "Parental leave")
-
-```
-
-The test result was not statistically significant (χ² = 0.344, p = 0.557 and Fisher’s p = 0.579), indicating that any observed differences could be due to chance rather than a meaningful pattern. Furthermore, the Cramér’s V value (0.029) suggests no association, reinforcing the conclusion that the relationship between gender and parental leave uptake is minimal. 
-
-Overall, these findings suggest that, within this sample, gender does not appear to influence parental leave uptake in a statistically meaningful way. 
-
-## Care responsibilities
-
-Another aspect where possible gender gaps can be explored is caregiving responsibilities. The GEAM examines this issue in relation to caregiving for a dependent adult (`WCWI006`) or children (`WCWI008`).
-
-+---------------+------------------------------------------------------------------------+-------------------------+
-| Code          | Question                                                               | Responses               |
-+===============+========================================================================+=========================+
-| WCWI006       | Are you the primary carer or assistant for an adult requiring care?    | \[1\] No\               |
-|               |                                                                        | \[2\] Yes\              |
-|               |                                                                        | \[3\] Prefer not to say |
-+---------------+------------------------------------------------------------------------+-------------------------+
-
-+---------------+--------------------------------------------------------------------------------+-------------------------+
-| Code          | Question                                                                       | Responses               |
-+===============+================================================================================+=========================+
-| WCWI008       | Are you the parent or legal guardian of any children aged 17 years or younger? | \[1\] No\               |
-|               |                                                                                | \[2\] Yes\              |
-|               |                                                                                | \[3\] Prefer not to say |
-+---------------+----------------------------------------------------------------------------------------------------------+
-
-Once again, we will begin by visually examining the gender distribution of these variables, as this serves as the initial step in identifying potential gaps. We will then proceed to confirm and statistically test our hypothesis.
+In addition to categotrical variables, the GEAM questionnaire contains a series of continuous variables, such as age (`SDEM001`) or salary (`WCJC005`). In addition, certain questions use several sub-items which are rated by respondents on a scale of agreement or frequency. Reponses are then averaged across these items which produces a numeric score. Detecting significant differences between two (or more groups) of respondents (e.g. by gender, job position) and a numeric response variable requires different statistical techniques (student t, ANOVA), introduced in what follows. 
 
 
-```{r}
-#| echo: false
-#| label:  fig-care-resp-WCWI006-gender-geam03
-#| fig.cap: "Stacked bar chart of WCWI006 and SDEM004.bin – Primary Caregiving for Dependent Adults by Gender"
-#| fig-alt: "Stacked bar chart of WCWI006 and SDEM004.bin – Primary Caregiving for Dependent Adults by Gender"
-#| cap-location: margin
-
-cpal <- RColorBrewer::brewer.pal(7, "Set1")
-
-#  Calculate gender proportions
-
-df.prop.03 <- df.geam03 |> 
-  filter(!is.na(WCWI006) & !is.na(SDEM004.bin)) |> 
-  group_by(SDEM004.bin, WCWI006) |> 
-  summarise(n = n(), .groups = "drop") |> 
-  group_by(SDEM004.bin) |> 
-  mutate(
-    prop = n / sum(n),
-    label = ifelse(prop > 0.01, paste0(n, " (", percent(prop, accuracy = 1), ")"), "")
-  )
-
-# Stacked bar chart
-
-ggplot(df.prop.03, aes(x = SDEM004.bin, y = prop, fill = WCWI006)) +
-  geom_col(width = 0.8, position = "stack") +
-  geom_text(aes(label = label), 
-            position = position_stack(vjust = 0.5), 
-            color = "white", size = 3.5, lineheight = 0.9) +
-  scale_fill_manual(values = cpal) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(x = "", y = "Proportion", fill = "Primary Caregiving for Dependent Adults") +
-  theme_light()
-
-
-
-```
-
-The chart depicts the distribution of responses regarding whether individuals serve as the primary caregiver for dependent adults, disaggregated by gender. Among men, 10% reported having this responsibility, 85% indicated they do not, and 6% preferred not to answer. In comparison, 20% of women reported being primary caregivers, 76% stated they are not, and 4% selected ‘Prefer not to say’. The data reveal a higher proportion of women reporting caregiving responsibilities for dependent adults relative to men. While the majority in both groups reported not assuming such responsibilities, the gender gap in affirmative responses suggests differences in caregiving roles that may warrant further investigation. Statistical analysis would be required to determine whether the observed difference is statistically significant.
-
-
-```{r}
-#| echo: false
-#| label:  fig-care-resp-WCWI008-gender-geam03
-#| fig.cap: "Stacked bar chart of WCWI008 and SDEM004.bin – - Parental/Legal guardianship of children by gender"
-#| fig-alt: "Stacked bar chart of WCWI008 and SDEM004.bin – - Parental/Legal guardianship of children by gender"
-#| cap-location: margin
-
-cpal <- RColorBrewer::brewer.pal(7, "Set1")
-
-#  Calculate gender proportions
-
-df.prop.03 <- df.geam03 |> 
-  filter(!is.na(WCWI008) & !is.na(SDEM004.bin)) |> 
-  group_by(SDEM004.bin, WCWI008) |> 
-  summarise(n = n(), .groups = "drop") |> 
-  group_by(SDEM004.bin) |> 
-  mutate(
-    prop = n / sum(n),
-    label = ifelse(prop > 0.01, paste0(n, " (", percent(prop, accuracy = 1), ")"), "")
-  )
-
-# Stacked bar chart
-
-ggplot(df.prop.03, aes(x = SDEM004.bin, y = prop, fill = WCWI008)) +
-  geom_col(width = 0.8, position = "stack") +
-  geom_text(aes(label = label), 
-            position = position_stack(vjust = 0.5), 
-            color = "white", size = 3.5, lineheight = 0.9) +
-  scale_fill_manual(values = cpal) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(x = "", y = "Proportion", fill = "Parental/Legal guardianship of children") +
-  theme_light()
-
-
-```
-
-The chart shows the distribution of responses concerning parental or legal guardianship of children, broken down by gender. Among men, 31% reported having parental or legal guardianship responsibilities, 68% indicated they do not, and 1% preferred not to respond. Similarly, among women, 32% answered ‘Yes’, 67% answered ‘No’, and 1% selected ‘Prefer not to say’. The results reveal a nearly identical pattern across genders, with only a marginal difference in reported guardianship responsibilities. These findings suggest that, within the sample, the distribution of parental or legal guardianship roles is broadly balanced between men and women. Nonetheless, further statistical testing would be necessary to confirm whether this apparent similarity is statistically non-significant.
-
-
-In order to simplify the analysis, we will combine the two variables related to care responsibilities in a single variable.
-
-```{r}
-#| echo: true
-#| label: care-resp-WCWI006-WCWI008-geam03
-
-# Variable of care responsibilities
-df.geam03 <- df.geam03 |> 
-  mutate(CareResp = (WCWI006 == "Yes" | WCWI008 == "Yes"))
-```
-
-Now, we apply the association tests
-
-```{r}
-#| echo: false 
-#| label: sample-care-resp-gender
-
-df.sub3 <- df.geam03 |>
-  filter(!is.na(CareResp) & CareResp != "Prefer not to say" & !is.na(SDEM004.bin)) |>
-  transmute(
-    CareResp = fct_drop(as.factor(CareResp)), 
-    SDEM004.bin = fct_drop(SDEM004.bin)
-  )
-
-```
-
-```{r}
-#| echo: true
-#| label: tlb-test-assoc-care-resp-gender
-#| tbl-cap: "Statistical test results - Association between parental leave and gender"
-#| cap-location: margin
-
-crosstab_report(df.sub3, "SDEM004.bin", "CareResp", 
-                var1_label = "Gender", var2_label = "Care Responsibilities")
-
-```
-
-The table displays the distribution of care responsibilities by gender. Among men, 36.6% reported having care responsibilities, compared to 46.7% of women. The chi-squared test of independence indicated that this difference is statistically significant (χ² = 4.85, df = 1, p = 0.0276), suggesting an association between gender and caregiving roles. The strength of the association, as measured by Cramér’s V, was 0.092, indicating a weak effect size. 
-
-These results suggest that women in the dataset are significantly more likely to report having care responsibilities compared to men. While the association is weak, the findings point towards a gendered distribution of care responsibilities, which may warrant further investigation into underlying factors influencing this disparity.
-
-## Flexible work
+### Student t - flexible work
 
 Flexible working arrangements are key to fostering an inclusive and supportive work environment, enabling employees to balance professional and personal responsibilities. 
-
 We will analyse responses to question `WCWI005`, which assesses employees' awareness and use of various flexible working arrangements, including:
 
 - The ability to request time off at short notice (WCWI005.SQ001)
@@ -560,7 +335,6 @@ We will analyse responses to question `WCWI005`, which assesses employees' aware
 Responses follow the response scale below.
 
 ```{r}
-#| echo: true
 #| label: categories-WCWI005.SQ001.
 
 levels(df.geam01$WCWI005.SQ001.)
@@ -573,12 +347,13 @@ Higher numerical values indicate greater availability and awareness of these fle
 To perform the analysis, we will treat these variables as interval variables, which allows us to calculate the mean of these four items for each respondent or observation.
 
 ```{r}
-#| echo: true
 #| label: flexible-work-mean-WCWI005-geam01
 
 df.geam01 <- df.geam01 |>  
-  mutate(across(starts_with("WCWI005.SQ"), as.numeric),  # Convert selected columns to numeric
-         FlexMean = rowMeans(across(starts_with("WCWI005.SQ")), na.rm = TRUE))  # Compute mean directly
+  mutate(across(starts_with("WCWI005.SQ"), as.numeric), 
+         FlexMean = rowMeans(across(starts_with("WCWI005.SQ")), na.rm = TRUE))  
+
+
 ```
 
 The following table presents descriptive statistics for the mean flexibility score, disaggregated by gender. 
@@ -630,12 +405,13 @@ Each box represents the interquartile range (IQR), with the black horizontal lin
 
 cpal <- RColorBrewer::brewer.pal(3, "Set1")  
 
-ggplot(df.sub.01, aes(x = SDEM004.bin, y = FlexMean, fill = SDEM004.bin)) + 
-  geom_boxplot(width = 0.5) + 
-  scale_fill_manual(values = cpal) +
-  scale_y_continuous(limits = c(1, 4), breaks = 1:4) +
-  labs(x = "", y = "Mean Flexibility Score", fill = "Gender") +
-  theme_light()
+df.sub.01|>
+  ggplot(aes(x = SDEM004.bin, y = FlexMean, fill = SDEM004.bin)) + 
+    geom_boxplot(width = 0.5) + 
+    scale_fill_manual(values = cpal) +
+    scale_y_continuous(limits = c(1, 4), breaks = 1:4) +
+    labs(x = "", y = "Mean Flexibility Score", fill = "Gender") +
+    theme_light()
 
 ```
 
@@ -647,16 +423,16 @@ To formally determine whether or not there are statistically significant differe
 Before computing the tests, we need to perform some preliminary tests to check if the assumptions are met.
 
 ::: callout-note
-The independent samples t-test assumes: `(1)` independence of observations, meaning that the data from one participant do not influence another; `(2)` normality of the dependent variable within each group, which can be assessed using the Shapiro–Wilk test or visual inspection; and `(3)` homogeneity of variances between groups, typically tested with Levene’s test. If normality or equal variances are violated, alternative approaches such as Welch’s t-test or non-parametric methods like the Mann–Whitney U test may be more appropriate.
+The independent samples t-test assumes: 
+1. independence of observations, meaning that the data from one participant do not influence another; 
+2. normality of the dependent variable within each group, which can be assessed using the Shapiro–Wilk test or visual inspection; and 
+3. homogeneity of variances between groups, typically tested with Levene’s test. If normality or equal variances are violated, alternative approaches such as Welch’s t-test or non-parametric methods like the Mann–Whitney U test may be more appropriate.
 :::
 
 ```{r}
-#| echo: true
 #| label: check-assumptions-mean-comparison-normality
 #| tbl-cap: "Shapiro-Wilk Test for Normality"
-
-
-library(ggpubr)  
+#| cap-location: margin
 
 df.sub.01 |>
   filter(SDEM004.bin %in% c("A woman", "A man")) |>
@@ -672,13 +448,11 @@ df.sub.01 |>
 Shapiro–Wilk tests indicated significant deviations from normality (p < 0.05).
 
 ```{r}
-#| echo: true
-#| label: check-assumptions-mean-comparison-variance
+#| label: tbl-check-assumptions-mean-comparison-variance
 #| tbl-cap: "Levene test for Homogeneity of Variances"
+#| cap-location: margin
 
-library(car)      
-
-leveneTest(FlexMean ~ SDEM004.bin, data = df.sub.01)
+car::leveneTest(FlexMean ~ SDEM004.bin, data = df.sub.01)
 ```
 
 The Levene’s test is not significant (p > 0.05). Therefore, we can assume the homogeneity of variances in the different groups.
@@ -694,9 +468,9 @@ Although the Shapiro–Wilk test indicated significant deviations from normality
 :::
 
 ```{r}
-#| echo: true
-#| label: test-mean-comparison
+#| label: tbl-test-mean-comparison
 #| tbl-cap: "Test mean comparison"
+#| cap-location: margin
 
 t.test(FlexMean ~ SDEM004.bin, data = df.sub.01, var.equal = TRUE)
 
@@ -704,7 +478,9 @@ t.test(FlexMean ~ SDEM004.bin, data = df.sub.01, var.equal = TRUE)
 
 The independent samples t-test examined whether mean flexibility scores differed significantly by gender. The results indicated that the difference in mean scores between men (3.30) and women (3.17) was not statistically significant [t(201) = 1.34, p = 0.182]. The 95% confidence interval for the difference in means ranged from –0.06 to 0.31, suggesting that the true difference could plausibly be zero. These findings indicate that, while men reported slightly higher average flexibility scores, the observed difference is not sufficient to conclude a statistically significant gender gap in workplace flexibility within this dataset.
 
-## Job satisfaction
+
+
+### Anova - Job satisfaction
 
 Job satisfaction is a critical indicator of employee well-being and organisational health. It reflects how individuals perceive their working conditions and can influence productivity, retention, and overall engagement. Exploring gender differences in job satisfaction can help identify whether workplace experiences and perceptions vary across genders, potentially revealing underlying inequalities.
 
@@ -724,11 +500,7 @@ Now, we will examine responses to the question `EWCS88JobSatisfact15`
 To enable the use of parametric statistical techniques, a new numerical variable will be created to represent job satisfaction. The original categorical variable, which includes four ordered levels of satisfaction and an additional non-substantive response ("Don't know/No opinion"), will be inverted so that higher values correspond to higher levels of satisfaction. Each response will then be recoded into a numerical score ranging from 1 (lowest satisfaction) to 4 (highest satisfaction). Uninformative responses will be excluded by assigning them a missing value (NM). The resulting variable will serve as a continuous measure of job satisfaction for subsequent statistical analyses.
 
 ```{r}
-#| echo: true
 #| label: var-JobSat_score
-
-library(dplyr)
-library(forcats)
 
 df.geam03 <- df.geam03 |> 
   mutate(
@@ -741,7 +513,6 @@ df.geam03 <- df.geam03 |>
       TRUE ~ NA_real_  # "Don't know/no opinion"  # exclude the category
     )
   )
-
 ```
 
 Now, we will investigate whether perceived job satisfaction varies as a function of gender, educational attainment, and the interaction between these two factors. 
@@ -751,11 +522,9 @@ Given the relevance of both gender and education in shaping workplace experience
 To facilitate the analysis of interaction effects and enhance comparability, the original educational attainment variable (SDEM016) will be recoded into three broader categories. Respondents reporting no formal education, primary, or lower secondary qualifications will be categorised as ‘Low’. Those indicating technical education, a college diploma, or a bachelor's degree will be classified as ‘Medium’. Individuals with postgraduate education, including master's, doctoral, or postdoctoral degrees will be assigned to the ‘High’ category. Responses such as “Prefer not to say” or “Other” will be treated as missing values and excluded from the analysis. This recoding will support a more robust and interpretable assessment of educational level as a factor in the subsequent two-way ANOVA.
 
 ```{r}
-#| echo: true
 #| label: var-educ_level
 
 levels(df.geam03$SDEM016)
-
 
 df.geam03 <- df.geam03 |> 
   mutate(
@@ -793,7 +562,6 @@ df.geam03 <- df.geam03 |>
 To ensure the validity of the statistical analysis, a clean subset of the data was created by removing any observations with missing values in the key variables of interest: job satisfaction score, gender, and educational level. This filtering step guarantees that the subsequent model includes only complete cases and avoids bias due to incomplete responses. The resulting dataset retains only the relevant variables and is used as the analytical base for the two-way ANOVA.
 
 ```{r}
-#| echo: true
 #| label: sample-job-satisfaction-gender-education-level
 
 df.sub.03 <- df.geam03 |> 
@@ -813,9 +581,9 @@ df.sub.03 <- df.geam03 |>
 Then, we will calculate summary statistics (n, mean, standard deviation) by groups (gender and educational level).
 
 ```{r}
-#| echo: true
 #| label: tbl-stat-job-satisfaction-gender-education-level
 #| tbl-cap: "Summary statistics of job satisfaction score by gender and education level"
+#| cap-location: margin
 
 df.sub.03 |>
   group_by(SDEM004.bin, educ_level) |>
@@ -837,7 +605,7 @@ Among men, mean satisfaction scores are relatively consistent across education l
 Now, a boxplot will illustrate the distribution of job satisfaction scores by gender, with education level represented by colour. 
 
 ```{r}
-#| label: boxplot-job-satisfaction-gender-education-level
+#| label: fig-boxplot-job-satisfaction-gender-education-level
 #| fig.cap: "Boxplot of job satisfaction by gender and education level"
 #| fig-alt: "Boxplot of job satisfaction by gender and education level"
 #| cap-location: margin
@@ -861,8 +629,7 @@ Prior to apply the  two-way analysis of variance (ANOVA), assumptions regarding 
 
 
 ```{r}
-#| echo: true
-#| label: check-assumptions-anova-normality-graph
+#| label: fig-check-assumptions-anova-normality-graph
 #| fig.cap: "QQ plot of residuals ANOVA model"
 #| fig-alt: "QQ plot of residuals ANOVA model"
 #| cap-location: margin
@@ -877,14 +644,14 @@ ggqqplot(residuals(model))
 ```
 
 ```{r}
-#| echo: true
-#| label: check-assumptions-anova-normality-test
+#| label: tbl-check-assumptions-anova-normality-test
 #| tbl-cap: "Shapiro-Wilk Test for Normality"
+#| cap-location: margin
 
 # Check normality assumption by groups
-df.sub.03 %>%
-  group_by(SDEM004.bin, educ_level) %>%
-  shapiro_test(JobSat_score)
+# df.sub.03 %>%
+#   group_by(SDEM004.bin, educ_level) %>%
+#   shapiro.test(JobSat_score)
 
 ```
 
@@ -894,22 +661,22 @@ Moreover, the sample sizes within most groups—particularly those with medium a
 
 
 ```{r}
-#| echo: true
-#| label: check-assumptions-anova-variance-homogeneity
+#| label: tbl-check-assumptions-anova-variance-homogeneity
 #| tbl-cap: "Levene test for Homogeneity of Variances"
+#| cap-location: margin
 
-df.sub.03 %>% levene_test(JobSat_score ~ SDEM004.bin*educ_level)
+car::leveneTest(JobSat_score ~ SDEM004.bin * educ_level, data=df.sub.03)
 
 ```
 
 The Levene’s test is not significant (p > 0.05). Therefore, we can assume the homogeneity of variances in the different groups.
 
 ```{r}
-#| echo: true
-#| label: two-way-anova-
+#| label: tbl-two-way-anova
 #| tbl-cap: "Two-Way ANOVA Summary: Effects of Gender and Education Level on Job Satisfaction"
+#| cap-location: margin
 
-anova_model <- aov(JobSat_score ~ SDEM004.bin *educ_level, data = df.sub.03)
+anova_model <- aov(JobSat_score ~ SDEM004.bin * educ_level, data = df.sub.03)
 summary(anova_model)
 
 ```

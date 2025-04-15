@@ -76,7 +76,6 @@ library(knitr)
 library(gtsummary)
 library(outliers)
 library(RNOmni)
-library(dplyr)
 library(gpg)         # use encryption
 
 source("util/common.R")
@@ -665,8 +664,10 @@ The regression analysis in @tbl-regression-ocwc-interaction indicates that facto
 #| code-fold: true
 #| code-summary: Click to see code for merging and matching of BIMA items
 
+
 df20 <- df.geam20 |>
   select(starts_with("BIMA001"))|>
+  map_df(~ {if_else(.x == "Not applicable", NA, .x)}) |>  # replace "Not applicable" with NA
   map_df(~ {as.numeric(.x)-1}) |>
   mutate(micagg_mean = rowMeans(across(everything()), na.rm=T)) |>
   select(micagg_mean)
