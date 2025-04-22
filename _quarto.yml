@@ -18,6 +18,7 @@ book:
     - part: "Part II: Thematic Analysis"
       chapters: 
       - 07-geam-data-for-geps.qmd
+      - 08-careers.qmd
   appendices:  
     - 10-annex-i-desc-variables.qmd
     

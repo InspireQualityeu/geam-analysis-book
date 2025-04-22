@@ -67,10 +67,10 @@ Three real databases from three organisations are used. These databases are iden
 :::
 
 ## Detecting differences between categorical variables
-
 The GEAM questionnaire contains many questions that yield categorical variables such as gender, job positions, type of contract among others. A categorical variable is a variable that represents categories or groups, rather than numerical values. For example `SDEM004` (Gender) is a categorical variable where answers fall into 4 possible groups (see also @sec-summary-ch02-gender): "A man", "A women", "Non-binary" or "Prefer to self-identify as...". 
 
 Crossing all answer options by two categorical variables produces a contingency table. 
+
 
 ### Gender differences by job position
 To identify potential gender gaps, we will begin by assessing whether gender influences the distribution of roles within the organisation. To do so, we will focus on determining whether there is a statistically significant relationship between gender and job positions.
@@ -218,7 +218,7 @@ Cramér's V values range from 0 to 1:
 |   > 0.5 → Strong association.
 :::
 
-### Gender differences by type of contract
+### Gender differences by type of contract {#sec-ch03-gaps-type-contract}
 A second example for detecting significant differences between categotrical variables uses type of contract (`WCJC011`) and gender (`SDEM004`). 
 
 Understanding the distribution of contract types across different genders is essential for identifying potential gender disparities in employment stability. Fixed-term contracts often offer less job security and fewer benefits compared to permanent contracts, which may have implications for career progression and income stability
