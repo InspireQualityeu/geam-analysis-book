@@ -206,11 +206,18 @@ Fisher's exact test is used instead of the chi-square test when sample sizes are
 ::: callout-note
 Cramér's V values range from 0 to 1: 
 
+<<<<<<< HEAD
 | 0       → No association
 | 0.1-0.3 → Weak association
 | 0.3-0.5 → Moderate association
 |   > 0.5 → Strong association.
 
+=======
+ 0 → No association
+ 0.1-0.3 → Weak association
+ 0.3-0.5 → Moderate association
+ \> 0.5 → Strong association.
+>>>>>>> 417f575ceede896dd52b4de288ae89c9687c3a06
 :::
 
 ### Gender differences by type of contract

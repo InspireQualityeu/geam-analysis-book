@@ -9,13 +9,21 @@ book:
   chapters:
     - index.qmd
     - 01-introduction.qmd
+<<<<<<< HEAD
     - part: "Part I: Statistical techniques" 
+=======
+    - part: "Statistical techniques" 
+>>>>>>> 417f575ceede896dd52b4de288ae89c9687c3a06
       chapters: 
       - 02-summary-respondents.qmd
       - 03-detecting-gaps.qmd
       - 04-compare-in-time.qmd
       - 06-intersectional-analysis.qmd
+<<<<<<< HEAD
     - part: "Part II: Thematic Analysis"
+=======
+    - part: "Thematic Analysis"
+>>>>>>> 417f575ceede896dd52b4de288ae89c9687c3a06
       chapters: 
       - 07-geam-data-for-geps.qmd
   appendices:  
