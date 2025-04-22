@@ -1,8 +1,13 @@
 ---
 author:
   - name: Dalia Argudo
+    email: dalia.argudo@notus-asr.org
+    affiliation: 
+        - id: notus
+          name: Notus, S.L.
+          city: Barcelona
+          url: www.notus-asr.org
 execute:
-    
     echo: true
     warning: false
     message: false
@@ -16,11 +21,9 @@ keywords:
    - t-test
    - ANOVA
    - Contingency table
-editor_options: 
-  chunk_output_type: inline
 ---
 
-# Detecting gender gaps
+# Detecting gender gaps {#sec-ch03-gaps}
 
 ```{r}
 #| echo: false
@@ -51,13 +54,13 @@ df.geam03 <-read_gpg("data/df.349312.en.rdata.gpg")
 
 The GEAM questionnaire collects information on various aspects of working life, including work-life balance, job satisfaction, organisational culture, and other key factors. Detecting gender gaps with GEAM data involves analysing how responses differ between genders across the dimensions assessed.
 
-Different statistical techniques are used depending on the nature of the variables and the study objectives. The Chapter 2 introduced statistical methods such as frequency distributions, percentages, and contingency tables, which provide an initial overview of the data and help identify potential patterns or differences between genders.
+Different statistical techniques are used depending on the nature of the variables and the study objectives. @sec-ch02-respondents introduced statistical methods such as frequency distributions, percentages, and contingency tables, which provide an initial overview of the data and help identify potential patterns or differences between genders.
 
-In this chapter, we take the analysis further by assessing whether the observed gender differences are statistically significant; therefore, they are unlikely to be due to chance and instead reflect real disparities.
+This chapter takes the analysis further by assessing whether the observed gender differences are statistically significant; therefore, they are unlikely to be due to chance and instead reflect real disparities.
 
 We begin by applying **bivariate analysis** techniques before progressing to more complex **multivariate analysis techniques** in later chapters. The choice between these approaches depends on the complexity of the analysis required, the type of data available, and the specific research questions. Each method has its advantages and limitations.
 
-In the following sections, we analyse gender gaps across a selection of GEAM variables to demonstrate the different statistical techniques to be applied according to the type of variables used (categorical, quantitative). For a more thematic oriented analysis of working conditions, working climate or bullying and harassment, see part II Of this handbook. 
+In the following sections, we analyse gender gaps across a selection of GEAM variables to demonstrate the different statistical techniques to be applied according to the type of variables used (categorical or continuous). For a more thematic oriented analysis of working conditions, working climate or bullying and harassment, see Part II of this handbook. 
 
 ::: callout-note
 Three real databases from three organisations are used. These databases are identified as `df.geam01`, `df.geam02`, and `df.geam03`. The main difference between the databases is the adaptation of some variables (questions) to the respective organisational context, without significantly modifying the statistical analysis of this chapter.
@@ -65,9 +68,10 @@ Three real databases from three organisations are used. These databases are iden
 
 ## Detecting differences between categorical variables
 
-The GEAM questionnaire contains many questions that yield categorical variables such as gender, job positions, type of contract among others. A categorical variable is a variable that represents categories or groups, rather than numerical values. For example `SDEM004` (Gender) is a categorical variable where answers fall into 4 possible groups (see also @sec-summary-ch02-gender): `A man`, `A women`, `Non-binary` or `Prefer to self-identify as...`. 
+The GEAM questionnaire contains many questions that yield categorical variables such as gender, job positions, type of contract among others. A categorical variable is a variable that represents categories or groups, rather than numerical values. For example `SDEM004` (Gender) is a categorical variable where answers fall into 4 possible groups (see also @sec-summary-ch02-gender): "A man", "A women", "Non-binary" or "Prefer to self-identify as...". 
 
 Crossing all answer options by two categorical variables produces a contingency table. 
+
 ### Gender differences by job position
 To identify potential gender gaps, we will begin by assessing whether gender influences the distribution of roles within the organisation. To do so, we will focus on determining whether there is a statistically significant relationship between gender and job positions.
 
@@ -125,13 +129,13 @@ ggplot(df.prop.01, aes(x = SDEM004.bin, y = prop, fill = WCJC001)) +
 The graph uses the binary gender variable `SDEM004.bin` and remove all `NAs` from both the gender as well as job position.
 :::
 
-The stacked bar chart shows the relative distribution of jobs by gender, highlighting differentiated patterns between men and women. It is observed that 72% of men hold academic or research positions, compared to 62% of women in the same category. On the other hand, women are overrepresented in administrative roles, with 24% compared to 10% of men. These differences suggest the existence of occupational segregation by gender, which may reflect structural dynamics of inequality within the organisation. The categories of technician and other positions show smaller discrepancies, though they still contribute to the overall pattern of unequal distribution. This trend requires further exploration through statistical tests to determine the significance of the observed differences.
+@fig-WCJC001-gender shows the relative distribution of jobs by gender, highlighting differentiated patterns between men and women. We observe that 72% of men hold academic or research positions, compared to 62% of women in the same category. On the other hand, women are overrepresented in administrative roles, with 24% compared to 10% of men. These differences suggest the existence of occupational segregation by gender, which may reflect structural dynamics of inequality within the organisation. The categories of technician and other positions show smaller discrepancies, though they still contribute to the overall pattern of unequal distribution. This trend requires further exploration through statistical tests to determine the significance of the observed differences.
 
-In addition to the bar chart, a contingency table will also be used to display the observed frequencies and identify patterns between the variables.
+In addition to the bar chart, a contingency table will also be used to display the observed frequencies and identify patterns between the variables. In order to generate contingency tables, we use the [gtsummary](https://www.danieldsjoberg.com/gtsummary/) package. 
 
 ```{r}
 #| label: tbl-cross-WCJC001-SDEM004.bin
-#| fig.cap: "Cross tab of job position and gender. Cells indicate absolute numbers"
+#| tbl-cap: "Cross tab of job position and gender. Cells indicate absolute numbers"
 #| cap-location: margin
 
 df.geam01 |>
@@ -170,11 +174,11 @@ df.sub.01 <- df.geam01 |>
 Since both gender and job position are categorical variables, we will apply association tests to determine (Chi-squared, Cramér's V, Fisher) whether the observed differences are statistically significant, indicating a relationship between the variables, or whether they are independent.
 
 ```{r}
-#| label: tlb-test-assoc-job-position-gender
+#| label: tbl-test-assoc-job-position-gender
 #| tbl-cap: "Statistical test results - Association between job position and gender"
 #| cap-location: margin
 
-# custom function to calculate different test statistics
+# custom function to calculate different test statistics: chi-square, cramer, fisher
 statsnote <- crosstab_stats(df.sub.01, "Gender", "Jobpos")
 
 # create the contingency table
@@ -192,10 +196,12 @@ df.sub.01 |>
   )
 ```
 
-The table displays the absolute frequencies, the corresponding row percentages for each category, and several statistical test.
+@tbl-test-assoc-job-position-gender displays the absolute frequencies, the corresponding row percentages for each category, and several statistical test.
 
 The result of the chi-square test was statistically significant (p < 0.05), the relationship between job position and gender is statistically significant at the 5% level, suggesting that the distribution of job positions is not independent of gender. 
-Additionally, to the chi-square test, we observe the `Cramer's V` that measures the strength of the association between the both variables, and the `Fisher's exact test`. 
+
+In addition to the the chi-square test, we observe `Cramer's V` which measures the strength of the association between the both variables, and the `Fisher's exact test`. 
+
 The Cramér’s V value (0.176) suggests a weak, though statistically significant, association between gender and job position. It suggests that other factors may also contribute to job position distribution. Further analysis could explore additional variables, such as education level, work experience, or sectoral differences, to gain a more comprehensive understanding of gender disparities in job roles.
 
 
@@ -206,18 +212,10 @@ Fisher's exact test is used instead of the chi-square test when sample sizes are
 ::: callout-note
 Cramér's V values range from 0 to 1: 
 
-<<<<<<< HEAD
 | 0       → No association
 | 0.1-0.3 → Weak association
 | 0.3-0.5 → Moderate association
 |   > 0.5 → Strong association.
-
-=======
- 0 → No association
- 0.1-0.3 → Weak association
- 0.3-0.5 → Moderate association
- \> 0.5 → Strong association.
->>>>>>> 417f575ceede896dd52b4de288ae89c9687c3a06
 :::
 
 ### Gender differences by type of contract
@@ -294,7 +292,7 @@ df.sub.02 <- df.geam02 |>
 
 
 ```{r}
-#| label: tlb-test-assoc-contract-type-gender
+#| label: tbl-test-assoc-contract-type-gender
 #| tbl-cap: "Statistical test results - Association between type of contract and gender"
 #| cap-location: margin
 #| code-fold: TRUE
@@ -369,6 +367,7 @@ The following table presents descriptive statistics for the mean flexibility sco
 #| echo: true
 #| label: tbl-stat-flexible-work-WCWI005-gender
 #| tbl-cap: "Summary statistics of flexible work scale by gender"
+#| cap-location: margin 
 
 df.geam01 |>
   filter(!is.na(SDEM004.bin)) |>
@@ -381,7 +380,6 @@ df.geam01 |>
     IQR_Flex = IQR(FlexMean, na.rm = TRUE),
     .groups = "drop"
   )
-
 ```
 
 The average score for men was 3.30 (SD = 0.52), compared to 3.17 (SD = 0.73) for women. Although the mean score was slightly higher for men, both groups shared the same median value (3.25) and interquartile range (0.75), suggesting a similar central tendency and spread in the middle 50% of responses. The standard deviation was notably higher among women, indicating greater variability in their responses. These results provide initial evidence of a modest difference in perceived workplace flexibility by gender, which warrants further statistical testing to assess its significance.
@@ -405,11 +403,10 @@ Each box represents the interquartile range (IQR), with the black horizontal lin
 
 ```{r}
 #| echo: true
-#| label: boxplot-flexible-work-WCWI005-geam01
+#| label: fig-boxplot-flexible-work-WCWI005-geam01
 #| fig.cap: "Boxplot of WCWI005 and SDEM004.bin – Flexibility score by gender"
 #| fig-alt: "Boxplot of WCWI005 and SDEM004.bin – Flexibility score by gender"
 #| cap-location: margin
-
 cpal <- RColorBrewer::brewer.pal(3, "Set1")  
 
 df.sub.01|>
@@ -437,7 +434,7 @@ The independent samples t-test assumes:
 :::
 
 ```{r}
-#| label: check-assumptions-mean-comparison-normality
+#| label: tbl-check-assumptions-mean-comparison-normality
 #| tbl-cap: "Shapiro-Wilk Test for Normality"
 #| cap-location: margin
 
@@ -480,7 +477,6 @@ Although the Shapiro–Wilk test indicated significant deviations from normality
 #| cap-location: margin
 
 t.test(FlexMean ~ SDEM004.bin, data = df.sub.01, var.equal = TRUE)
-
 ```
 
 The independent samples t-test examined whether mean flexibility scores differed significantly by gender. The results indicated that the difference in mean scores between men (3.30) and women (3.17) was not statistically significant [t(201) = 1.34, p = 0.182]. The 95% confidence interval for the difference in means ranged from –0.06 to 0.31, suggesting that the true difference could plausibly be zero. These findings indicate that, while men reported slightly higher average flexibility scores, the observed difference is not sufficient to conclude a statistically significant gender gap in workplace flexibility within this dataset.
@@ -507,7 +503,7 @@ Now, we will examine responses to the question `EWCS88JobSatisfact15`
 To enable the use of parametric statistical techniques, a new numerical variable will be created to represent job satisfaction. The original categorical variable, which includes four ordered levels of satisfaction and an additional non-substantive response ("Don't know/No opinion"), will be inverted so that higher values correspond to higher levels of satisfaction. Each response will then be recoded into a numerical score ranging from 1 (lowest satisfaction) to 4 (highest satisfaction). Uninformative responses will be excluded by assigning them a missing value (NM). The resulting variable will serve as a continuous measure of job satisfaction for subsequent statistical analyses.
 
 ```{r}
-#| label: var-JobSat_score
+#| label: var-job-sat-score
 
 df.geam03 <- df.geam03 |> 
   mutate(
@@ -529,7 +525,7 @@ Given the relevance of both gender and education in shaping workplace experience
 To facilitate the analysis of interaction effects and enhance comparability, the original educational attainment variable (SDEM016) will be recoded into three broader categories. Respondents reporting no formal education, primary, or lower secondary qualifications will be categorised as ‘Low’. Those indicating technical education, a college diploma, or a bachelor's degree will be classified as ‘Medium’. Individuals with postgraduate education, including master's, doctoral, or postdoctoral degrees will be assigned to the ‘High’ category. Responses such as “Prefer not to say” or “Other” will be treated as missing values and excluded from the analysis. This recoding will support a more robust and interpretable assessment of educational level as a factor in the subsequent two-way ANOVA.
 
 ```{r}
-#| label: var-educ_level
+#| label: var-educ-level
 
 levels(df.geam03$SDEM016)
 
@@ -602,9 +598,6 @@ df.sub.03 |>
     IQR_Flex = IQR(JobSat_score, na.rm = TRUE),
     .groups = "drop"
   )
-
-
-
 ```
 
 Among men, mean satisfaction scores are relatively consistent across education levels, ranging from 2.00 in the low education group to 2.20 in the medium group, with a slightly lower mean observed among those with higher education (2.14). In contrast, women with low education levels reported the highest average score (2.36), while those with medium education had the lowest (2.11). 
