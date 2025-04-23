@@ -30,7 +30,7 @@ keywords:
   - Gender gaps
 ---
 
-# Analysing Work-life conflict {#sec-ch07-career}
+# Analysing Work-life conflict {#sec-ch08-career}
 
 ```{r}
 #| label: setup 
@@ -54,7 +54,7 @@ df.geam02 <-read_gpg("data/df.784191.en.rdata.gpg")
 
 The GEAM covers many variables concerned with the working conditions of respondents, including type of contract, complementary bonus, recruitment and training options, work-life balance, parental leave, among others.
 
-Among the central dimensions of gender inequality in research performing organisations are work-life balance issues and fair career progression. Vertical segregration remains one of the most persistent gender inequalities in R&I: the higher on the career ladder, the less women. According to the most recent She Figures 2024 publication \[europeancommissionShe2025\], women represent approximately half (48 %) of Doctoral (ISCED 8) graduates at EU level but only 29.7% of highest Grade A positions.
+Among the central dimensions of gender inequality in research performing organisations are work-life balance issues and fair career progression. Vertical segregration remains one of the most persistent gender inequalities in R&I: the higher on the career ladder, the less women. According to the most recent She Figures 2024 publication [@europeancommissionShe2025], women represent approximately half (48 %) of Doctoral (ISCED 8) graduates at EU level but only 29.7% of highest Grade A positions.
 
 The overall result of fewer women at the top is the result of a many different factors contributing to an overall slower career progression of women.
 
@@ -62,16 +62,34 @@ For example, the analysis of the ASSET 2016 survey uncovered how differences bet
 
 ![ASSET Career path](images/ASSET_careerpath.jpg){#fig-career-path}
 
-The GEAM holds several variables that contribute to an analysis of career progression and the potential disadvantages faced by women compared to their male colleauges. These variables include:
+The GEAM holds several variables that contribute to an analysis of career progression and the potential disadvantages faced by women compared to their male colleauges. These variables are bundled under different question groups on working conditions, including:
 
--   type of contract (`WCJC010`) (see @sec-ch03-gaps-type-contract)
--   care responsibilties (`WCWI006` and `WCWI008` )
--   parental leave policies (`WCWI011a` and `WCWI011b`)
--   work-family conflict (`WorkFamConfISSP`)
+- **Recruitment and promotion**
+   + Encouragement to apply for promotion (`WCJC013`)
+   + How did you obtain your current job (`WCJC014`)
+- **Type of contract**
+   + part-time vs full-time (`WCJC010`) with women usually being over-represented among part-time employees
+   + permanent vs temporary contract (`WCJC011`) with (early career) women usually being over-represented among employees with temporary contracts (see also @sec-ch03-gaps-type-contract)
+- **Training opportunities**, which are important for career progression
+  + Training opportunities available and received (`WCJC019`)
+  + Barriers to training (`WCJC021`)
+- **Care responsibilties** are a crucial topic with regards to work-life balance issues and career advancement. Several question cover these: 
+  + Care responsibilities for dependent adults (`WCWI006`) and children (`WCWI008` )
+  + If care responsibilities for children exist, `WCWI009` indicates the number of children, and `WCWI010` status of single parent. 
+- **Parental leave** covers policies targeting work-life balance issues. These include: 
+  + Uptake over the past 5 years (`WCWI011a`) and type of parental leave (`WCWI011b`) taken; reasons for not taking leave (`WCWI026`)
+  + Time since last uptake of leave (`WCWI027`)
+  + Policies available before, during and upon return from leave (`WCWI016`); helpfullness of these policies (`WCWI021`) and overall preparedness to return from leave (`WCWI020`)
+- **Work-family conflict** scale (`WorkFamConfISSP`) and several question on job statisfaction (`EWCS89JobSatisfact8` and `EWCS88JobSatisfact1`) as well as work intensity (`EWCS36WorkIntensity2`). For an example analysis of job satisfaction see @sec-ch03-gaps-job-satisfaction. 
+- **Flexible work** arrangements
+   + GEAM v2 included question `WCWI005` with several sub-items on flexible work arrangements (for an example analysis see @sec-ch03-gaps-flex-work). This section has been revised due to Covid and contains now dedicated question on flexible work options (`WCFlexibility`), frequency of teleworking (`WCTeleworkfreq`), reasons for *not* teleworking (`WCTeleworkNO`) and for teleworking (`WCTeleworkYES`) and possible improvements to working arranagements (`WCValuedAspects`). 
+
+In what follows we introduce some of these questions in more detail, especially where questions require certain pre-processing steps or use existing measurement scales drawn from the scientific literature.  
+
 
 ## Care responsibilities
 
-Women tend to have considerably more care responsibilities than men, both for children but also for dependent adults [@Gimenez-NadalGenderGapTime2020]. The GEAM covers both of these aspects using question `WCWI006` and `WCWI008`.
+Women tend to have considerably more care responsibilities than men, both for children but also for dependent adults [@Gimenez-NadalGenderGapTime2020]. The GEAM covers both of these aspects using question `WCWI006` (dependent adults) and `WCWI008` (children).
 
 +------------+--------------------------------------------------------------------------------+-------------------------+
 | Code       | Question                                                                       | Responses               |
@@ -420,33 +438,6 @@ df.geam03 |>
 The mean value for work-family conflict is considerablly higher (mean=2.06) compared to the mean value for family-work conflict (0.91).
 
 Builing upon these insights, a more in-depth exploration of gender differences regarding work-family conflict could follow, for example exploring work-family conflict scores in relation to gender, age, or maritial status. Other interesting variables to examine in this regard include of course care responsibilities, `WCJC001` (current position), type of contract `WCJC010` (full- or part-time), or socio-economic background (`SDEM017` and `SDEM018`).
-
-## Flexible work
-
-Flexible working arrangements are key to fostering an inclusive and supportive work environment, enabling employees to balance professional and personal responsibilities.
-
-The GEAM covers several issues realted to flexible work arrangements in question `WCWI005`, including:
-
--   The ability to request time off at short notice (`WCWI005.SQ001`)
--   Flexibility in hours, days worked, and working patterns (`WCWI005.SQ002`)
--   Home-based or remote working (`WCWI005.SQ003`)
--   Job sharing with a colleague (`WCWI005.SQ004`)
-
-::: column-margin
-Higher numerical values indicate greater availability and awareness of these flexible work options.
-:::
-
-To perform the analysis, we will treat these variables as interval variables, which allows us to calculate the mean of these four items for each respondent or observation.
-
-```{r}
-#| label: code-flexible-work-mean-WCWI005-geam01
-
-df.geam03 <- df.geam03 |>  
-  mutate(across(starts_with("WCWI005.SQ"), as.numeric),  # Convert selected columns to numeric
-         FlexMean = rowMeans(across(starts_with("WCWI005.SQ")), na.rm = TRUE))  # Compute mean directly
-```
-
-The following table presents descriptive statistics for the mean flexibility score, disaggregated by gender.
 
 
 ## References

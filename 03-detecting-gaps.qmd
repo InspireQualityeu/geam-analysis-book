@@ -11,8 +11,10 @@ execute:
     echo: true
     warning: false
     message: false
+    
 abstract: >
     This chapter provides a comprehensive overview of gender gap identification using GEAM questionnaire data, employing bivariate analysis techniques such as Chi-squared tests, Student’s t-tests, and analysis of variance (ANOVA). Key aspects including working conditions, work-life balance, and organisational culture are explored, offering practical tools for analysing and understanding gender inequalities in various contexts.
+
 keywords:
    - Gender gaps
    - Bivariate analysis
@@ -54,7 +56,7 @@ df.geam03 <-read_gpg("data/df.349312.en.rdata.gpg")
 
 The GEAM questionnaire collects information on various aspects of working life, including work-life balance, job satisfaction, organisational culture, and other key factors. Detecting gender gaps with GEAM data involves analysing how responses differ between genders across the dimensions assessed.
 
-Different statistical techniques are used depending on the nature of the variables and the study objectives. @sec-ch02-respondents introduced statistical methods such as frequency distributions, percentages, and contingency tables, which provide an initial overview of the data and help identify potential patterns or differences between genders.
+Different statistical techniques are used depending on the nature of the variables and the study objectives.  @sec-ch02-respondents introduced statistical methods such as frequency distributions, percentages, and contingency tables, which provide an initial overview of the data and help identify potential patterns or differences between genders.
 
 This chapter takes the analysis further by assessing whether the observed gender differences are statistically significant; therefore, they are unlikely to be due to chance and instead reflect real disparities.
 
@@ -66,13 +68,15 @@ In the following sections, we analyse gender gaps across a selection of GEAM var
 Three real databases from three organisations are used. These databases are identified as `df.geam01`, `df.geam02`, and `df.geam03`. The main difference between the databases is the adaptation of some variables (questions) to the respective organisational context, without significantly modifying the statistical analysis of this chapter.
 :::
 
-## Detecting differences between categorical variables
+## Gender gaps and categorical variables  {#sec-ch03-gaps-categorical}
+
 The GEAM questionnaire contains many questions that yield categorical variables such as gender, job positions, type of contract among others. A categorical variable is a variable that represents categories or groups, rather than numerical values. For example `SDEM004` (Gender) is a categorical variable where answers fall into 4 possible groups (see also @sec-summary-ch02-gender): "A man", "A women", "Non-binary" or "Prefer to self-identify as...". 
 
 Crossing all answer options by two categorical variables produces a contingency table. 
 
 
-### Gender differences by job position
+### Gender gaps in job position {#sec-ch03-gaps-job-postion}
+
 To identify potential gender gaps, we will begin by assessing whether gender influences the distribution of roles within the organisation. To do so, we will focus on determining whether there is a statistically significant relationship between gender and job positions.
 
 To explore this relationship, it is essential to first conduct a visual analysis that allows for a clear comparison of the distribution of gender across different job roles.
@@ -96,8 +100,7 @@ This type of chart helps identify potential gender gaps in the distribution of r
 
 ```{r}
 #| label: fig-WCJC001-gender
-#| fig.cap: "Stacked bar chart of WCJC001 and SDEM004.bin – Job position and gender"
-#| fig-alt: "Stacked bar chart of WCJC001 and SDEM004.bin – Job position and gender"
+#| fig-cap: "Stacked bar chart of WCJC001 and SDEM004.bin – Job position and gender"
 #| cap-location: margin  
 cpal <- RColorBrewer::brewer.pal(5, "Set1")
 
@@ -218,7 +221,8 @@ Cramér's V values range from 0 to 1:
 |   > 0.5 → Strong association.
 :::
 
-### Gender differences by type of contract {#sec-ch03-gaps-type-contract}
+### Gender gaps by type of contract {#sec-ch03-gaps-type-contract}
+
 A second example for detecting significant differences between categotrical variables uses type of contract (`WCJC011`) and gender (`SDEM004`). 
 
 Understanding the distribution of contract types across different genders is essential for identifying potential gender disparities in employment stability. Fixed-term contracts often offer less job security and fewer benefits compared to permanent contracts, which may have implications for career progression and income stability
@@ -227,7 +231,7 @@ Let's explore whether gender influences the likelihood of holding a fixed-term o
 
 ```{r}
 #| label: binary-sdem004-gender-geam02
-#| code-fold: TRUE
+#| code-fold: true
 #| code-summary: Click to see code for making gender binary
 
 df.geam02 <- df.geam02 |>
@@ -241,10 +245,10 @@ df.geam02 <- df.geam02 |>
 
 ```{r}
 #| label: fig-WCJC011-gender
-#| fig.cap: "Stacked bar chart of WCJC011 and SDEM004.bin - Type of contract and gender"
+#| fig-cap: "Stacked bar chart of WCJC011 and SDEM004.bin - Type of contract and gender"
 #| fig-alt: "Stacked bar chart of WCJC011 and SDEM004.bin - Type of contract and gender"
 #| cap-location: margin 
-#| code-fold: TRUE
+#| code-fold: true
 #| code-summary: Click to see code for generating stacked barchart 
 
 cpal <- RColorBrewer::brewer.pal(5, "Set1")
@@ -279,7 +283,7 @@ Again, we will first clean the database and apply association tests for categori
 
 ```{r}
 #| label: sample-type-of-contract-gender
-#| code-fold: TRUE
+#| code-fold: true
 #| code-summary: Click to see pre-processing code to drop unused levels
 
 df.sub.02 <- df.geam02 |>
@@ -322,20 +326,23 @@ These findings imply that contract type does not significantly differ by gender 
 
 
 
-## Detecting differences between continuous variables
+## Gender gaps and continuous variables  {#sec-ch03-gaps-continuous}
 
 In addition to categotrical variables, the GEAM questionnaire contains a series of continuous variables, such as age (`SDEM001`) or salary (`WCJC005`). In addition, certain questions use several sub-items which are rated by respondents on a scale of agreement or frequency. Reponses are then averaged across these items which produces a numeric score. Detecting significant differences between two (or more groups) of respondents (e.g. by gender, job position) and a numeric response variable requires different statistical techniques (student t, ANOVA), introduced in what follows. 
 
 
-### Student t - flexible work
+### Student t - flexible work {#sec-ch03-gaps-flex-work}
 
 Flexible working arrangements are key to fostering an inclusive and supportive work environment, enabling employees to balance professional and personal responsibilities. 
 We will analyse responses to question `WCWI005`, which assesses employees' awareness and use of various flexible working arrangements, including:
 
-- The ability to request time off at short notice (WCWI005.SQ001)
-- Flexibility in hours, days worked, and working patterns (WCWI005.SQ002)
-- Home-based or remote working (WCWI005.SQ003)
-- Job sharing with a colleague (WCWI005.SQ004)
+- The ability to request time off at short notice (`WCWI005.SQ001`)
+- Flexibility in hours, days worked, and working patterns (`WCWI005.SQ002`)
+- Home-based or remote working (`WCWI005.SQ003`)
+- Job sharing with a colleague (`WCWI005.SQ004`)
+
+Note that `WCWI005` is specific to the GEAM version 2. Flexible work arrangements have been revised in GEAM version 3. For an overview of the updated variables see the introduction @sec-ch08-career. 
+
 
 Responses follow the response scale below.
 
@@ -404,8 +411,7 @@ Each box represents the interquartile range (IQR), with the black horizontal lin
 ```{r}
 #| echo: true
 #| label: fig-boxplot-flexible-work-WCWI005-geam01
-#| fig.cap: "Boxplot of WCWI005 and SDEM004.bin – Flexibility score by gender"
-#| fig-alt: "Boxplot of WCWI005 and SDEM004.bin – Flexibility score by gender"
+#| fig-cap: "Boxplot of WCWI005 and SDEM004.bin – Flexibility score by gender"
 #| cap-location: margin
 cpal <- RColorBrewer::brewer.pal(3, "Set1")  
 
@@ -483,7 +489,7 @@ The independent samples t-test examined whether mean flexibility scores differed
 
 
 
-### Anova - Job satisfaction
+### Anova - Job satisfaction {#sec-ch03-gaps-job-satisfaction}
 
 Job satisfaction is a critical indicator of employee well-being and organisational health. It reflects how individuals perceive their working conditions and can influence productivity, retention, and overall engagement. Exploring gender differences in job satisfaction can help identify whether workplace experiences and perceptions vary across genders, potentially revealing underlying inequalities.
 
@@ -606,8 +612,7 @@ Now, a boxplot will illustrate the distribution of job satisfaction scores by ge
 
 ```{r}
 #| label: fig-boxplot-job-satisfaction-gender-education-level
-#| fig.cap: "Boxplot of job satisfaction by gender and education level"
-#| fig-alt: "Boxplot of job satisfaction by gender and education level"
+#| fig-cap: "Boxplot of job satisfaction by gender and education level"
 #| cap-location: margin
 
 
@@ -630,8 +635,7 @@ Prior to apply the  two-way analysis of variance (ANOVA), assumptions regarding 
 
 ```{r}
 #| label: fig-check-assumptions-anova-normality-graph
-#| fig.cap: "QQ plot of residuals ANOVA model"
-#| fig-alt: "QQ plot of residuals ANOVA model"
+#| fig-cap: "QQ plot of residuals ANOVA model"
 #| cap-location: margin
 
 # Build the linear model
