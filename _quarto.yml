@@ -19,8 +19,9 @@ book:
       chapters: 
       - 07-geam-data-for-geps.qmd
       - 08-careers.qmd
+      - 09-culture-climate.qmd
   appendices:  
-    - 10-annex-i-desc-variables.qmd
+    - 99-annex-i-desc-variables.qmd
     
   author:
   - name: Jörg Müller
@@ -74,6 +75,8 @@ citation-location: document
 cover-image: images/abstract-landscape-3.jpg
 
 tbl-cap-location: margin
+fig-cap-location: margin
+cap-location: margin
 
 format:
   html:

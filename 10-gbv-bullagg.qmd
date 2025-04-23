@@ -1,0 +1,187 @@
+---
+author:
+  - name: Jörg Müller
+  
+execute: 
+    echo: true
+    warning: false
+    message: false
+
+abstract: >
+    The following chapter summarises the question of section Bullying, Harassment, Microaggresions.  
+
+keywords:
+  - Descriptive statistics
+  - Bullying
+  - Harassment
+  - Microaggressions
+---
+
+```{r}
+#| label: setup 
+#| echo: false
+
+library(tidyverse)
+
+# library(likert)
+library(sjPlot)
+library(sjmisc)
+
+# should be active from chapter 02
+
+df.geam <- df.geam03 |>
+  filter(!is.na(submitdate))
+
+```
+
+
+Diel leader 1 
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("DiehlBiasLeaderAgree.SQ")) |>
+  sjPlot::plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal
+)
+
+```
+
+Diehl leader 2 
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("DiehlBiasLeaderFreq.SQ")) |>
+  sjPlot::plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal
+)
+
+```
+
+
+
+Glick Masculinity
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("GlickMasculCont8.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal
+)
+
+```
+
+
+
+
+# Microaggressions
+
+By microaggressions we mean brief and commonplace verbal, behavioral, and environmental indignities, whether intentional or unintentional, that communicate hostile, derogatory, or negative slights and insults to the target person or group. They might be related to race or the colour of one's skin, gender, sexual orientation, age, ethnic group, or religion.
+
+
+```{r}
+
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("BIMA001.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(.4,1.4),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              geom.colors = cpal
+)
+
+```
+
+
+```{r}
+# calculate total score per group 
+# 
+
+df.geam03 |>
+  rowwise() |>
+  mutate(score = mean(as.numeric(c_across(starts_with("BIMA001.SQ"))), na.rm=T)) |>
+  #summarise(score = across(starts_with("BIMA001.SQ"), ~ mean(as.numeric(.x), na.rm = T))) 
+  select(starts_with("BIMA001.SQ"), score)
+
+```
+
+
+
+```{r}
+df.geam03 |>
+  select(starts_with("BISB001.SQ")) |>
+  plot_likert(values="sum.outside", 
+              show.prc.sign = T, 
+              grid.range = c(1,.8),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              #wrap.labels = 40,
+              geom.colors = cpal
+)
+```
+
+
+
+
+
+```{r}
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam03 |>
+  select(starts_with("EWCS89JobSatisfact8.SQ")) |>  
+  plot_likert(values="sum.outside", 
+              show.prc.sign = T, 
+              grid.range = c(1.4,1.4),
+              expand.grid = T, 
+              show.n = F, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              geom.colors = cpal, 
+              catcount = 4, 
+              cat.neutral = 3
+              )
+```
+

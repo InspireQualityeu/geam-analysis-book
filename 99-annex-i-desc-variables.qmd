@@ -159,7 +159,7 @@ df.geam <- df.geam |>
 
 cpal <- RColorBrewer::brewer.pal(4, "Spectral")
 
-df.geam03 |>
+df.geam |>
   select(starts_with("GlickMasculCont8.SQ")) |>
   plot_likert(values="hide", 
               show.prc.sign = T, 
@@ -186,7 +186,7 @@ Diel leader 1
 
 cpal <- RColorBrewer::brewer.pal(4, "Spectral")
 
-df.geam03 |>
+df.geam |>
   select(starts_with("DiehlBiasLeaderAgree.SQ")) |>
   sjPlot::plot_likert(values="hide", 
               show.prc.sign = T, 
@@ -209,7 +209,7 @@ Diehl leader 2
 
 cpal <- RColorBrewer::brewer.pal(4, "Spectral")
 
-df.geam03 |>
+df.geam |>
   select(starts_with("DiehlBiasLeaderFreq.SQ")) |>
   sjPlot::plot_likert(values="hide", 
               show.prc.sign = T, 
@@ -241,7 +241,7 @@ By microaggressions we mean brief and commonplace verbal, behavioral, and enviro
 
 cpal <- RColorBrewer::brewer.pal(4, "Spectral")
 
-df.geam03 |>
+df.geam |>
   select(starts_with("BIMA001.SQ")) |>
   plot_likert(values="hide", 
               show.prc.sign = T, 
@@ -254,15 +254,4 @@ df.geam03 |>
 )
 
 ```
-
-
-```{r}
-# create outcome varible of interest
-# df.geam <- df.geam |>
-#   rowwise() |>
-#   mutate(microscore = mean(as.numeric(c_across(starts_with("BIMA001.SQ"))), na.rm=T))
-```
-
-
-
 

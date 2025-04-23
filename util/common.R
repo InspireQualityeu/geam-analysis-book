@@ -152,3 +152,41 @@ crosstab_stats <- function(data, var, by, ...){
 
 
 
+#' Crosstab function to plot stacked barchart of two variables. 
+#'
+#'
+#' @param data A data frame containing the variables.
+#' @param var The first categorical variable (y-axis).
+#' @param by The second categorical variable (x-axis).
+#' 
+#' @return A ggplot2 objects
+#' 
+crosstab_plot <- function(data, var, by, xlab="", ylab="Proportion", fillab="", ...) {
+  
+  cpal <- RColorBrewer::brewer.pal(6, "Set1")
+  
+  #  Calculate gender proportions
+  df.prop <- data |> 
+    filter(!is.na({{by}})) |> 
+    group_by({{by}}, {{var}}) |> 
+    summarise(n = n(), .groups = "drop") |> 
+    group_by({{by}}) |> 
+    mutate(
+      prop = n / sum(n),
+      label = ifelse(prop > 0.03, paste0(n, " (", scales::percent(prop, accuracy = 1), ")"), "")
+    )
+  
+  # Stacked bar chart
+  ggplot(df.prop, aes(x = {{by}}, y = prop, fill = {{var}})) +
+    geom_col(width = 0.8, position = "stack") +
+    geom_text(aes(label = label), 
+              position = position_stack(vjust = 0.5), 
+              color = "white", size = 3.5, lineheight = 0.9) +
+    scale_fill_manual(values = cpal) +
+    scale_y_continuous(labels = scales::percent_format()) +
+    labs(x = xlab, y = ylab, fill = fillab) +
+    theme_light()
+  
+}
+
+

@@ -438,7 +438,7 @@ df.geam01 |>
 
 As can be seen from frequency @tbl-disability, among the respondents, 15 persons indicate a disabilty or health impairment.
 
-### Educational level
+### Educational level {#sec-ch02-edu-level}
 
 The highest educational level of the respondent is covered in question `SDEM016`. Responses follow the International Standard Classification of Education (ISCED) proposed by the UNESCO Institute for Statistics [@unescoISCED2012] which provides the basis for comparing educational levels across countries.
 
@@ -564,8 +564,8 @@ df.geam01 |>
 Then it is easy to assign the respondents socioeconomic status to three groups, consisting of "Higher SES", "Medium SES", or "Lower SES", for example. 
 
 ```{r}
-#| echo: true
-#| label: code-ses-3g
+#| lst-label: lst-code-ses-3g
+#| lst-cap: Code to aggregate three levels of socio-economic status
 
 df.geam01 <- df.geam01 |>
   mutate(SES_3g = case_when(
