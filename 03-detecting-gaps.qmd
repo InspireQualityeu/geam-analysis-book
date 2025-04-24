@@ -682,3 +682,6 @@ A two-way analysis of variance was conducted to examine the effects of gender an
 
 **Conclusion:** Although prior research has often pointed to the potential influence of gender and educational attainment on perceptions of job satisfaction, the present analysis did not reveal statistically significant differences across these dimensions. Neither gender nor education level appeared to have a measurable impact on satisfaction scores, nor was there evidence of an interaction between the two. These findings may reflect a genuinely uniform experience of satisfaction across groups in this particular organisational context, or they may be shaped by the limited range and distribution of the satisfaction scale. Further research using alternative measures or larger samples may help clarify whether these results are sample-specific or indicative of broader patterns.
 
+
+## References {.unnumbered}
+

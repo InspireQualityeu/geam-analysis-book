@@ -209,7 +209,7 @@ In terms of gender, the 2020 sample was quite evenly split between men and women
 
 ### Dependent Variables
 
-For the purposes of the analysis, we constructed scales that measure: work culture **`OCWC002`**, masculinity contest culture **`MCC`** [@glick_development_2018], respondents’ experiences of microaggressions at work **`BIMA001`**, overall perceptions of equality practices at the institute **`OCPER001`**, and the redistribution of resources and responsibilities **`OCPER003`**. For each scale, we selected items from a relevant group of questions that were adequate and comparable between the two surveys. For comparable items worded in the opposite way, reverse coding was applied. 
+For the purposes of the analysis, we constructed scales that measure: work culture **`OCWC002`**, masculinity contest culture **`MCC`** [@GlickDevMCC2018], respondents’ experiences of microaggressions at work **`BIMA001`**, overall perceptions of equality practices at the institute **`OCPER001`**, and the redistribution of resources and responsibilities **`OCPER003`**. For each scale, we selected items from a relevant group of questions that were adequate and comparable between the two surveys. For comparable items worded in the opposite way, reverse coding was applied. 
 
 ::: aside 
 See @sec-ch04-appendix-i for details for wording of sub-question items in both surveys, the coding applied, and the Cronbach’s alpha values for each case. 
