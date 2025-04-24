@@ -108,9 +108,10 @@ The two editions differed in terms of their numbers of respondents. In 2020, a t
 In a first pre-processing step, the two datasets for 2020 and 2024 need to be merged, unifying variable names in the process. We basically add the rows from 2020 and 2024 into a single dataset, selecting only those predictor variables we are interested in, namely gender, managerial position, parent status, and job position. An additional column `year` is added, to indicate the respective year of a response. 
 
 ```{r}
-#| label: code-merge-datasets
+#| lst-label: lst-merge-datasets
+#| lst-cap: Merge 2020 and 2024 datasets over selected variables 
 #| code-fold: true
-#| code-summary: Click to see code for merging datasets 
+#| code-summary: Show code for merging datasets 
 # remove variable names
 attr(df.geam20, "variable.labels") <- NULL
 
@@ -149,7 +150,6 @@ After merging, @tbl-stats-merged-predictors provides a quick overview of the sum
 ```{r}
 #| label: tbl-stats-merged-predictors
 #| tbl-cap: "Overview of main predictor variables and answer options for both years"
-#| cap-location: margin
 df.geam20.24 |>
   tbl_summary(include = c(gender, manager, parent), 
               by=year, 
@@ -158,9 +158,10 @@ df.geam20.24 |>
 However, as we can see in the above table, response options also differ between the 2020 and 2024 datasets (note how some items have uniformly zero responses on the left vs. right column) and need to be matched.  
 
 ```{r}
-#| label: code-collapse-factors
+#| lst-label: lst-collapse-factors
+#| lst-cap: Unify and match factor response options
 #| code-fold: true
-#| code-summary: Click to see code unifying and matching factor responses 
+#| code-summary: Show code
 df.geam20.24 <- df.geam20.24 |>
   mutate(
       gender = case_when(
@@ -195,7 +196,6 @@ After matching and thus unifying the response options across both years, @tbl-st
 ```{r}
 #| label: tbl-stats-20-24
 #| tbl-cap: "Summary statistics of main independent variables, unified across 2020 and 2024"
-#| cap-location: margin
 df.geam20.24 |>
   tbl_summary(include = c(gender, manager, parent), 
               by=year, 
@@ -308,14 +308,15 @@ For `OCWC002`, `MCC`, `BIMA001`, `OCPER001`, and `OCPER003`, statistically signi
 
 ## Results
 
-### Masculinity contest culture (MCC)
+### Masculinity contest culture (MCC) {#sec-ch04-mcc}
 
 #### Preparation and transformation of data
 
 The Masculinity Contest Culture scale contains eight items (see @tbl-app-mcc) in both waves. In order to calculate the mean value for each respondent, we convert the ordered answer items into numeric values from -2 to 2. Negative values indicate that a given statement is "not true" while positive statements represent that a given statement is true for the work environment. The scale is centered on 0 ("Neither true nor untrue"). We then add the mean score of the `MCC` to our main data frame. 
 
 ```{r}
-#| label: code-mcc-scores
+#| lst-label: lst-mcc-scores
+#| lst-cap: Calculate row means of MCC for each year
 # convert mcc answers to numeric, center on 0, 
 # then calculate mean across all 8 items
 df20 <- df.geam20 |>
@@ -342,7 +343,6 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 ```{r}
 #| label: tbl-mean-mcc-score
 #| tbl-cap: "Mean masculinity contest culture (MCC) scores by gender, manager, and parent status across years"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for producing MCC mean scores table"
 
@@ -363,7 +363,6 @@ df.geam20.24 |>
 ) |>
   add_overall(last=T)|>
   modify_spanning_header(all_stat_cols() ~ "**Mean MCC scores**")
-
 ```
 
 The mean values of MCC in both 2020 (−0.84) and 2024 (−0.86) indicate that, in general, the work environment at OPI PIB is not perceived as one that supports male norms. When divided by gender, both women and men tend to view the environment as one that does not support male norms; however, the means are lower for men (−1.03 vs. −0.68 in 2020, and −1.02 vs. −0.75 in 2024), which indicates that men agree with this conclusion slightly more than women do. The results for both parents and nonparents, and for managers and nonmanagers also support the conclusion that OPI PIB is not perceived as a workplace that rewards masculinity. This perception is quite stable: only slight differences can be observed in the means between 2020 and 2024 for the groups discussed above.
@@ -372,7 +371,6 @@ The mean values of MCC in both 2020 (−0.84) and 2024 (−0.86) indicate that, 
 ```{r}
 #| label: fig-mcc-mean-df
 #| fig-cap: "Barchart of mean MCC scores by year and gender"
-#| cap-location: margin
 # create barchart of MCC scores by year and gender
 df.geam20.24 |>
   select(year, gender, mcc_mean) |>
@@ -394,7 +392,6 @@ The same information can be presented as a boxplot in @fig-box-mcc-gender.
 ```{r}
 #| label: fig-box-mcc-gender
 #| fig-cap: "Boxplots of MCC scores by year and gender"
-#| cap-location: margin
 # create boxplots for MCC scores by year and gender
 df.geam20.24 |>
   select(year, gender, mcc_mean) |>
@@ -411,12 +408,10 @@ df.geam20.24 |>
 
 
 
-
 #### Regression analysis: masculinity contest culture
 ```{r}
 #| label: tbl-regression-mcc-base
 #| tbl-cap: "Regression analysis of MCC score - model 1 including year"
-#| cap-location: margin
 mcc_base <- lm(mcc_mean ~ year, data = df.geam20.24) 
 
 mcc_base |>
@@ -429,7 +424,6 @@ mcc_base |>
 ```{r}
 #| label: tbl-regression-mcc-main
 #| tbl-cap: "Regression analysis of MCC score - model 2 main effects year, gender, managerial role and parent status"
-#| cap-location: margin
 mcc_main <- lm(mcc_mean ~ year + gender + manager + parent, data = df.geam20.24) 
 
 mcc_main |>
@@ -443,7 +437,6 @@ mcc_main |>
 ```{r}
 #| label: tbl-regression-mcc-interaction
 #| tbl-cap: "Regression analysis of MCC score - model 3 including interaction terms"
-#| cap-location: margin
 mcc_fit <- lm(mcc_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
 
 mcc_fit |>
@@ -457,7 +450,6 @@ Regression analysis accounting for all variables (@tbl-regression-mcc-interactio
 ```{r}
 #| label: tbl-mcc-breusch-pagan
 #| tbl-cap: "MCC score model homoscedasticity test results"
-#| cap-location: margin
 bp_test <- car::ncvTest(mcc_fit)
 
 bp_results <- data.frame(
@@ -483,9 +475,10 @@ The R code for matching 2020 and 2024 culture (OCWC002) answer options and mappi
 :::
 
 ```{r}
-#| label: code-map-culture-values
+#| lst-label: lst-map-culture-values
+#| lst-cap: Merge and match OCWC culture scores
 #| code-fold: true
-#| code-summary: Click to see code for merging and matching of OCWC / culture scores 
+#| code-summary: Show code
 # merge items for 2020 dataset
 df20 <- df.geam20 |>
   select(num_range("OCWC002_SQ", c(4,13:15, 18:20), width=3)) |>
@@ -516,7 +509,6 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 ```{r}
 #| label: tbl-mean-culture-score
 #| tbl-cap: "Mean workplace culture (OCWC) scores by gender, manager, and parent status across years"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for mean OCWC scores table"
 # summarise mean scores for OCWC
@@ -545,7 +537,6 @@ As can be seen in @tbl-mean-culture-score, the overall mean of the OCWC / Cultur
 ```{r}
 #| label: fig-culture-mean-df
 #| fig-cap: "Barcharts of mean workplace culture scores for gender by year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code producing the barchart
 # barchart of mean workplace culture scores for gender by year
@@ -566,7 +557,6 @@ df.geam20.24 |>
 ```{r}
 #| label: fig-box-culture-gender
 #| fig-cap: "Boxplots for workplace culture scores by gender and year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code producing the boxplot
 # Boxplots for workplace culture scores by gender and year
@@ -588,7 +578,6 @@ df.geam20.24 |>
 ```{r}
 #| label: tbl-regression-ocwc-base
 #| tbl-cap: "Regression analysis of workplace culture score - model 1 by year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for base linear regression model 1 with year only"
 
@@ -603,7 +592,6 @@ owcw_base |>
 ```{r}
 #| label: tbl-regression-ocwc-main
 #| tbl-cap: "Regression analysis of workplace culture score - model 2 main effects year, gender, managerial role and parent status"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 2"
 
@@ -618,7 +606,6 @@ owcw_main |>
 ```{r}
 #| label: tbl-regression-ocwc-interaction
 #| tbl-cap: "Regression analysis of the workplace culture score - model 3 including interaction terms"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 3"
 
@@ -634,7 +621,6 @@ owcw_fit |>
 ```{r}
 #| label: tbl-owco-breusch-pagan
 #| tbl-cap: "Workplace culture score homoscedasticity test results"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for homoscedasticity test"
 
@@ -660,11 +646,10 @@ The regression analysis in @tbl-regression-ocwc-interaction indicates that facto
 
 
 ```{r}
-#| label: code-bima-scores
+#| lst-label: lst-bima-scores
+#| lst-cap: Merge and match BIMA responses
 #| code-fold: true
-#| code-summary: Click to see code for merging and matching of BIMA items
-
-
+#| code-summary: Show code
 df20 <- df.geam20 |>
   select(starts_with("BIMA001"))|>
   map_df(~ {if_else(.x == "Not applicable", NA, .x)}) |>  # replace "Not applicable" with NA
@@ -689,7 +674,6 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 ```{r}
 #| label: tbl-mean-bima-score
 #| tbl-cap: "Mean microaggression (BIMA) scores by gender, manager, and parent status across years"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for producing BIMA mean scores"
 # Mean scores for microaggressions (BIMA)
@@ -720,7 +704,6 @@ The data reveals that microaggressive behaviour was reported less frequently in 
 ```{r}
 #| label: fig-bima-mean-df
 #| fig-cap: "Barcharts of mean microagression scores for gender by year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see the code for producing the barchart 
 # Barchart of mean microaggression scores
@@ -742,7 +725,6 @@ df.geam20.24 |>
 ```{r}
 #| label: fig-box-bima-gender
 #| fig-cap: "Boxplots for microagression scores by gender and year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code producing the boxplot
 # Boxplots for microagression scores by gender and year
@@ -764,7 +746,6 @@ df.geam20.24 |>
 ```{r}
 #| label: tbl-regression-bima-base
 #| tbl-cap: "Regression analysis of microagression score - model 1 by year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 1"
 
@@ -779,7 +760,6 @@ micagg_base |>
 ```{r}
 #| label: tbl-regression-bima-main
 #| tbl-cap: "Regression analysis of microagression score - model 2 main effects of year, gender, managerial role and parent status"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 2"
 
@@ -794,7 +774,6 @@ micagg_main |>
 ```{r}
 #| label: tbl-regression-bima-interaction
 #| tbl-cap: "Regression analysis of microagression score - model 3 including interaction terms"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 3"
 
@@ -811,7 +790,6 @@ The results of the regression analysis as shown in @tbl-regression-bima-main rev
 ```{r}
 #| label: tbl-micagg-breusch-pagan
 #| tbl-cap: "Microagression score homoscedasticity test results"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for homoscedasticity test"
 
@@ -834,9 +812,10 @@ bp_results
 
 
 ```{r}
-#| label: code-gender-equality-scores
+#| lst-label: lst-gender-equality-scores
+#| lst-cap: Match and merge OCPER001 items
 #| code-fold: true
-#| code-summary: "Click to see code for merging OCPER001 items"
+#| code-summary: Show code
 # merge OCPER001 items for year 2020
 df20 <- df.geam20 |>
   select(starts_with("OCPER001"))|>
@@ -861,7 +840,6 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 ```{r}
 #| label: tbl-mean-gender-equality-score
 #| tbl-cap: "Mean gender equality (OCPER001) scores by gender, manager, and parent status across years"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for producing OCPER001 mean scores table"
 # Calculate mean scores for OCPER001 by gender, manager, and parent status across years
@@ -891,7 +869,6 @@ In 2020, the average value hovered around zero (0.09), which indicates that OPI 
 ```{r}
 #| label: fig-ocper1-mean-df
 #| fig-cap: "Barchart of mean gender equality scores for gender by year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code producing the barchart 
 
@@ -914,7 +891,6 @@ df.geam20.24 |>
 ```{r}
 #| label: fig-box-ocper1-gender
 #| fig-cap: "Boxplots for gender equality scores by gender and year "
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code producing the boxplot
 
@@ -936,8 +912,7 @@ df.geam20.24 |>
 #### Regression analysis: gender equality
 ```{r}
 #| label: tbl-regression-gender-equality-base
-#| tbl-cap: "Regression analysis of gender equality score - model 1 by year"
-#| cap-location: margin
+#| tbl-cap: Regression analysis of gender equality score 
 #| code-fold: true
 #| code-summary: "Click to see code for model 1"
 genequ_base <- lm(genequ_mean ~ year, data = df.geam20.24) 
@@ -951,7 +926,6 @@ genequ_base |>
 ```{r}
 #| label: tbl-regression-gender-equality-main
 #| tbl-cap: "Regression analysis of gender equality score - model 2 main effects year, gender, managerial role and parent status"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 2"
 genequ_main <- lm(genequ_mean ~ year + gender + manager + parent, data = df.geam20.24) 
@@ -965,7 +939,6 @@ genequ_main |>
 ```{r}
 #| label: tbl-regression-gender-equality-interaction
 #| tbl-cap: "Regression analysis of gender equality score - model 3 including interaction terms"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 3"
 genequ_fit <- lm(genequ_mean ~ gender*year + manager*year + parent*year, data=df.geam20.24) 
@@ -980,7 +953,6 @@ genequ_fit |>
 ```{r}
 #| label: tbl-gender-equality-breusch-pagan
 #| tbl-cap: "Gender equality score homoscedasticity test results"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for homoscedasticity test"
 bp_test <- car::ncvTest(genequ_fit)
@@ -1005,9 +977,10 @@ In summary, the perception of equality at OPI PIB improved significantly in 2024
 #### Preparation and transformation of data
 
 ```{r}
-#| label: code-ocper3-scores
+#| lst-label: lst-ocper3-scores
+#| lst-cap: Merge and match OCPER003 items
 #| code-fold: true
-#| code-summary: "Click to see code for merging OCPER003 items"
+#| code-summary: Show code
 # merge selected OCPER003 items for 2020
 df20 <- df.geam20 |>
   select(num_range("OCPER003_SQ", c(3,4,6,7,9,10,11,14,16,18,19), width=3)) |> # select sub-questions 3, 4, ...
@@ -1034,7 +1007,6 @@ df.geam20.24 <- bind_rows(df20, df24)  |>
 ```{r}
 #| label: tbl-mean-ocper3-score
 #| tbl-cap: "Mean resources or responsibilities (OCPER003) scores by gender, manager, and parent status across years"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for producing OCPER003 mean scores table"
 
@@ -1064,7 +1036,6 @@ The data indicates a small but persistent trend that the resources and responsib
 ```{r}
 #| label: fig-ocper3-mean-df
 #| fig-cap: "Barchart of mean resources or responsibilities scores for gender by year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code producing the barchart  
 
@@ -1087,7 +1058,6 @@ df.geam20.24 |>
 ```{r}
 #| label: fig-box-ocper3-gender
 #| fig-cap: "Boxplots for resources or responsibilities scores by gender and year "
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code producing the boxplot 
 
@@ -1109,7 +1079,6 @@ df.geam20.24 |>
 ```{r}
 #| label: tbl-regression-ocper003-base
 #| tbl-cap: "Regression analysis of resources or responsibilities score - model 1 by year"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 1"
 ocper3_base <- lm(ocper3_mean ~ year, data = df.geam20.24) 
@@ -1123,7 +1092,6 @@ ocper3_base |>
 ```{r}
 #| label: tbl-regression-ocper003-main
 #| tbl-cap: "Regression analysis of resources or responsibilities score - model 2 main effects year, gender, managerial role and parent status"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 2"
 ocper3_main <- lm(ocper3_mean ~ year + gender + manager + parent, data = df.geam20.24) 
@@ -1137,7 +1105,6 @@ ocper3_main |>
 ```{r}
 #| label: tbl-regression-ocper003-interaction
 #| tbl-cap: "Regression analysis of resources or responsibilities score - model 3 including interaction terms"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for model 3"
 
@@ -1152,7 +1119,6 @@ ocper3_fit |>
 ```{r}
 #| label: tbl-ocper003-breusch-pagan
 #| tbl-cap: "Resources or responsibilities score homoscedasticity test results"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: "Click to see code for homoscedasticity test"
 bp_test <- car::ncvTest(ocper3_fit)

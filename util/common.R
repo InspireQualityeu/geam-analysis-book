@@ -29,13 +29,13 @@ options(
 ggplot2::theme_set(ggplot2::theme_light())
 
 
-# Custom frequency table function
-# 
-# @param data data frame object, passed implicitly
-# @param var variable name to use for frequency table
-# @param digits numeric round up to number of digits
-# @param fsize numeric font size for word tables
-# 
+#' Custom frequency table function
+#' 
+#' @param data data frame object, passed implicitly
+#' @param var variable name to use for frequency table
+#' @param digits numeric round up to number of digits
+#' @param fsize numeric font size for word tables
+#' 
 table_frq <- function(data, var, digits=2, fsize=11){
   
   headertxt <- c("N", "Raw%", "Valid%", "Cum%")
@@ -83,15 +83,13 @@ table_frq <- function(data, var, digits=2, fsize=11){
       flextable::compose(i = tnum_rows, j = 1, as_paragraph(as_chunk(missing_str)))
   }
   
-
   tblx
-  
 }
 
 
-# Generic table print function to switch correctly to flextable for 
-# word documents. 
-# 
+#' Generic table print function to switch correctly to flextable for 
+#' word documents. 
+#' 
 table_df <- function(tblx, digits=2, fsize=11){
   
 

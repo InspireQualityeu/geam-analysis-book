@@ -1,0 +1,225 @@
+---
+author:
+  - name: Jörg Müller
+    orcid: 0000-0001-7727-2117
+    email: jmuller@uoc.edu
+    affiliation: 
+      - id: uoc
+        name: Universitat Oberta de Catalunya
+        city: Barcelona
+        url: www.gender-ict.net
+  - name: Dalia Argudo
+    email: dalia.argudo@notus-asr.org
+    affiliation: 
+        - id: notus
+          name: Notus, S.L.
+          city: Barcelona
+          url: www.notus-asr.org
+execute: 
+    echo: true
+    warning: false
+    message: false
+
+abstract: >
+    The following chapter  
+
+keywords:
+  - Career progression
+  - Work-life balance
+  - Vertical segregation
+  - Gender gaps
+---
+
+# The climate of equality, diveristy and inclusion {#sec-ch09-climate}
+
+```{r}
+#| label: setup 
+#| echo: false
+
+library(tidyverse)
+library(gpg)
+library(scales)
+library(sjPlot)
+library(knitr)
+library(gtsummary)
+
+source("util/common.R")
+source("util/encrypt.R")
+
+# at the start of the session, need to execute this first time manually to get password callback
+df.geam03 <-read_gpg("data/df.343696.en.rdata.gpg")
+
+df.geam02 <-read_gpg("data/df.784191.en.rdata.gpg") 
+
+
+```
+
+
+
+
+## Perceptions of gender equality
+
+One of the consistent findings of the ASSET Survey 2016 is that men reported a more positive perception of Equality, Diversity and Inclustion aspects than women. The GEAM captures the perception of gender equality issues through several items. `OCPER001` inquires about any differences in organizational committment to gender equality or differences in the equal treatment and participation of women and men. `OCPER003` on the other hand examines differences in the allocation of several type of resources and responsibilities.
+
++----------+--------------------------------------------------------------------------------------------+-----------------------------------+
+| Code     | Item                                                                                       | Responses                         |
++==========+============================================================================================+===================================+
+| OCPER001 |                                                                                            |                                   |
++----------+--------------------------------------------------------------------------------------------+-----------------------------------+
+| .SQ001.  | In general, men and women are equally represented (in terms of numbers) in my organisation | \[1\] Strongly disagree\          |
+|          |                                                                                            | \[2\] Disagree\                   |
+|          |                                                                                            | \[3\] Neither agree nor disagree\ |
+|          |                                                                                            | \[4\] Agree\                      |
+|          |                                                                                            | \[5\] Strongly agree              |
++----------+--------------------------------------------------------------------------------------------+-----------------------------------+
+| .SQ002.  | In general, men and women are treated equally in my organisation                           | \- same as above                  |
++----------+--------------------------------------------------------------------------------------------+-----------------------------------+
+| .SQ003.  | My organisation is committed to promoting gender equality                                  | \- same as above                  |
++----------+--------------------------------------------------------------------------------------------+-----------------------------------+
+| .SQ004.  | Myself and colleagues know who to go to if we have concerns related to gender equality     | \- same as above                  |
++----------+--------------------------------------------------------------------------------------------+-----------------------------------+
+| .SQ005.  | My organisation is responsive to concerns about gender equality                            | \- same as above                  |
++----------+--------------------------------------------------------------------------------------------+-----------------------------------+
+
+
+
+
+## Masculinity Contest Culture
+
+The aim of the Masculinity Contest Culture (MCC) scale is to assess how strongly an organization or organizational unit endorses masculine norms. Since the MCC is an organizational level variable, it correlates primarily with organizational level outcomes. A comparative analysis in the framework of the GEAM would be especially pertinent to explore differences between departments or faculties within one and the same organization (e.g. male dominated areas vs. female dominated areas). A possible proxy for this type of exploration could be disciplinary background of respondents (e.g. computer science or engineering versus arts & humanities.) As an organizational level measure, the MCC is a useful instrument to track the impact of organization level policies - when administered before and after the implementation of certain measures.
+
+The concepts and measurement scale is introduced in the following two articles [@BerdahlMCC2018] and [@GlickDevMCC2018]:
+
+Glick, Peter, Jennifer L. Berdahl, and Natalya M. Alonso. 2018. “Development and Validation of the Masculinity Contest Culture Scale.” Journal of Social Issues 74 (3): 449–76. https://doi.org/10.1111/josi.12280.
+
+Berdahl, Jennifer L., Marianne Cooper, Peter Glick, Robert W. Livingston, and Joan C. Williams. 2018. “Work as a Masculinity Contest: Work as a Masculinity Contest.” Journal of Social Issues 74 (3): 422–48. https://doi.org/10.1111/josi.12289.
+
+Overall, the MCC is made up of 4 factors that together constitute "masculine" norms at the organizational level:
+
+-   show no weakness
+-   demonstrate strength and stamina
+-   put work first
+-   engage in dog-eat-dog competition
+
+Each dimension is captured with two sub-question as shown below. Although an organizational level measurement scale, outcomes at the organisational level are expected to trickle down to the individual level, for example in terms of turn-over intentions, burnout, job-satisfaction, or overall individual well-being of employees. As Glick and co-authors write, "\[...\] both men and women experienced masculinity contest workplaces as dysfunctional, rife with negative social behaviors, dissatisfying, and personallyl harmful." [@GlickDevMCC2018].
+
+Masculinity contest norms correlate with having toxic leaders, a heterosexist culture, lower psychological team safety, and less support for work-life balance. It also correlates with bullying in general as well as sexual and ethnic harassment. Respondents from workplaces with higher masculinity contest norms reported "more personal experiences with coworkers bullying, sexual harassment and ethnic harassment". The MCC is also moderately correlated with employees alientation from an organization.
+
+The MCC is gathered in 8 variables, `GlickMasculCont8.SQ0XX`:
+
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| Code             | Item                                                                 | Facet          | Responses                                      |
++==================+======================================================================+================+================================================+
+| GlickMasculCont8 |                                                                      |                |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ001.          | Admitting you don't know the answer looks weak                       | no weakness    | \[1\] Not at all true for my work environment\ |
+|                  |                                                                      |                | \[2\] Somewhat untrue for my work environment\ |
+|                  |                                                                      |                | \[3\] Neither true nor untrue\                 |
+|                  |                                                                      |                | \[4\] Somewhat true for my work environment\   |
+|                  |                                                                      |                | \[5\] Entirely true for my work environment    |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ002.          | Expressing any emotion other than anger or pride is seen as weak     | no weakness    |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ006.          | It's important to be in good physical shape to be respected          | stamina        |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ007.          | People who are physically smaller have to work harder to get respect | stamina        |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ011.          | To succeed you can't let family interfere with work                  | put work first |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ012.          | Taking days off is frowned upon                                      | put work first |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ016.          | You're either "in" or you're "out", and once you're out, you're out  | dog-eats-dog   |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+| .SQ017.          | If you don't stand up for yourself people will step on you           | dog-eats-dog   |                                                |
++------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
+: Masculinit Contest Culture sub-question items and response options {tbl-colwidths="[10,40,20,35]"}
+
+```{r}
+
+cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+
+df.geam02 |>
+  select(starts_with("GlickMasculCont8.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = T, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 40,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal
+)
+
+```
+
+Based upon this first visual exploration, MCC scores can be used for downstream analysis. For example, @sec-ch04-mcc compares how MCC scores have changed between the first and second round of the GEAM survey withing the same organisation. As the analysis in @sec-ch04-compare-time shows, there are only slight changes between the 2020 and 2024 data. 
+
+As described, MCC is an organisational level score best used to detect differences between organisational level units such as university faculties or departments. In lack of those, let's see if MCC differ by type of staff (`WCJC001`). 
+
+Using similar code as in @lst-mcc-scores, we first reverse all MCC scores and center them on 0. This eases interpretability, as negative scores indicate a strong masculinity contest culture, while positive scores indicate the opposite, namely the absence of a masculinity contest culture. 
+
+```{r}
+#| lst-label: lst-ch09-mean-mcc-scores
+#| lst-cap: Reverse factor levels, convert to numeric and center on 0, and calculate row means of MCC 
+df.geam02 <- df.geam02 |>
+  mutate(across(starts_with("Glick"), ~ fct_rev(.x), .names = "Rev_{.col}"), 
+         across(starts_with("Rev_Glick"), ~ {as.numeric(.x) - 3}), 
+         mcc_mean = rowMeans(across(starts_with("Rev_Glick")), na.rm=T))
+```
+
+
+```{r}
+#| label: tbl-ch09-mcc-mean-scores
+#| tbl-cap: Mean Masculinity Contest Culture scores by type of job position
+df.geam02 |>
+  filter(!is.na(WCJC001)) |>
+  group_by(WCJC001) |>
+  summarize(
+    N = n(),
+    Mean = mean(mcc_mean, na.rm = TRUE),
+    StrdDev = sd(mcc_mean, na.rm = TRUE),
+    Median = median(mcc_mean, na.rm = TRUE),
+    IQR = IQR(mcc_mean, na.rm = TRUE)
+  )
+```
+
+As @tbl-ch09-mcc-mean-scores indicates, there are indeed differences between MCC scores between academics/researchers, Technicians, and Administrative staff. Since we have reversed the factors and centered the score on 0, a score of 2 on a given sub-question (e.g. "Admitting you don't know the answer looks weak") would indicate that it is "Not at all true for my work environment" while a score of -2 would indicate "Entirely true for my work environment". As the above table suggests, academics/researchers in this particular organisation think overall more favorably of their work environment than technicians and administrative staff.
+
+```{r}
+#| label: fig-ch09-box-mcc
+#| fig-cap: Boxplot of MCC scores
+#| code-fold: true
+#| code-summary: Show code 
+cpal <- RColorBrewer::brewer.pal(3, "Set1")  
+
+df.geam02 |>
+  filter(!is.na(WCJC001) & !is.na(mcc_mean)) |>
+  ggplot(aes(x=WCJC001, y = mcc_mean, fill=WCJC001)) +
+    geom_boxplot(width=.8) + 
+    scale_fill_manual(values=cpal) +
+    #scale_y_continuous(limits = c(-2, 2)) +
+    labs(x="", y="Mean job satisfaction", fill="Year")
+```
+
+
+
+```{r}
+
+anova_model <- aov(mcc_mean ~ WCJC001, data = df.geam02)
+summary(anova_model)
+
+# df.geam02 |>
+#   filter(!is.na(WCJC001) & !is.na(mcc_mean)) |>
+#   select(mcc_mean, WCJC001) |>
+#   tbl_summary(
+#     by = WCJC001, 
+#     missing = "no"
+#   ) |>
+#   add_p(all_continuous() ~ "aov") |>
+#   modify_header(statistic ~ "**Test Statistic**") |>
+#   modify_fmt_fun(statistic ~ style_sigfig)
+
+```
+

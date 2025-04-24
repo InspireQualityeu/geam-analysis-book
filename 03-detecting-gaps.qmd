@@ -109,12 +109,15 @@ A 100% stacked bar chart is a suitable tool for this purpose, as it facilitates 
 
 This type of chart helps identify potential gender gaps in the distribution of roles, highlighting whether one gender is overrepresented or underrepresented in specific areas of the organisation, which is crucial for understanding workplace equity and diversity dynamics.
 
+::: callout-note
+The graph uses the binary gender variable `SDEM004.bin` and remove all `NAs` from both the gender as well as job position.
+
+Since these stacked barchars between two categorical variables are quite frequent, we have created a custom function `crosstab_plot()` to generate the plots on the fly with different variables. It saves repeating the same lines of code for each plot. 
+:::
+
 ```{r}
-#| label: fig-WCJC001-gender
 #| lst-label: lst-crosstab-plot-code
-#| fig-cap: "Stacked bar chart of WCJC001 and SDEM004.bin – Job position and gender"
-#| cap-location: margin  
-cpal <- RColorBrewer::brewer.pal(5, "Set1")
+#| lst-cap: Code to calculate proportion of women and men by job positions and create stacked bar chart
 
 #  Calculate gender proportions
 df.prop.01 <- df.geam01 |> 
@@ -127,24 +130,29 @@ df.prop.01 <- df.geam01 |>
     label = ifelse(prop > 0.03, paste0(n, " (", scales::percent(prop, accuracy = 1), ")"), "")
   )
 
-# Stacked bar chart
-ggplot(df.prop.01, aes(x = SDEM004.bin, y = prop, fill = WCJC001)) +
-  geom_col(width = 0.8, position = "stack") +
-  geom_text(aes(label = label), 
+# define colors
+cpal <- RColorBrewer::brewer.pal(5, "Set1")
+
+# create stacked bar chart
+p1 <- df.prop.01 |>
+  ggplot(aes(x = SDEM004.bin, y = prop, fill = WCJC001)) +
+    geom_col(width = 0.8, position = "stack") +
+    geom_text(aes(label = label), 
             position = position_stack(vjust = 0.5), 
             color = "white", size = 3.5, lineheight = 0.9) +
-  scale_fill_manual(values = cpal) +
-  scale_y_continuous(labels = percent_format()) +
-  labs(x = "", y = "Proportion", fill = "Job Position") +
-  theme_light()
-
+    scale_fill_manual(values = cpal) +
+    scale_y_continuous(labels = percent_format()) +
+    labs(x = "", y = "Proportion", fill = "Job Position") +
+    theme_light()
 ```
 
-::: callout-note
-The graph uses the binary gender variable `SDEM004.bin` and remove all `NAs` from both the gender as well as job position.
+```{r}
+#| echo: false
+#| label: fig-WCJC001-gender
+#| fig-cap: "Stacked bar chart of WCJC001 and SDEM004.bin – Job position by gender"
+p1
+```
 
-Since these stacked barchars are quite frequent, we have created a custom function `crosstab_plot()` to generate the plots on the fly with different variables. It saves us from repeating the same lines of code for each plot. 
-:::
 
 @fig-WCJC001-gender shows the relative distribution of jobs by gender, highlighting differentiated patterns between men and women. We observe that 72% of men hold academic or research positions, compared to 62% of women in the same category. On the other hand, women are overrepresented in administrative roles, with 24% compared to 10% of men. These differences suggest the existence of occupational segregation by gender, which may reflect structural dynamics of inequality within the organisation. The categories of technician and other positions show smaller discrepancies, though they still contribute to the overall pattern of unequal distribution. This trend requires further exploration through statistical tests to determine the significance of the observed differences.
 
@@ -178,8 +186,8 @@ Excluding empty categories is essential, as the `Chi-square test` requires at le
 
 
 ```{r}
-#| label: sample-job-position-gender
-
+#| lst-label: lst-sample-job-position-gender
+#| lst-cap: Remove NAs and drop unused factor levels
 df.sub.01 <- df.geam01 |>
   filter(!is.na(WCJC001) & WCJC001 != "Other" & !is.na(SDEM004.bin)) |>
   transmute(

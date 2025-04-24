@@ -46,9 +46,27 @@ source("util/common.R")
 source("util/encrypt.R")
 
 # at the start of the session, need to execute this first time manually to get password callback
-df.geam03 <-read_gpg("data/df.343696.en.rdata.gpg")
-
 df.geam02 <-read_gpg("data/df.784191.en.rdata.gpg") 
+
+# make gender binary 
+df.geam02 <- df.geam02 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004))
+
+# load data 
+df.geam03 <-read_gpg("data/df.349312.en.rdata.gpg")
+
+# make gender binary
+df.geam03 <- df.geam03 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004))
+
 
 ```
 
@@ -104,24 +122,10 @@ Women tend to have considerably more care responsibilities than men, both for ch
 
 : GEAM questions covering care responsibilities for dependent adults and children {tbl-colwidths="[15,50,35]"}
 
-Gender gaps in care responsibilities to both questions can be visually explored quickly using recipies and code introduced in @sec-ch02-respondents abd @sec-ch03-gaps.
+Gender gaps in care responsibilities can be explored quickly using code-recipies introduced in @sec-ch02-respondents and @sec-ch03-gaps. 
 
 
-```{r}
-#| label: code-preprocess-wcwi006
-#| code-fold: true
-#| code-summary: Show preprocessing code for gender
-
-df.geam03 <- df.geam03 |>
-  mutate(SDEM004.bin = case_when(
-    SDEM004 == "Prefer not to say" ~ NA,
-    SDEM004 == "Non-binary" ~ NA, 
-    SDEM004 == "Other" ~ NA,
-    .default = SDEM004
-  ))
-```
-
-For example, by using @lst-crosstab-plot-code, we can generate stacked barcharts to visualise the relative proportion of women and men with care responsibilities: 
+For example, by using @lst-crosstab-plot-code, we can generate stacked barcharts to visualise the relative proportion of women and men with care responsibilities. Note that this uses a binary gender variable, applying @lst-binary-sdem004-gender  before printing the plot.   
 
 ```{r}
 #| label: fig-care-adult
@@ -131,7 +135,6 @@ For example, by using @lst-crosstab-plot-code, we can generate stacked barcharts
 
 df.geam03 |>
   crosstab_plot(WCWI006, SDEM004.bin, fillab="Dependent adult")
-
 ```
 
 ```{r}
@@ -147,21 +150,23 @@ df.geam03 |>
 
 In both @fig-care-adult and @fig-care-child we can see that women have more care responsibilities than their male colleagues.
 
-For many subsequent analysis (e.g. in relation to the work-family conflict scale), we combine these two care-related variables into a new single variable named `CareResp` which is set to `TRUE` if a respondent is a primary carer for an adult **or** has caring responsibilities for children, and set to `FALSE` otherwise.
+For many subsequent analysis (e.g. in relation to the work-family conflict scale), we combine these two care-related variables in @lst-create-bin-care-res into a single variable called `CareResp`. It is set to `TRUE` if a respondent is a primary carer for an adult **or** has caring responsibilities for children, and set to `FALSE` otherwise.
 
 ```{r}
-#| label: code-create-bin-care-responsibility
+#| lst-label: lst-create-bin-care-res
+#| lst-cap: Merge Adult and Child care responsibilities into a new variable 'CareResp'
   df.geam03 <- df.geam03 |> 
         mutate(CareResp = if_else((WCWI006 == "Yes" | 
                                    WCWI008 == "Yes"), TRUE,FALSE))
 ```
 
-At this point we do not differentiate which type of care responsibilities respondents have, but simply if there are any gender differences at all. Using this newly created variable, we could explore if there are statistically significant gender differences for care responsibilities in this particular dataset using recipies for categorical variables in @sec-ch03-gaps.
+At this point we do not differentiate which type of care responsibilities respondents have. Using the newly created `CareResp` variable we check if there exist statistically significant gender differences for care responsibilities in our dataset (see @sec-ch03-gaps-categorical). 
 
 ```{r}
-#| label: code-care-by-gender
+#| lst-label: lst-care-by-gender
+#| lst-cap: Drop rows containing NA and unused factor levels
 #| code-fold: true
-#| code-summary: Show code for contingency table
+#| code-summary: Show code
 
 df.sub.01 <- df.geam03 |>
   filter(!is.na(SDEM004.bin) & !is.na(CareResp)) |>
@@ -174,7 +179,6 @@ df.sub.01 <- df.geam03 |>
 ```{r}
 #| label: tbl-care-by-gender
 #| tbl-cap: Contingency table care responsibilities by gender
-#| tbl-cap-location: margin
 #| code-fold: true
 #| code-summary: Show code for contingency table
 # custom function to calculate different test statistics: chi-square, cramer, fisher
@@ -195,7 +199,7 @@ df.sub.01 |>
   )
 ```
 
-As @tbl-care-by-gender shows, there are no statistically significant differences in care responsibilities by gender.
+As @tbl-care-by-gender shows, gender differences in care responsibilities tend to be significant at the p < 0.05 signifance level. As @fig-care-adult shows, the difference concerns mainly care responsibilities for dependent adults, where men have fewer care responsibilities than women. 
 
 ## Parental leave
 
@@ -217,13 +221,13 @@ The GEAM includes a series of questions regarding parental leave. To start with,
 |            |                                                                                                      | \[4\] Paid parental leave    |
 +------------+------------------------------------------------------------------------------------------------------+------------------------------+
 
-: Care responsibilities question {tbl-colwidths="\[15,45,30\]"}
+: Care responsibilities question {tbl-colwidths="[15,45,30]"}
 
 In addition, questions `WCWI016`, `WCWI020`, `WCWI021` gather further details regarding parental leave policies, return to work support measures and if they are preceived as useful.
 
 ```{r}
 #| label: fig-leave-gender
-#| fig.cap: "Stacked bar chart of parental leave update by gender"
+#| fig.cap: "Stacked bar chart of parental leave uptake by gender"
 #| code-fold: true
 #| code-summary: Click to show code for illustration
 
@@ -232,19 +236,21 @@ df.geam03 |>
 
 ```
 
-The chart presents the distribution of parental leave uptake by gender, categorised into three response options: ‘Yes’, ‘No’, and ‘Prefer not to say’. Among men, 88% reported not having taken parental leave, 10% reported having taken it, and 2% preferred not to answer. Among women, 86% responded ‘No’, 12% responded ‘Yes’, and 1% selected ‘Prefer not to say’. The distribution indicates a slightly higher reported uptake of parental leave among women compared to men. While the overall proportions are similar, the small increase in reported uptake among women may reflect differences in access, eligibility, or social norms surrounding parental responsibilities. Further statistical analysis would be required to determine whether the observed differences are statistically significant.
+The chart presents the distribution of parental leave uptake by gender, categorised into three response options: ‘Yes’, ‘No’, and ‘Prefer not to say’. Among men, 88% reported not having taken parental leave, 10% reported having taken it, and 2% preferred not to answer. Among women, 86% responded ‘No’, 12% responded ‘Yes’, and 1% selected ‘Prefer not to say’. The distribution indicates a slightly higher reported uptake of parental leave among women compared to men. While the overall proportions are similar, the small increase in reported uptake among women may reflect differences in access, eligibility, or social norms surrounding parental responsibilities. 
+
+In a subsequent step, further statistical analysis shows whether the observed differences are statistically significant. For that we also remove the 'Prefer not to say' answer option from parental leave (`WCWI011a`) which contains too few respondents and all respondents with now answer.  
 
 ```{r}
 #| label: tbl-test-assoc-parent-leave-gender
 #| tbl-cap: "Statistical test results - Association between parental leave and gender"
-#| cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code to generate contingency table
 # drop unused factor levels
 df.sub.03 <- df.geam03 |>
-  filter(!is.na(WCWI011a) & !is.na(SDEM004.bin)) |>
+  mutate(ParentLeave = if_else(WCWI011a == "Prefer not to say", NA_character_, WCWI011a)) |>
+  filter(!is.na(ParentLeave) & !is.na(SDEM004.bin)) |>
   transmute(
-    ParentLeave = fct_drop(WCWI011a), 
+    ParentLeave = fct_drop(ParentLeave), 
     Gender = fct_drop(SDEM004.bin)
   )
 
@@ -266,7 +272,7 @@ df.sub.03 |>
   )
 ```
 
-@tbl-test-assoc-parent-leave-gender indicates that there are no statistically significant gender differences regarding parental leave (χ² = 0.736, p = 0.391 and Fisher’s p = 0.366). Furthermore, the Cramér’s V value (0.073) suggests no association, reinforcing the conclusion that the relationship between gender and parental leave uptake in this particular organisation is minimal.
+@tbl-test-assoc-parent-leave-gender indicates that there are no statistically significant gender differences regarding parental leave (χ² = 0.344, p = 0.557 and Fisher’s p = 0.579). Furthermore, the Cramér’s V value (0.029) suggests no association, reinforcing the conclusion that the relationship between gender and parental leave uptake in this particular organisation is minimal.
 
 Overall, these findings suggest that, within this sample, gender does not appear to influence parental leave uptake in a statistically meaningful way.
 
@@ -274,7 +280,7 @@ Overall, these findings suggest that, within this sample, gender does not appear
 
 Existing research indicates the negative impact of work-family conflict in terms of heightened burnout [@KinmanLifeWorkJob2008], lower job satisfaction, diminished health and higher turnover intentions [@ZabrodskaBurnout2018] for academic staff.
 
-The GEAM uses the Work-Family Conflict Scale [@breyer2016] is a well established measurement instrument on work-life balance that has been used in the [2002](http://dx.doi.org/10.4232/1.11564) and [2012](http://dx.doi.org/10.4232/1.12022) version of the Family and Changing Gender Roles module of the International Social Survey Program (ISSP).
+The GEAM uses the Work-Family Conflict Scale [@breyer2016] which is a well established measurement instrument on work-life balance that has been used in the [2002](http://dx.doi.org/10.4232/1.11564) and [2012](http://dx.doi.org/10.4232/1.12022) version of the Family and Changing Gender Roles module of the International Social Survey Program (ISSP).
 
 Source: Breyer, B., and M. Bluemke. 2016. "Work-Family Conflict Scale (ISSP)." ZIS - The Collection Items and Scales for the Social Sciences. <https://doi.org/10.6102/zis243>.
 
@@ -310,7 +316,8 @@ The variable (`WorkFamConfISSP`) is composed of four items which are subdivided 
 Note that for earlier version of the GEAM, the identification of sub-questions slightly changes from underscore "\_" to dot "." For example, to reference sub-question item one, the correct code for older version is `WorkFamConfISSP_SQ001` while for newer version it is `WorkFamConfISSP.SQ001.`
 :::
 
-There are national reference values available to deduce if respondents are below or above the national average of work conflict scale (see also [here](https://zis.gesis.org/skala/Breyer-Bluemke-Work-Family-Conflict-Scale-(ISSP)#Table6)).
+In addition, there are national reference values available to deduce if respondents are below or above the national average of work conflict (see also [here](https://zis.gesis.org/skala/Breyer-Bluemke-Work-Family-Conflict-Scale-(ISSP)#Table6)).
+
 
 ### Preparation and pre-processing
 
@@ -321,7 +328,8 @@ In order to use the work-family conflict scale for a more in-depth analysis, sev
 First, the scale needs to be recoded in order to ease interpretation. Original response items are coded starting with the lowest value representing the most sever work-life conflict "\[1\] = Several times a week" to the highest value representing the least work-life conflict "\[4\]=Never". The following code reverses the factor levels so that lower numers indicate lower work-family conflict and higher numbers will indicate a higher work-family conflict. In addition, we substract 1 from each score, so that "\[0\]=Never" coincides with a numeric 0. The [`fct_rev()`](https://forcats.tidyverse.org/reference/fct_rev.html) method from the [forcats](https://forcats.tidyverse.org/index.html) package does this job. We can conveniently convert all four sub-questions items with the `across()` function, which selects all variable names that start with `WorkFamConfISSP` and saves them into corresponding new variables `Rev_WorkFamConfISSP` using the `.names` argument. In addition, we need to convert the factor variables to numeric variables to calculate mean values for the scales in a subsequent step (and substract 1).
 
 ```{r}
-#| label: code-reverse-wfc
+#| lst-label: lst-reverse-wfc
+#| lst-cap: Reverse code work-family conflict items and convert to numeric
 # reverse factor levels
 df.geam03 <- df.geam03 |>
   mutate(across(starts_with("WorkFamConfISSP"), ~ fct_rev(.x), .names = "Rev_{.col}"), 
@@ -335,7 +343,8 @@ The order is now reversed where lower numbers indicate lower conflict and higher
 Since the work-family conflict scale is composed of two different dimension, we can calculate the average values for both, the work-family conflict as well as the family-work interference for each respondent. This will make it easier to produce summary statistics for the entire survey in a second step and explore potential gender gaps.
 
 ```{r}
-#| label: code-wfc-mean-values
+#| lst-label: lst-wfc-mean-values
+#| lst-cap: Calculate row means for work-family conflict scale for WF and FW sub-dimensions
 # calculate row means for work-family conflict scale
 df.geam03 <- df.geam03 |>
   mutate(WorkFamMean = rowMeans(across(c("Rev_WorkFamConfISSP.SQ001.","Rev_WorkFamConfISSP.SQ001.")), na.rm=T), 
@@ -343,14 +352,14 @@ df.geam03 <- df.geam03 |>
          WFCMean = (WorkFamMean+FamWorkMean)/2) 
 ```
 
-### Visual inspection
+
+### Exploring patterns
 
 Since the Work-family conflict scale includes four sub-question items that respondents rate on 4 answer options, we use a Likert plot to get an overview of the overall distribution.
 
 ```{r}
 #| label: fig-wfc-likert
 #| fig-cap: Likert plot of work-family conflict scores for each sub-question
-#| fig-cap-location: margin
 #| code-fold: true
 #| code-summary: Click to see code for producing the following figure
 cpal <- RColorBrewer::brewer.pal(4, "Set1")
@@ -358,13 +367,14 @@ cpal <- RColorBrewer::brewer.pal(4, "Set1")
 df.geam03 |>
   select(starts_with("WorkFamConfISSP")) |>  
   sjPlot::plot_likert(values="sum.outside", 
-              show.prc.sign = T, 
+              show.prc.sign = T,
+              grid.range = c(1.1, 1.1),
               expand.grid = T, 
-              wrap.legend.labels = 17, 
+              wrap.legend.labels = 10, 
               geom.colors = cpal)
 ```
 
-As @fig-wfc-likert demonstrates, more respondents have difficulties to concile their work with family responsibilities than respondents where family interferes with work. For example, 73.3% of respondents indicate that they've "come home from work too tired to the chores" either "several times a week" or "several times a month". By comparison, a much higher percentage indicate that their household responsibilities does "Never" or "Once or twice" interfere with work.
+As @fig-wfc-likert demonstrates, more respondents have difficulties to concile their work with family responsibilities than respondents where family interferes with work. For example, 60.9% of respondents indicate that they've "come home from work too tired to the chores" either "several times a week" or "several times a month". By comparison, 87.9% of respondents indicate that their household responsibilities do "Never" or "Once or twice" interfere with work.
 
 We also see that the pattern is consistent, i.e. the upper two bars and the lower two bars exhibit similar percentages for each answer option. We would expect this consistency due to conceptualization of work-family conflict as a two-directional phenomena, where the upper two items measure the same family-work interference while the lower two items measure work-family intereference.
 
@@ -395,7 +405,7 @@ df.geam03 |>
    mutate(across(where(is.numeric), \(x) round(x, 2)))
 ```
 
-The mean value for work-family conflict is considerablly higher (mean=2.06) compared to the mean value for family-work conflict (0.91).
+The mean value for work-family conflict is considerablly higher (mean=1.8) compared to the mean value for family-work conflict (0.62).
 
 Builing upon these insights, a more in-depth exploration of gender differences regarding work-family conflict could follow, for example exploring work-family conflict scores in relation to gender, age, or maritial status. Other interesting variables to examine in this regard include of course care responsibilities, `WCJC001` (current position), type of contract `WCJC010` (full- or part-time), or socio-economic background (`SDEM017` and `SDEM018`).
 
