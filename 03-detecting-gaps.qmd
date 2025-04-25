@@ -276,7 +276,7 @@ df.geam02 |>
   crosstab_plot(WCJC011, SDEM004.bin, fillab="Type of contract")
 ```
 
-The bar chart displays the distribution of contract types by gender, showing the proportion of individuals with fixed-term and permanent contracts. Among men, 41% hold fixed-term contracts and 59% have permanent contracts. Among women, 33% are employed on a fixed-term basis, while 67% hold permanent contracts. Although the difference is moderate, the visual comparison suggests a higher proportion of fixed-term contracts among men relative to women. These figures indicate a potential association between gender and type of employment contract, which warrants further statistical analysis to determine whether the observed variation is statistically significant.
+The bar chart displays the distribution of contract types by gender, showing the proportion of individuals with fixed-term and permanent contracts. Among men, 39% hold fixed-term contracts and 57% have permanent contracts. Among women, 31% are employed on a fixed-term basis, while 62% hold permanent contracts. Although the difference is moderate, the visual comparison suggests a higher proportion of fixed-term contracts among men relative to women. These figures indicate a potential association between gender and type of employment contract, which warrants further statistical analysis to determine whether the observed variation is statistically significant.
 
 
 Again, we will first clean the database and apply association tests for categorical variables.
