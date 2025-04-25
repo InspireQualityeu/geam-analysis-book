@@ -1,11 +1,19 @@
 
 project:
   type: book
+  output-dir: _book
 
 book:
   title: "Statistical Analysis for Inclusive Gender Equality"
   subtitle: "Practical Guidance for Analysing GEAM Data"
   date: today
+  cover-image: images/cover-page-design.jpg
+  favicon: images/cover-page-design.jpg
+  site-url: https://geamtool.eu/analysis
+  repo-url: https://github.com/InspireQualityeu/geam-analysis-book
+  repo-branch: main
+  repo-actions: [edit, issue]
+  
   chapters:
     - index.qmd
     - 01-introduction.qmd
@@ -67,20 +75,18 @@ keywords:
   - Descriptive statistics
   - Statistical analysis
 
-
 bibliography: references.bib
 reference-location: margin
 citation-location: document
-
-cover-image: images/abstract-landscape-3.jpg
-
 tbl-cap-location: margin
 fig-cap-location: margin
 cap-location: margin
 
 format:
   html:
-    theme: cosmo
+    theme: 
+      - cosmo
+      - styles.scss
     df-print: kable
   pdf:
     documentclass: scrbook
