@@ -32,6 +32,7 @@ library(gpg)
 library(datawizard)
 library(sjmisc)
 library(knitr)
+library(gtsummary)
 
 source("util/common.R")
 source("util/encrypt.R")
@@ -254,5 +255,325 @@ The next step, of this stage will be to create derived variables and indices. Th
 
 This is also the stage to transform continuous variables into categories (e.g., age groups @lst-age-aggregate-4g) or create dichotomous variables (e.g., binary gender variable @lst-binary-sdem004-gender).
 
+We are going to calculate the following variables and indices:
+
+- Binary gender (@lst-binary-sdem004-gender)
+
+```{r}
+#| label: code-binary-sdem004-gender
+#| code-fold: true
+#| code-summary: Show code to create the variable
+
+# Create binary gender variable
+df.combined <- df.combined |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004
+  ))
+
+```
+
+- Socioeconomic status (@lst-sdem01718-comp and @lst-code-ses-3g)
+
+```{r}
+#| label: code-ses
+#| code-fold: true
+#| code-summary: Show code to create the variable
+
+# create new SES variable based upon the higher value of SDEM017 vs. SDEM018
+df.combined <- df.combined |>
+  mutate(SDEM017.comp = if_else(SDEM017 == "Prefer not to say" | 
+                                SDEM017 == "Other" | 
+                                is.na(SDEM017), -99, as.numeric(SDEM017)), 
+         SDEM018.comp = if_else(SDEM018 == "Prefer not to say" |
+                                SDEM018 == "Other" | 
+                                is.na(SDEM018), -99, as.numeric(SDEM018)), 
+         higher_ses = if_else(SDEM017.comp >= SDEM018.comp, SDEM017.comp, SDEM018.comp))
+
+# create three SES groups
+df.combined <- df.combined |>
+  mutate(ses_3g = case_when(
+    higher_ses >0 & higher_ses <=3 ~ "Lower SES", 
+    higher_ses >3 & higher_ses <=5 ~ "Medium SES",
+    higher_ses >5 & higher_ses <=9 ~ "Higher SES",
+    .default = NA
+  ))
+
+# reconvert to factor
+df.combined$ses <- factor(df.combined$ses_3g)
+
+```
+
+- Care responsibilities (@lst-create-bin-care-res)
+
+```{r}
+#| label: code-create-bin-care-res
+#| code-fold: true
+#| code-summary: Show code to create the variable
+
+# Create binary care responsibilities
+df.combined<-df.combined |> 
+        mutate(CareResp = if_else((WCWI006 == "Yes" | 
+                                   WCWI008 == "Yes"), TRUE,FALSE))
+```
+
+- Level of education three groups (@lst-var-educ-level)
+
+```{r}
+#| label: code-var-educ-level
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create education level 3 groups
+df.combined <- df.combined |>
+  mutate(
+    educ.level = case_when(
+      SDEM016 %in% c(
+        "No formal education ",
+        "Primary school / elementary school",
+        "Secondary school / high school"
+      ) ~ "Low",
+
+      SDEM016 %in% c(
+        "College diploma or degree",
+        "Technical school",
+        "University - Baccalaureate / Bachelor's"
+      ) ~ "Medium",
+
+      SDEM016 %in% c(
+        "University - Master's",
+        "University - Doctorate",
+        "University - Postdoctorate"
+      ) ~ "High",
+
+      SDEM016 %in% c(
+        "Prefer not to say",
+        "Other",
+        ""
+      ) ~ NA_character_
+    ),
+
+    educ.level = factor(educ.level, levels = c("Low", "Medium", "High"))
+  )
+```
+
+- Work family conflict scale (@lst-reverse-wfc and @lst-wfc-mean-values)
+
+```{r}
+#| label: code-wfc
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# reverse factor levels
+df.combined <- df.combined |>
+  mutate(across(starts_with("WorkFamConfISSP"), ~ fct_rev(.x), .names = "Rev_{.col}"), 
+         across(starts_with("Rev_WorkFamConfISSP"), ~ {as.numeric(.x) - 1}))
+
+# calculate row means for work-family conflict scale
+df.combined <- df.combined |>
+  mutate(WorkFamMean = rowMeans(across(c("Rev_WorkFamConfISSP.SQ001.","Rev_WorkFamConfISSP.SQ001.")), na.rm=T), 
+         FamWorkMean = rowMeans(across(c("Rev_WorkFamConfISSP.SQ003.","Rev_WorkFamConfISSP.SQ004.")), na.rm=T), 
+         WFCMean = (WorkFamMean+FamWorkMean)/2) 
+
+```
+
+- Job satisfaction scale (combined)
+
+```{r}
+#| label: code-mean-EWCS89JobSatisfact8
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create job satisfaction score (combined)
+df.combined <- df.combined |>
+  rowwise() |>
+  mutate(jobsatis2 = mean(as.numeric(c_across(c(EWCS89JobSatisfact8.SQ001.,EWCS89JobSatisfact8.SQ002.))), na.rm=T), 
+         jobsatis3 = jobsatis2 * as.numeric(EWCS88JobSatisfact1))
+
+```
+
+- Job satisfaction score (@lst-var-job-sat-score)
+
+```{r}
+#| label: code-var-job-sat-score
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create job satisfaction score
+df.geam03 <- df.geam03 |>
+  mutate(JobSF.rev   = fct_rev(EWCS88JobSatisfact1), # reverse factor
+         JobSF.score = if_else(JobSF.rev == "Don't know/no opinion", 
+                             NA, 
+                             as.numeric(JobSF.rev)-1) ) 
+```
+
+- Microaggressions score
+
+```{r}
+#| label: code-mean-BIMA001.SQ
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create outcome microaggression score
+df.combined <- df.combined |>
+   rowwise() |>
+   mutate(microscore = mean(as.numeric(c_across(starts_with("BIMA001.SQ"))), na.rm=T))
+
+```
+
+- Masculinity Contest Culture scale
+
+```{r}
+#| label: code-mean-MCC-score
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create Masculinity Contest Culture variable
+df.combined <- df.combined |>
+  rowwise() |>
+  mutate(
+    MCC            = mean(as.numeric(c_across(starts_with("GlickMasculCont8.SQ"))), na.rm = TRUE),
+    MCC1_Weakness  = mean(as.numeric(c_across(c("GlickMasculCont8.SQ001.", "GlickMasculCont8.SQ002."))), na.rm = T),
+    MCC2_Stamina   = mean(as.numeric(c_across(c("GlickMasculCont8.SQ006.", "GlickMasculCont8.SQ007."))), na.rm = T),
+    MCC3_WorkFirst = mean(as.numeric(c_across(c("GlickMasculCont8.SQ011.", "GlickMasculCont8.SQ012."))), na.rm = T),
+    MCC4_Compete   = mean(as.numeric(c_across(c("GlickMasculCont8.SQ016.", "GlickMasculCont8.SQ017."))), na.rm = T)
+  ) |>
+  ungroup()
+
+```
+
+- Work overload index
+```{r}
+#| label: code-mean-overload-index
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create work overload index
+df.combined <- df.combined |>
+  rowwise() |>
+  mutate(work_overload = mean(as.numeric(c_across(c(EWCS36WorkIntensity2.SQ003., EWCS36WorkIntensity2.SQ004.))), na.rm = T)) |>
+  ungroup()
+```
+
+- Gender equality perception
+
+```{r}
+#| label: code-mean-equality-perception
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create organisational gender equality perception index
+df.combined <- df.combined |>
+  rowwise() |>
+  mutate(gender_equality_perception = mean(as.numeric(c_across(c(OCPER001.SQ001., OCPER001.SQ002., OCPER001.SQ003., OCPER001.SQ004.,       OCPER001.SQ005.))), na.rm = T)) |>
+  ungroup()
+```
+
+- Flexible work score
+
+```{r}
+#| label: flexible-work-mean-WCWI005
+#| code-fold: true
+#| code-summary: Show code for create the variable
+
+# Create flexible work mean
+df.combined <- df.combined |>  
+  mutate(across(starts_with("WCWI005.SQ"), as.numeric), 
+         FlexMean = rowMeans(across(starts_with("WCWI005.SQ")), na.rm = TRUE))  
+
+```
+
+- Awareness and use of flexible work options
+
+```{r}
+#| label: index-awareness-use-flexible-working-options
+#| code-fold: true
+#| code-summary: Click to see code for the index of awareness and use of flexible work options
+
+# Index of awareness and use of flexible work options
+# 1. Convert factor responses to numeric
+df.combined <- df.combined |>  
+  mutate(across(starts_with("WCWI005.SQ"), as.numeric))  # Convert selected columns to numeric
+
+# 2. Create dummy variables for awareness and usage
+df.combined <- df.combined |>
+  mutate(
+    aware_a = if_else(is.na(WCWI005.SQ001.), NA_real_, if_else(WCWI005.SQ001. %in% c(2, 3, 4), 1, 0)),
+    aware_b = if_else(is.na(WCWI005.SQ002.), NA_real_, if_else(WCWI005.SQ002. %in% c(2, 3, 4), 1, 0)),
+    aware_c = if_else(is.na(WCWI005.SQ003.), NA_real_, if_else(WCWI005.SQ003. %in% c(2, 3, 4), 1, 0)),
+    aware_d = if_else(is.na(WCWI005.SQ004.), NA_real_, if_else(WCWI005.SQ004. %in% c(2, 3, 4), 1, 0)),
+
+    uses_a = if_else(is.na(WCWI005.SQ001.), NA_real_, if_else(WCWI005.SQ001. == 4, 1, 0)),
+    uses_b = if_else(is.na(WCWI005.SQ002.), NA_real_, if_else(WCWI005.SQ002. == 4, 1, 0)),
+    uses_c = if_else(is.na(WCWI005.SQ003.), NA_real_, if_else(WCWI005.SQ003. == 4, 1, 0)),
+    uses_d = if_else(is.na(WCWI005.SQ004.), NA_real_, if_else(WCWI005.SQ004. == 4, 1, 0))
+  )
+
+# 3. Count valid (non-missing) responses
+df.combined <- df.combined |>
+  rowwise() |>
+  mutate(
+    n_valid_awareness = sum(!is.na(c_across(aware_a:aware_d))),
+    n_valid_usage     = sum(!is.na(c_across(uses_a:uses_d)))
+  ) |>
+  ungroup()
+
+# 4. Compute indices if 2+ items were answered
+df.combined <- df.combined |>
+  rowwise() |>
+  mutate(
+    awareness_index = if_else(n_valid_awareness >= 2, mean(c_across(aware_a:aware_d), na.rm = TRUE), NA_real_),
+    usage_index     = if_else(n_valid_usage >= 2, mean(c_across(uses_a:uses_d), na.rm = TRUE), NA_real_)
+  ) |>
+  ungroup() 
+```
+
+## Stage 2. Descriptive analysis
+
+Once the datasets have been cleaned, harmonised and merged (Stage 1), the next step is to explore and describe the main features of each organisation’s data. Descriptive analysis such as that introduced in @sec-ch02-respondents provides a foundational understanding of how key variables are distributed across groups, and helps identify early patterns and potential inequalities in working conditions, perceptions, and experiences.
+
+This stage is essential for both internal and cross-organisational comparisons and supports data-informed interpretation in later analytical stages.
+
+### Summarising key variables
+
+We will begin by providing separate summaries for each organization (unit) for each key variable.This will allow for profile comparison between organisations and lays the groundwork for identifying potential inequalities.
+
+Examples of variables to summarise:
+
+- Continuous / ordinal: Age, number of children, work family conflict scale, job satisfaction scale, masculinity constest scale, and so on.
+
+- Nominal / categorical: Gender, job position, contract type, caregiving responsibilities, level of education, and so on.
+
+
+### Recommended Techniques
+
+The following table summarizes some descriptive statistical techniques could be applied at this stage according to the type of variable.
+
++-------------------------+-------------------------------------------+----------------------------------------------+
+| Variable type           | Analysis                                  | Suggested Output                             |
++=========================+===========================================+==============================================+
+| Continuous/Likert-type  | Mean, standard deviation, median          | Tables, bar plots, or boxplots                          |
+| Categorical             | Frequencies and percentages               | Tables, bar charts, stacked column charts    |
+| Group comparisons       | Grouped summaries by organisation/gender  | Side-by-side bar graphs or comparative tables|
++-------------------------+-------------------------------------------+----------------------------------------------+
+
+: Statistical techniques for descriptive analysis {tbl-colwidths="[15,50,35]"}
+
+```{r}
+#| label: tbl-gender-by-org
+#| tbl-cap: Contingency table gender by organisation
+#| code-fold: true
+#| code-summary: Show code for contingency table
+
+df.combined |>
+  filter(!is.na(org) & !is.na(SDEM004.bin)) |>
+  tbl_cross(
+    row = SDEM004.bin,
+    col = org
+  ) |>
+  bold_labels()
+```
 
 
