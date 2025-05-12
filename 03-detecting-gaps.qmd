@@ -655,9 +655,9 @@ ggqqplot(residuals(model))
 #| cap-location: margin
 
 # Check normality assumption by groups
-# df.sub.03 %>%
-#   group_by(SDEM004.bin, educ_level) %>%
-#   shapiro.test(JobSat_score)
+df.sub.03 %>%
+group_by(Gender, educ.level) %>%
+shapiro_test(JobSF.score)
 
 ```
 
