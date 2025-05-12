@@ -554,7 +554,7 @@ The following table summarizes some descriptive statistical techniques could be 
 +-------------------------+-------------------------------------------+----------------------------------------------+
 | Variable type           | Analysis                                  | Suggested Output                             |
 +=========================+===========================================+==============================================+
-| Continuous/Likert-type  | Mean, standard deviation, median          | Tables, bar plots, or boxplots                          |
+| Continuous/Likert-type  | Mean, standard deviation, median          | Tables, bar plots, or boxplots               |
 | Categorical             | Frequencies and percentages               | Tables, bar charts, stacked column charts    |
 | Group comparisons       | Grouped summaries by organisation/gender  | Side-by-side bar graphs or comparative tables|
 +-------------------------+-------------------------------------------+----------------------------------------------+
