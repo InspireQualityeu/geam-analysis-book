@@ -14,6 +14,6 @@ In this manual, users will find not only a technical resource but also a startin
 
 ## Credits {.unnumbered}
 
-
 ## Acknowledgements {.unnumbered}
-Special thanks to all those organisations that have run the GEAM survey and provided access to their data. 
+
+Special thanks to all those organisations that have run the GEAM survey and provided access to their data.
