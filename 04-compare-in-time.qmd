@@ -285,7 +285,8 @@ In this model:
 
 The final model expanded on Model 2 by incorporating interaction terms between 'year2024' and each of the categorical variables. This allowed the effects of gender, managerial role, and parent status on the Index to vary between 2020 and 2024. The full model is expressed as:
 $$
-\text{Index}_i = \beta_0 + \beta_1 \text{gender}_i + \beta_2 \text{year2024}_i + \beta_3 (\text{gender}_i \times \text{year2024}_i) + \beta_4 \text{manager}_i + \beta_5 (\text{manager}_i \times \text{year2024}_i) + \beta_6 \text{parent}_i + \beta_7 (\text{parent}_i \times \text{year2024}_i) + \varepsilon_i
+\text{Index}_i = \beta_0 + \beta_1 \text{gender}_i + \beta_2 \text{year2024}_i + \beta_3 (\text{gender}_i \times \text{year2024}_i) + \beta_4 \text{manager}_i + \\
+\beta_5 (\text{manager}_i \times \text{year2024}_i) + \beta_6 \text{parent}_i + \beta_7 (\text{parent}_i \times \text{year2024}_i) + \varepsilon_i
 $$
 where:
 

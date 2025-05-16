@@ -21,7 +21,7 @@ keywords:
    - Gender gaps
 ---
 
-# Compare organisations
+# Compare organisations {#sec-ch05-compare-org}
 
 ```{r}
 #| label: setup-ch05

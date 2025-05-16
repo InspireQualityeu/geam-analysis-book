@@ -26,7 +26,7 @@ keywords:
   - institutional change
 ---
 
-# Using GEAM Data for GEP Design or Revision
+# Using GEAM data for GEP design or revision {#sec-ch07-gep-design}
 
 Improving gender equality should be an ongoing process. Therefore, the monitoring and evaluation of the progress are an essential phase of a GEP lifecycle. In their GEPs organisations should detail not only the set of activities that are required to achieve the defined aims, but also specific indicators to measure the achievement of these aims. Relevant indicators should be developed, regularly verified and communicated in GEP progress reports [@europeancommissionHorizon2021]. The GEAM tool can be used to verify some of these indicators, both quantitatively and qualitatively as it gathers feedback and inputs from staff and students on the organisational working culture, the perception and experiences of gender (in)equality in the organisation, organisational practices promoting gender equality, as well as sexist attitudes and behaviours. The GEAM questionnaire gathers many variables that allow to verify and monitor the situation concerning 1. work-life balance and organisational culture, 2. gender balance in leadership and decision-making, 3. gender equality in recruitment and career progression and 4. measures against gender-based violence, including sexual harassment. It does not cover the fifth recommended area of GEP intervention - inclusion of the sex/gender dimension into research and teaching content. However, the student and employee GEAM questionnaires can be adapted by adding a few questions or items to the existing questions tailored to the organisational needs – or to monitor specific action in the GEP.
 

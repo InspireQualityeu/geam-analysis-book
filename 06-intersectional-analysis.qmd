@@ -553,7 +553,7 @@ Our analysis indicates intersectional effects of gender, disability and age for 
 
 Complementing the quantitative analysis with a qualitative exploration is also warranted to understand better how existing power relations and hierarchies within the organisation produce the observed effects. 
 
-For example see  [@yangAnalysing2023] for some points. 
+Further guidance can be found for example in @yangAnalysing2023. 
 
 
-## References
+## References {.unnumbered}
