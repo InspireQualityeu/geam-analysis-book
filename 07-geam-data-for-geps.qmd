@@ -123,41 +123,41 @@ The GEAM includes a separate module devoted to training opportunities. It consis
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
 | Code      | Question / Answer options                                                                                                                          | Responses          |
 +===========+====================================================================================================================================================+====================+
-| `WCJC019` | *We are interested in the training opportunities available to you. Please indicate which, if any, of the following you have received training in.* |                    |
-+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ001`   | Administrative tasks related to managing other members of staff (e.g. conducting annual performance reviews, induction processes for new staff)    | \[1\] not-checked\ |
+| `WCJC019` | *We are interested in the training opportunities available to you. Please indicate which, if any, of the following you have received training in.* | \[1\] not-checked\ |
 |           |                                                                                                                                                    | \[2\] checked      |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ002`   | Leadership development (e.g. preparation for senior managerial appointments)                                                                       | \- same as `SQ001` |
+| `.SQ001`  | Administrative tasks related to managing other members of staff (e.g. conducting annual performance reviews, induction processes for new staff)    |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ003`   | Professional development                                                                                                                           | \- same as `SQ001` |
+| `.SQ002`  | Leadership development (e.g. preparation for senior managerial appointments)                                                                       |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ004`   | Grant or funding application skills                                                                                                                | \- same as `SQ001` |
+| `.SQ003`  | Professional development                                                                                                                           |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ005`   | Teaching and/or student supervision                                                                                                                | \- same as `SQ001` |
+| `.SQ004`  | Grant or funding application skills                                                                                                                |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ006`   | Project management training (e.g. leading project administration, budgets, etc.)                                                                   | \- same as `SQ001` |
+| `.SQ005`  | Teaching and/or student supervision                                                                                                                |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ007`   | Unconscious bias, equality, diversity, and inclusion training                                                                                      | \- same as `SQ001` |
+| `.SQ006`  | Project management training (e.g. leading project administration, budgets, etc.)                                                                   |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ008`   | Bullying/harassment at work                                                                                                                        | \- same as `SQ001` |
+| `.SQ007`  | Unconscious bias, equality, diversity, and inclusion training                                                                                      |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ009`   | Sexual and/or sexist or gender harassment                                                                                                          | \- same as `SQ001` |
+| `.SQ008`  | Bullying/harassment at work                                                                                                                        |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ010`   | Accounting or financial management accreditation programmes                                                                                        | \- same as `SQ001` |
+| `.SQ009`  | Sexual and/or sexist or gender harassment                                                                                                          |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ011`   | IT courses (e.g., training related to using specific software programs, website design, etc.)                                                      | \- same as `SQ001` |
+| `.SQ010`  | Accounting or financial management accreditation programmes                                                                                        |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ012`   | Job shadowing or placements (e.g. within another department or faculty to develop skills required for progression)                                 | \- same as `SQ001` |
+| `.SQ011`  | IT courses (e.g., training related to using specific software programs, website design, etc.)                                                      |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ013`   | Human Resources (HR) courses or accreditation programs                                                                                             | \- same as `SQ001` |
+| `.SQ012`  | Job shadowing or placements (e.g. within another department or faculty to develop skills required for progression)                                 |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ014`   | Course on legal regulations / changes                                                                                                              | \- same as `SQ001` |
+| `.SQ013`  | Human Resources (HR) courses or accreditation programs                                                                                             |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ015`   | None of the above                                                                                                                                  | \- same as `SQ001` |
+| `.SQ014`  | Course on legal regulations / changes                                                                                                              |                    |
++-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
+| `.SQ015`  | None of the above                                                                                                                                  |                    |
 +-----------+----------------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
 
-: Training opportunities received, multiple-choise answer options for `WCJC019` {tbl-colwidths="[15,60,25]"}
+: Training opportunities received, multiple-choise answer options for `WCJC019` {tbl-colwidths="\[15,60,25\]"}
 
 ![Training opportunities in 2020 (n=489)](images/geam-geps-training-opportunities.png){#fig-training-opportunities fig-alt="Training opportunities in 2020 (n=489)" fig-align="center"}
 
@@ -168,33 +168,33 @@ Next, we focus on question `WCJC021` that asks about barriers to training opport
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
 | Code      | Question / Answer options                                                                                                               | Responses          |
 +===========+=========================================================================================================================================+====================+
-| `WCJC021` | *In the last 12 months, do you feel that any of the following have been a barrier to you accessing training that you needed or wanted?* |                    |
-+-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ001`   | Time pressure                                                                                                                           | \[1\] not-checked\ |
+| `WCJC021` | *In the last 12 months, do you feel that any of the following have been a barrier to you accessing training that you needed or wanted?* | \[1\] not-checked\ |
 |           |                                                                                                                                         | \[2\] checked      |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ002`   | Teaching duties                                                                                                                         |                    |
+| `.SQ001`  | Time pressure                                                                                                                           |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ003`   | Cost of training                                                                                                                        |                    |
+| `.SQ002`  | Teaching duties                                                                                                                         |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ004`   | Not being eligible                                                                                                                      |                    |
+| `.SQ003`  | Cost of training                                                                                                                        |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ005`   | A long term health condition or disability                                                                                              |                    |
+| `.SQ004`  | Not being eligible                                                                                                                      |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ006`   | Training not offered by my organization                                                                                                 |                    |
+| `.SQ005`  | A long term health condition or disability                                                                                              |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ007`   | Training scheduled in a different location                                                                                              |                    |
+| `.SQ006`  | Training not offered by my organization                                                                                                 |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ008`   | My parenting/caring responsibilities                                                                                                    |                    |
+| `.SQ007`  | Training scheduled in a different location                                                                                              |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ009`   | My language skills                                                                                                                      |                    |
+| `.SQ008`  | My parenting/caring responsibilities                                                                                                    |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ010`   | My manager being obstructive or unhelpful                                                                                               |                    |
+| `.SQ009`  | My language skills                                                                                                                      |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
-| `SQ011`   | None of the above                                                                                                                       |                    |
+| `.SQ010`  | My manager being obstructive or unhelpful                                                                                               |                    |
++-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
+| `.SQ011`  | None of the above                                                                                                                       |                    |
 +-----------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
 
-: Barrier to training opportunties - answer options to multip-choice question `WCJC021` {tbl-colwidths="[15,60,25]"}
+: Barrier to training opportunties - answer options to multip-choice question `WCJC021` {tbl-colwidths="\[15,60,25\]"}
 
 ![Barriers to training in 2020 (n=489)](images/geam-geps-training-barriers.png){#fig-training-barriers fig-alt="Barriers to training in 2020 (n=489)" fig-align="center"}
 

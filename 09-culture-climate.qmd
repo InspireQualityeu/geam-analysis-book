@@ -24,10 +24,9 @@ abstract: >
     The following chapter  
 
 keywords:
-  - Career progression
-  - Work-life balance
-  - Vertical segregation
-  - Gender gaps
+  - Masculinity Contest Culture
+  - Chilly climate
+  - Perceived discrimination
 ---
 
 # The climate of equality, diveristy and inclusion {#sec-ch09-climate}
@@ -47,41 +46,228 @@ source("util/common.R")
 source("util/encrypt.R")
 
 # at the start of the session, need to execute this first time manually to get password callback
-df.geam03 <-read_gpg("data/df.343696.en.rdata.gpg")
+df.geam01 <-read_gpg("data/df.343696.en.rdata.gpg")
 
 df.geam02 <-read_gpg("data/df.784191.en.rdata.gpg") 
 
+df.geam03 <-read_gpg("data/df.349312.en.rdata.gpg")
 
 ```
 
+In addition to work-life balance issues covered in @sec-ch08-career the GEAM questionnaire contains two dedicated sections on organisational culture and climate regarding inclusive gender equality. A "chilly” organisational climate has been consistently identified as a main factor driving women out of science [@brittonChilly2017, @morrisChilly2003, @arredondoOrganizational2022] due to the subtle yet pervasive forms of gender bias that create unwelcoming environments for women in academia. First introduced by Hall and Sandler in [-@hallClassroom1982], the term captures how everyday interactions, institutional norms, and structural inequalities can collectively undermine women's confidence, sense of belonging, and career progression.
 
+STEM fields are particularly affected by chilly climates, where women frequently report feelings of isolation, lack of recognition, and heightened scrutiny. The book *Women and the Challenge of STEM Professions* [@arredondoWomen2022] provides recent and compelling narratives from women in science, illustrating how these climates not only hinder professional advancement but also impact mental health and job satisfaction.
+
+Over the decades, the "chilly climate" concept has evolved from a focus on overt discrimination to include more nuanced understandings of microaggressions (see Chapter 10), implicit bias, and systemic exclusion. As summarised by @mullerDiversity2022, although overt discrimination has thus declined, subtle forms remain pervasive and equally harmful. Research shows these covert biases significantly impact individuals’ mental and physical health, job satisfaction, and organizational commitment. The resulting decline in employee well-being and performance can undermine overall organizational effectiveness. Because these forms of discrimination are harder to detect, they require a solid measurement approach as delineated in what follows.
+
+Organisational culture and climate is covered in two broad question groups in the GEAM, that cover the following issues:
+
+-   **Perceptions of gender equality** inquires about the organisational commitment and general perceptions of gender equality (`OCPER001`)
+
+-   **Allocation of resources** is a further crucial question block. `OCPER003` asks about the perception regarding differential allocation of resources (e.g. funds) and recognition of intellectual contributions (e.g. during meetings or through awards).
+
+-   **Opportunities for career progression** `OCWC002` assembles an additional 9 items on opportunities usually associated with career progression such as access to seniors staff, decision-making positions, mentorship, encouragement, among others.
+
+-   **Promotion** Opportunities and obstacles to career promotion are covered in `BACD005`.
+
+-   **Masculinity Contest Culture** measures how strongly an organization or organizational unit endorses masculine norms, thus producing a "chilly climate" for women and men `GlickMasculCont8`.
+
+-   **Bias against women leaders** Although conceptualised as a specific measurement scale against women leaders, `DiehlBiasLeaderAgree` and `DiehlBiasLeaderFreq` capture several dimensions of gender bias more generally. 
+
+In what follows we briefly introduce some of these measurement items and their relevant scientific literature. As it will become apparent, some questions and sub-question items do overlap to a certain extend. 
 
 
 ## Perceptions of gender equality
 
-One of the consistent findings of the ASSET Survey 2016 is that men reported a more positive perception of Equality, Diversity and Inclustion aspects than women. The GEAM captures the perception of gender equality issues through several items. `OCPER001` inquires about any differences in organizational committment to gender equality or differences in the equal treatment and participation of women and men. `OCPER003` on the other hand examines differences in the allocation of several type of resources and responsibilities.
+One of the consistent findings of the ASSET Survey 2016 has been that men reported a more positive perception of equality, diversity and inclustion aspects than women. The GEAM captures the perception of gender equality issues through several items. `OCPER001` inquires about any differences in organizational committment to gender equality or differences in the equal treatment and participation of women and men. `OCPER003` on the other hand examines differences in the allocation of several type of resources and responsibilities.
 
-+----------+--------------------------------------------------------------------------------------------+-----------------------------------+
-| Code     | Item                                                                                       | Responses                         |
-+==========+============================================================================================+===================================+
-| OCPER001 |                                                                                            |                                   |
-+----------+--------------------------------------------------------------------------------------------+-----------------------------------+
-| .SQ001.  | In general, men and women are equally represented (in terms of numbers) in my organisation | \[1\] Strongly disagree\          |
-|          |                                                                                            | \[2\] Disagree\                   |
-|          |                                                                                            | \[3\] Neither agree nor disagree\ |
-|          |                                                                                            | \[4\] Agree\                      |
-|          |                                                                                            | \[5\] Strongly agree              |
-+----------+--------------------------------------------------------------------------------------------+-----------------------------------+
-| .SQ002.  | In general, men and women are treated equally in my organisation                           | \- same as above                  |
-+----------+--------------------------------------------------------------------------------------------+-----------------------------------+
-| .SQ003.  | My organisation is committed to promoting gender equality                                  | \- same as above                  |
-+----------+--------------------------------------------------------------------------------------------+-----------------------------------+
-| .SQ004.  | Myself and colleagues know who to go to if we have concerns related to gender equality     | \- same as above                  |
-+----------+--------------------------------------------------------------------------------------------+-----------------------------------+
-| .SQ005.  | My organisation is responsive to concerns about gender equality                            | \- same as above                  |
-+----------+--------------------------------------------------------------------------------------------+-----------------------------------+
++-------------+--------------------------------------------------------------------------------------------+
+| Code        | Question & question-items                                                                  |
++=============+============================================================================================+
+| `OCPER001`  | Please indicate the extent to which you agree or disagree with the following statements:   |
++-------------+--------------------------------------------------------------------------------------------+
+| `.SQ001.`   | In general, men and women are equally represented (in terms of numbers) in my organisation |
++-------------+--------------------------------------------------------------------------------------------+
+| `.SQ002.`   | In general, men and women are treated equally in my organisation                           |
++-------------+--------------------------------------------------------------------------------------------+
+| `.SQ003.`   | My organisation is committed to promoting gender equality                                  |
++-------------+--------------------------------------------------------------------------------------------+
+| `.SQ004.`   | Myself and colleagues know who to go to if we have concerns related to gender equality     |
++-------------+--------------------------------------------------------------------------------------------+
+| `.SQ005.`   | My organisation is responsive to concerns about gender equality                            |
++-------------+--------------------------------------------------------------------------------------------+
+|             | **Response options**                                                                       |
++-------------+--------------------------------------------------------------------------------------------+
+|             | \[1\] Strongly disagree\                                                                   |
+|             | \[2\] Disagree\                                                                            |
+|             | \[3\] Neither agree nor disagree\                                                          |
+|             | \[4\] Agree \                                                                              |
+|             | \[5\] Strongly agree                                                                       |
++-------------+--------------------------------------------------------------------------------------------+
+
+: OCPER001 captures differences in organizational committment to gender equality {tbl-colwidths="[15,85]"}
+
+Using familiar code to plot likert scales, we can generate an overview of the response patter across all sub-question items as show in @fig-ocper001-likert-overview
+
+```{r}
+#| label: fig-ocper001-likert-overview
+#| fig-cap: "Responses across sub-question items for OCPER001 regarding perceived gender equality"
+#| code-fold: TRUE
+#| code-summary: Show code for figure
+
+cpal <- RColorBrewer::brewer.pal(4, "RdYlBu")
+
+df.geam01 |>
+  select(starts_with("OCPER001.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,.3),
+              expand.grid = T, 
+              show.n = T, 
+              wrap.legend.labels = 15, 
+              wrap.labels = 30,
+              catcount = 4, 
+              reverse.scale = T,
+              cat.neutral = 3,
+              geom.colors = cpal)
+```
+
+While the general perception is that women and men are treated equally within the organisation (item `SQ002`) and that gender equality issues are taken seriously within research groups and units (item `SQ002` and `SQ005`), two items receveid a relatively stronger disagreement rating. This concerns the equal representation of women and men in research units (`SQ001`) as well as the general knowledge of whom to approach with GE concerns (`SQ004`).  
+
+Based upon this visual inspection, a follow-up analysis could explore to which degree the perception of unequal representation is specific to women versus men respondents as alluded to in the introduction. Code in lst-ocper001-prepare converts the gender variable `SDEM004` into a binary variable (if not already done), and converst the factor of the agreement score to a number.  
+
+```{r}
+#| lst-label: lst-ocper001-prepare
+#| lst-cap: Use binary gender variable and convert Agreement score to numeric
+#| code-fold: TRUE
+#| code-summary: Show code
+
+df.ocper001 <- df.geam02 |>
+  mutate(SDEM004.bin = case_when(
+    SDEM004 == "Prefer not to say" ~ NA,
+    SDEM004 == "Non-binary" ~ NA, 
+    SDEM004 == "Other" ~ NA,
+    .default = SDEM004), 
+    Gender = fct_drop(SDEM004.bin), #drop unused levels
+    AgreementScore = as.numeric(OCPER001.SQ001.)) |>
+  filter(!is.na(Gender) & !is.na(AgreementScore)) |>
+  select(Gender, AgreementScore)  
+```
+
+Using the recipies described in @sec-ch03-gaps-continuous in a slightly more compact way, we can detect if women and men differ in their perception of gender balanced representation in their research groups:  
+
+```{r}
+#| label: tbl-ocper001-mean
+#| tbl-cap: Mean agreement score by gender and significance test 
+#| code-fold: TRUE
+#| code-summary: Show code for table
+
+df.ocper001 |>
+  tbl_continuous(variable=AgreementScore,
+                 include=c("Gender"),
+                 statistic = ~"{mean} ({sd})") |> 
+  add_p() |>
+  modify_spanning_header(
+    all_stat_cols() ~ "**In general women and men are equally  \rrepresented in my research unit**")
+
+```
+
+As we can see in @tbl-ocper001-mean, men are more in agreement that their groups are gender balanced than women! The mean score for men is 4.22 being located between "[4] Agreement" and "[5] Strong agreement". Most mean therefore think that women and men are equally represented in their research group or unit. In contrast, women respondents do not tend to agree to a similar degree as most of their response scores are between "[3] Neither agree or disagree" and "[4] Agree", yielding a much lower mean score of 3.54. As the table furthermore shows, these differences are significant at p < 0.003 level, meaning these differences are extremely unlikely to have occured by chance. 
+
+::: callout-note
+Note foonote 2 in @tbl-ocper001-mean indicating that the signifiance test has been carried out with the Wilcoxon test (Mann-Whitney U) for data that is not normally distribued. 
+::: 
+
+The analysis therefore confirms our initial hypothesis, that the perception of gender (in)equalities within an organisation differs by gender itself. 
 
 
+## Allocation of resources
+
+Allocation of resources is captured in question `OCPER003` with its 12 sub-questions shown in the following table.  
+
++------------+-----------------------------------------------------------------------------------------------------+
+| Code       | Question & sub-question items                                                                       |
++============+=====================================================================================================+
+| `OCPER003` | *Have you perceived a difference in the allocation of the following in your organisation?*          |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ001.`  | The receipt of mentoring and/or other guidance in making career decisions                           |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ002.`  | Representation in senior positions                                                                  |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ003.`  | Positive attention from, or additional time with, senior management                                 |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ004.`  | Access to informal circles of influence                                                             |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ005.`  | Recruitment and selection of new staff                                                              |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ006.`  | Promotion decisions                                                                                 |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ007.`  | Formal training and career development opportunities                                                |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ008.`  | Invitations or opportunities (i.e., funding, additional time) to attend conferences, lectures, etc. |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ009.`  | Recognition of intellectual contributions during meetings, conferences, workshops, etc.             |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ010.`  | Funds and monetary resources                                                                        |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ011.`  | Awards and recognition of excellence                                                                |
++------------+-----------------------------------------------------------------------------------------------------+
+| `.SQ012.`  | Support in grant preparation and writing                                                            |
++------------+-----------------------------------------------------------------------------------------------------+
+|            | **Response options**                                                                                |
++------------+-----------------------------------------------------------------------------------------------------+
+|            | \[1\] Mainly allocated to women\                                                                    |
+|            | \[2\] Often allocated to women\                                                                     |
+|            | \[3\] I have not noticed a difference\                                                              |
+|            | \[4\] Often allocated to men\                                                                       |
+|            | \[5\] Mainly allocated to men \                                                                     |
+|            | \[6\] I don't have an opinion                                                                       |
++------------+-----------------------------------------------------------------------------------------------------+
+
+: Allocation of resources {tbl-colwidths="[15,85]"}
+
+In order to visualize response patterns across `OCPER003` sub-questions, it is useful to remove answer option "[6] I don't have an opinion" from the data. This leaves us with five answer options: two in favor of women and two in favor of men with "[3] I have not noticed a difference" providing a neutral response option. To remove option [6] we first set it to `NA`, remove those, and then drop the corresponding unused factor level, as shown in the @lst-preprocess-ocper003
+
+
+```{r}
+#| lst-label: lst-preprocess-ocper003
+#| lst-cap: "Remove level 'I don't have an opinion' from factor and responses"
+#| code-fold: FALSE
+#| code-summary: Show code
+
+df.ocper003 <- df.geam02 |>
+  select(starts_with("OCPER003.SQ")) |>
+  mutate(across(everything(), ~ na_if(., "I don’t have an opinion") )) |>
+  drop_na() |>
+  mutate(across(everything(), fct_drop))
+```
+
+Given that `OCPER003` has 12 sub-question it is hard to visualize all items in a single figure. Hence, we use the `num_range()` selector to given an overview of the first three sub-questions in @fig-ocper003-likert-overview. 
+
+```{r}
+#| label: fig-ocper003-likert-overview
+#| fig-cap: "Responses across sub-question items for OCPER003"
+#| code-fold: true
+#| code-summary: Show code for figure
+
+cpal <- RColorBrewer::brewer.pal(4, "RdYlBu")
+
+df.ocper003 |>
+  select(num_range("OCPER003.SQ", range=c(1,2,3), width=3, suffix=".")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,1),
+              expand.grid = T, 
+              show.n = T, 
+              wrap.legend.labels = 20, 
+              wrap.labels = 20,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal, 
+              legend.pos = "all") + 
+  theme(legend.position="bottom")
+```
+A first issue to note are the few remaining responses n=34 after having removed "[6] I don't have an opinion" in this example. Next, considering the gray bar in the first two sub-questions, the majority of respondents does not note a difference how mentoring or senior positions are allocated, with some indicating that senior positions are main/often allocated to men. At the same time, there is no doubt among respondents that responsibilities for student care (`SQ003`) is mainly allocated to women. 
 
 
 ## Masculinity Contest Culture
@@ -107,58 +293,68 @@ Masculinity contest norms correlate with having toxic leaders, a heterosexist cu
 
 The MCC is gathered in 8 variables, `GlickMasculCont8.SQ0XX`:
 
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| Code             | Item                                                                 | Facet          | Responses                                      |
-+==================+======================================================================+================+================================================+
-| GlickMasculCont8 |                                                                      |                |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ001.          | Admitting you don't know the answer looks weak                       | no weakness    | \[1\] Not at all true for my work environment\ |
-|                  |                                                                      |                | \[2\] Somewhat untrue for my work environment\ |
-|                  |                                                                      |                | \[3\] Neither true nor untrue\                 |
-|                  |                                                                      |                | \[4\] Somewhat true for my work environment\   |
-|                  |                                                                      |                | \[5\] Entirely true for my work environment    |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ002.          | Expressing any emotion other than anger or pride is seen as weak     | no weakness    |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ006.          | It's important to be in good physical shape to be respected          | stamina        |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ007.          | People who are physically smaller have to work harder to get respect | stamina        |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ011.          | To succeed you can't let family interfere with work                  | put work first |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ012.          | Taking days off is frowned upon                                      | put work first |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ016.          | You're either "in" or you're "out", and once you're out, you're out  | dog-eats-dog   |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-| .SQ017.          | If you don't stand up for yourself people will step on you           | dog-eats-dog   |                                                |
-+------------------+----------------------------------------------------------------------+----------------+------------------------------------------------+
-: Masculinit Contest Culture sub-question items and response options {tbl-colwidths="[10,40,20,35]"}
++------------------+----------------------------------------------------------------------+----------------+
+| Code             | Item                                                                 | Facet          |
++==================+======================================================================+================+
+| GlickMasculCont8 | *In my work environment:*                                            |                |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ001.          | Admitting you don't know the answer looks weak                       | no weakness    |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ002.          | Expressing any emotion other than anger or pride is seen as weak     | no weakness    |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ006.          | It's important to be in good physical shape to be respected          | stamina        |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ007.          | People who are physically smaller have to work harder to get respect | stamina        |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ011.          | To succeed you can't let family interfere with work                  | put work first |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ012.          | Taking days off is frowned upon                                      | put work first |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ016.          | You're either "in" or you're "out", and once you're out, you're out  | dog-eats-dog   |
++------------------+----------------------------------------------------------------------+----------------+
+| .SQ017.          | If you don't stand up for yourself people will step on you           | dog-eats-dog   |
++------------------+----------------------------------------------------------------------+----------------+
+|                  | **Response options**                                                 |                |
++------------------+----------------------------------------------------------------------+----------------+
+|                  | \[1\] Not at all true for my work environment\                       |                |
+|                  | \[2\] Somewhat untrue for my work environment\                       |                |
+|                  | \[3\] Neither true nor untrue\                                       |                |
+|                  | \[4\] Somewhat true for my work environment\                         |                |
+|                  | \[5\] Entirely true for my work environment                          |                |
++------------------+----------------------------------------------------------------------+----------------+
+
+: Masculinit Contest Culture sub-question items and response options {tbl-colwidths="[15,65,20]"}
+
 
 ```{r}
+#| label: fig-mcc-likert-overview
+#| fig-cap: Responses for Masculinity Contest Culture items
+#| code-fold: true
+#| code-summary: Show code
 
-cpal <- RColorBrewer::brewer.pal(4, "Spectral")
+cpal <- RColorBrewer::brewer.pal(4, "RdYlBu")
 
 df.geam02 |>
   select(starts_with("GlickMasculCont8.SQ")) |>
   plot_likert(values="hide", 
               show.prc.sign = T, 
-              grid.range = c(1,1),
+              grid.range = c(1,.8),
               expand.grid = T, 
               show.n = T, 
               wrap.legend.labels = 20, 
               wrap.labels = 40,
+              reverse.scale = T,
               catcount = 4, 
               cat.neutral = 3,
-              geom.colors = cpal
-)
-
+              geom.colors = cpal) + 
+  theme(legend.position="bottom")
 ```
 
-Based upon this first visual exploration, MCC scores can be used for downstream analysis. For example, @sec-ch04-mcc compares how MCC scores have changed between the first and second round of the GEAM survey withing the same organisation. As the analysis in @sec-ch04-compare-time shows, there are only slight changes between the 2020 and 2024 data. 
+Based upon this first visual exploration, MCC scores can be used for downstream analysis. For example, @sec-ch04-mcc compares how MCC scores have changed between the first and second round of the GEAM survey withing the same organisation. As the analysis in @sec-ch04-compare-time shows, there are only slight changes between the 2020 and 2024 data.
 
-As described, MCC is an organisational level score best used to detect differences between organisational level units such as university faculties or departments. In lack of those, let's see if MCC differ by type of staff (`WCJC001`). 
+As described, MCC is an organisational level score best used to detect differences between organisational level units such as university faculties or departments. In lack of those, let's see if MCC differ by type of staff (`WCJC001`).
 
-Using similar code as in @lst-mcc-scores, we first reverse all MCC scores and center them on 0. This eases interpretability, as negative scores indicate a strong masculinity contest culture, while positive scores indicate the opposite, namely the absence of a masculinity contest culture. 
+Using similar code as in @lst-mcc-scores, we first reverse all MCC scores and center them on 0. This eases interpretability, as negative scores indicate a strong masculinity contest culture, while positive scores indicate the opposite, namely the absence of a masculinity contest culture.
 
 ```{r}
 #| lst-label: lst-ch09-mean-mcc-scores
@@ -169,7 +365,6 @@ df.geam02 <- df.geam02 |>
          mcc_mean = rowMeans(across(starts_with("Rev_Glick")), na.rm=T))
 ```
 
-
 ```{r}
 #| label: tbl-ch09-mcc-mean-scores
 #| tbl-cap: Mean Masculinity Contest Culture scores by type of job position
@@ -178,11 +373,10 @@ df.geam02 |>
   group_by(WCJC001) |>
   summarize(
     N = n(),
-    Mean = mean(mcc_mean, na.rm = TRUE),
-    StrdDev = sd(mcc_mean, na.rm = TRUE),
+    Mean = round(mean(mcc_mean, na.rm = TRUE),3),
+    StrdDev = round(sd(mcc_mean, na.rm = TRUE),3),
     Median = median(mcc_mean, na.rm = TRUE),
-    IQR = IQR(mcc_mean, na.rm = TRUE)
-  )
+    IQR = IQR(mcc_mean, na.rm = TRUE)) 
 ```
 
 As @tbl-ch09-mcc-mean-scores indicates, there are indeed differences between MCC scores between academics/researchers, Technicians, and Administrative staff. Since we have reversed the factors and centered the score on 0, a score of 2 on a given sub-question (e.g. "Admitting you don't know the answer looks weak") would indicate that it is "Not at all true for my work environment" while a score of -2 would indicate "Entirely true for my work environment". As the above table suggests, academics/researchers in this particular organisation think overall more favorably of their work environment than technicians and administrative staff.
@@ -204,22 +398,134 @@ df.geam02 |>
 ```
 
 
+## Gender bias against women leaders
+
+GEAM version 3 includes a new measurement scale on how women leaders perceive and experience gender bias [@diehlMeasuring2020]. The scale allows to identify the specific types of bias  prevalent for women leaders in a given organizations. Several factors of the Gender Bias Scale correlate with turnover intention and job satisfaction.  The scale is descirbed in detail in the following article: 
+
+Diehl, Amy B., Amber L. Stephenson, Leanne M. Dzubinski, and David C. Wang. 2020. “Measuring the Invisible: Development and Multi-Industry Validation of the Gender Bias Scale for Women Leaders.” Human Resource Development Quarterly 31(3):249–80. doi: https://doi.org/10.1002/hrdq.21389.
+
+The scale targets mainly women leaders and their experiences with or perceptions of organizational- and individual-level gender barriers in the workplace. In the context of higher education, this might refer to senior academic staff such as Principal Investigators but also middle management staff in Human Resources or similar. 
+
+The measurment scale is interesting as it identifies six higher order factors that cause gender biase against women (leaders). These include: 
+
+* Barriers derived from **male privilege** — a source of influence that can  dominate an organizational environment.
+
+* Women can experience **disproportionate constraints** due to constrained career choices, constrained communication, and being held to higher standards than men.
+
+* **Insufficient support** can refer to lack of mentoring, lack of sponsorhip, and exclusion from informal networks. 
+
+* **Devaluation** captures those instances where women find their work contributions devalued, both psychologically and monetarily.
+
+* Fifth, women leaders may also face **hostility**, including through harassment, queen been syndrome. 
+
+* And finally, **acquiescence** captures a woman's apparent acceptance of her assigned place, by self-silencing on gender issues and self-limited aspirations.
+
+The GEAM questionnaire has made a selection and adaption of some items of the original gender bias scale. which are split across two questions according to the answer options. 
+
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+| Code                   | Sub-question items                                                                              | Higher order factor - lower level factor         |
++========================+=================================================================================================+==================================================+
+| `DiehlBiasLeaderAgree` | *Please indicate the extent to which you agree or disagree with the following statements:*      |                                                  |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+| `.SQ001.`              | I have been held responsible for organizational problems outside of my control                  | Male privilege - Glass cliff                     |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+| `.SQ002.`              | The decisions in my organisation are made by men                                                | Male privilege - Male culture                    |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+| `.SQ003.`              | I have to work harder than my colleagues to be perceived as a legitimate professional           | Not included in original scale                   |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+| `.SQ004.`              | I am held to the same standards as others for promotion or advancement                          | Not included in original scale                   |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+| `.SQ005.`              | Women in my organisation have to work harder than their men colleagues for the same credibility | Disproportionate constraints - Unequal standards |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+| `.SQ006.`              | High-level women in my organisation help other women succeed                                    | Hostility - Queen bee syndrome (R)               |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+|                        | **Answer options**                                                                              | **Notes**                                        |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+|                        | \[1\] Strongly agree\                                                                           | Items marked with (R) are reverse coded.         |
+|                        | \[2\] Agree\                                                                                    |                                                  |
+|                        | \[3\] Neither agree nor disagree\                                                               |                                                  |
+|                        | \[4\] Disagree\                                                                                 |                                                  |
+|                        | \[5\] Strongly disagree                                                                         |                                                  |
++------------------------+-------------------------------------------------------------------------------------------------+--------------------------------------------------+
+
+: Gender Bias Scale against women leaders, agreement-based answer options  {tbl-colwidths="[15,60,25]"}
+
+
+@fig-diehlagree-likert provides an overivew of response patters of the gender bias scale for items using the agreement-disagreement likert scale. 
 
 ```{r}
+#| label: fig-diehlagree-likert
+#| fig-cap: Overall responses (agreement) on gender bias women leaders 
+#| code-fold: true
+#| code-summary: Show code 
 
-anova_model <- aov(mcc_mean ~ WCJC001, data = df.geam02)
-summary(anova_model)
+cpal <- RColorBrewer::brewer.pal(4, "RdYlBu")
 
-# df.geam02 |>
-#   filter(!is.na(WCJC001) & !is.na(mcc_mean)) |>
-#   select(mcc_mean, WCJC001) |>
-#   tbl_summary(
-#     by = WCJC001, 
-#     missing = "no"
-#   ) |>
-#   add_p(all_continuous() ~ "aov") |>
-#   modify_header(statistic ~ "**Test Statistic**") |>
-#   modify_fmt_fun(statistic ~ style_sigfig)
-
+df.geam03 |>
+  select(starts_with("DiehlBiasLeaderAgree.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(1,.6),
+              expand.grid = T, 
+              show.n = T, 
+              wrap.legend.labels = 15, 
+              wrap.labels = 30,
+              reverse.scale = T,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal)
 ```
+Overall, responses points to a rather gender fair working environment, as disagreement on disproportionate constraints and disproportionate constraints is rather high. Interesting, this holds less for the Hostility - Queen bee syndrom which is reverse coded. Here respondents also strongly disagree that high-level women help other women succeed in the organisation. 
+
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+| Code                 | Question / sub-question items                                                                                                 | Higher order factor - lower level factor                  |
++======================+===============================================================================================================================+===========================================================+
+| `DiehlBiasLederFreq` | *Please indicate whether the following statements apply to you:*                                                              |                                                           |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+| `.SQ001.`            | I downplay my accomplishments when speaking to others                                                                         | Disproportionate constraints - Constrainted communication |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+| `.SQ002.`            | I have been excluded from leadership events (e.g., off-sites, retreats) because of my gender                                  | Insufficient support - exclusion                          |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+| `.SQ003.`            | Leaders have recommended me for advancement opportunities                                                                     | Insufficient support - Lack of sponsorship (R)            |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+| `.SQ004.`            | In a meeting where I am the only person of my gender, or I am in a minority, I find it difficult to gain support for my ideas | Devaluation - Lack of acknowledgement                     |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+| `.SQ005.`            | I speak up about challenges women face at work                                                                                | Acquiescence - Self-silencing (R)                         |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+|                      | **Answer options**                                                                                                            | **Notes**                                                 |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+|                      | \[1\] Never\                                                                                                                  | Items marked with (R) are reverse coded                   |
+|                      | \[2\] Rarely\                                                                                                                 |                                                           |
+|                      | \[3\] Sometimes \                                                                                                             |                                                           |
+|                      | \[4\] Often\                                                                                                                  |                                                           |
+|                      | \[5\] Always                                                                                                                  |                                                           |
++----------------------+-------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------+
+
+: Gender bias scale against women leaders, frequency-based answer options  {tbl-colwidths="[15,60,25]"}
+
+A quick visual inspection in @fig-diehlfreq-likert shows the overall response pattern for the frequency based response items in the scale. 
+
+```{r}
+#| label: fig-diehlfreq-likert
+#| fig-cap: Overall responses (frequency) on gender bias women leaders 
+#| code-fold: true
+#| code-summary: Show code 
+
+cpal <- RColorBrewer::brewer.pal(4, "RdYlBu")
+
+df.geam03 |>
+  select(starts_with("DiehlBiasLeaderFreq.SQ")) |>
+  plot_likert(values="hide", 
+              show.prc.sign = T, 
+              grid.range = c(.6,1),
+              expand.grid = T, 
+              show.n = T, 
+              wrap.labels = 30,
+              reverse.scale = T,
+              catcount = 4, 
+              cat.neutral = 3,
+              geom.colors = cpal)
+```
+
+## References {.unnumbered}
 

@@ -401,7 +401,6 @@ Thus, we fit a new model (model 1b) adding each socio-demographic variable that 
 
 ```{r}
 #| label: code-maihda-adjusted-model
-#| 
 
 model_2 <- lmer(micagg ~ gender + disability + age_3g + (1|strata), data=df.geam)
 

@@ -361,7 +361,8 @@ Since the Work-family conflict scale includes four sub-question items that respo
 #| label: fig-wfc-likert
 #| fig-cap: Likert plot of work-family conflict scores for each sub-question
 #| code-fold: true
-#| code-summary: Click to see code for producing the following figure
+#| code-summary: Show code for figure
+
 cpal <- RColorBrewer::brewer.pal(4, "Set1")
 
 df.geam03 |>
@@ -409,4 +410,4 @@ The mean value for work-family conflict is considerablly higher (mean=1.8) compa
 
 Builing upon these insights, a more in-depth exploration of gender differences regarding work-family conflict could follow, for example exploring work-family conflict scores in relation to gender, age, or maritial status. Other interesting variables to examine in this regard include of course care responsibilities, `WCJC001` (current position), type of contract `WCJC010` (full- or part-time), or socio-economic background (`SDEM017` and `SDEM018`).
 
-## References
+## References {.unnumbered}
