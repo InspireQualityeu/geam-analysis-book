@@ -1,10 +1,10 @@
 # Preface {.unnumbered}
 
- This book guides the statistical analysis of data collected with the Gender Equality Audit and Monitoring (GEAM) questionnaire. It seeks to inspire and empower users to perform statistical analyses beyond basic descriptive statistics, delving deeper into the underlying thematic issues.
+This book offers practical, in-depth guidance on analyzing data collected through the Gender Equality Audit and Monitoring (GEAM) questionnaire. It aims to inspire and equip users to move beyond basic descriptive statistics, encouraging deeper exploration of the thematic issues underlying gender equality.
 
 It is intended for members of gender equality working groups, including professionals, gender specialists, administrative staff, and other stakeholders who have collected data using GEAM in their organisations but are uncertain about how to analyse it in greater depth.
 
-Each chapter represents a collaboration between gender equality practitioners and academic statisticians and data analysts. Cases use real-world data from different Higher Eduaction organisations across Europe. Running thematic analysis side by side with the R code used, faciliates to kick-start similar analysis in different organisations. 
+Each chapter represents a collaboration between gender equality practitioners and academic statisticians and data analysts. Cases use real-world data from different Higher Eduaction organisations across Europe. Running thematic analysis side by side with the R code used, faciliates to kick-start similar analysis in different organisations.
 
 The statistical analyses presented in this manual encompass methodologies ranging from univariate and bivariate analyses to describe general patterns, to more advanced techniques such as multivariate analysis, logistic and linear regressions, hypothesis testing, and others. Modern data visualisation tools are also covered, enabling results to be represented in a clear and accessible manner. All of this aims to equip users with analytical skills to extract meaningful and evidence-based conclusions, essential for implementing policies and actions to promote gender equality.
 
@@ -14,4 +14,10 @@ In this manual, users will find not only a technical resource but also a startin
 
 ## Acknowledgements {.unnumbered}
 
-The editors want to thank especially all organisations that have run the GEAM survey previously and provided access to their data for the elaboration of this book. 
+The editors want to thank especially all organisations that have run the GEAM survey previously and provided access to their data for the elaboration of this book.
+
+## License {.unnumbered}
+
+[![](images/cc-license.png){fig-alt="cc-by-nc-sa license" fig-align="left" width="114"}](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+The work contained in this document is subjected to a Creative Commons license (https://creativecommons.org/licenses/by-nc-sa/4.0/).

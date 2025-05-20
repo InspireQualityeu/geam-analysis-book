@@ -93,7 +93,7 @@ Readers are expected to have a basic understanding of statistics, including fund
 
 We recommend in any case that equality practitioners with little statistical background consult and collaborate with a statistics expert. Expert guidance can facilitate the interpretation of results and ensure that conclusions drawn from the data are robust and reliable. This collaborative approach will maximise the impact of the analysis and its application in gender equality strategies and policies. 
 
-Ideally, this book provides a starting point for engaging in a dialog between equality practitioners, data or statistical experts and employees or students about equality in their organisation. As such, we hope that it will be interesting and useful for statisticians to learn about gender and for gender equality practitioners interested in quantitative data analysis. 
+Ideally, this book serves as a starting point for fostering dialogue among equality practitioners, data and statistical experts, employees, and students about gender and other forms of inequality within their organizations. We hope it will be both engaging and valuable—offering statisticians insights into gender issues, while supporting gender equality practitioners in developing their skills in quantitative data analysis.
 
 
 ## How to use this book
@@ -111,7 +111,9 @@ This handbook is a living document. New contributions using GEAM data or other s
 
 As noted, most chapters have been written in a collaborative effort between gender professionals and statisticians, incorporating examples from various organisations and contexts where GEAM has been used. 
 
-The GEAM survey framework, including its many translations, is a collective endeavour that has been built by many contributions from European equality practitioners. Its success reflects this open and collaborative way of working. The GEAM questionnaire, handbooks and reporting infrastructure is available for free online.
+The GEAM survey framework, including its many translations, is a collective endeavour that has been built by many contributions from European equality practitioners. Its success reflects this open and collaborative way of working. 
+
+The GEAM questionnaire, handbooks and reporting infrastructure is available under the [Creative-Commons BY-NC-SA 4.0]((https://creativecommons.org/licenses/by-nc-sa/4.0/) license. Meaning you are free to share and adapt the material, as long as you give appropriate credit, do not use it for commerical purposes, and share your results under the same license as the original. 
 
 
 ## References {.unnumbered}

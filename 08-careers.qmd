@@ -21,7 +21,7 @@ execute:
     message: false
 
 abstract: >
-    The following chapter  
+    The following chapter provides an overview of the main variables and questions regarding work-life balance issues. This includes questions on parental leave options and policies, dedicated measurement scales on work-family conflict, as well as questions regarding employees care responsibilities for children or dependent adults. Using statistical techniques introduced in Part I of this book, selected analysis are carried out. The GEAM questionnaire includes many questions regarding work-life balance and thus enables a solid diagnostic of work-life balance issues and their related (gender) inequalities in organisations.  
 
 keywords:
   - Career progression
@@ -30,7 +30,7 @@ keywords:
   - Gender gaps
 ---
 
-# Analysing work-life conflict {#sec-ch08-career}
+# Analysing work-life balance {#sec-ch08-career}
 
 ```{r}
 #| label: setup 
