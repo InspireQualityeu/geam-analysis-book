@@ -14,7 +14,7 @@ In this manual, users will find not only a technical resource but also a startin
 
 ## Acknowledgements {.unnumbered}
 
-The editors want to thank especially all organisations that have run the GEAM survey previously and provided access to their data for the elaboration of this book.
+The editors want to thank especially the Municipality of Brescia, IBEC (Institute for Bioengineering of Catalonia) and Katherine Palomino Carrillo, and one additional anonymous organisation for conducting a GEAM survey and providing access to their data for the elaboration of this book.
 
 ## License {.unnumbered}
 

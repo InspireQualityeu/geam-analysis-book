@@ -21,7 +21,7 @@ execute:
     message: false
 
 abstract: >
-    The following chapter  
+    The following chapter provides an overview of the main questions regarding workplace culture and climate, including perceived discrimination.  
 
 keywords:
   - Masculinity Contest Culture
@@ -226,48 +226,65 @@ Allocation of resources is captured in question `OCPER003` with its 12 sub-quest
 
 : Allocation of resources {tbl-colwidths="[15,85]"}
 
-In order to visualize response patterns across `OCPER003` sub-questions, it is useful to remove answer option "[6] I don't have an opinion" from the data. This leaves us with five answer options: two in favor of women and two in favor of men with "[3] I have not noticed a difference" providing a neutral response option. To remove option [6] we first set it to `NA`, remove those, and then drop the corresponding unused factor level, as shown in the @lst-preprocess-ocper003
+To start the analysis, a summary table of the rating scores for each item is helpful as shown in @tbl-ocper003-overview
+
+```{r}
+#| label: tbl-ocper003-overview
+#| tbl-cap: Summary table of response scores for OCPER003 sub-questions
+#| code-fold: true
+#| code-summary: Show code
+
+df.geam02 |>
+  tbl_likert(include = starts_with("OCPER003.SQ")) |>
+  add_n()
+```
+A quick glance demonstrates that most respondents do not preceived a difference in the allocation or resources or recognition, as answer option "[3] I have not noticed a difference" is in all cases the most frequently selected option, followed by option "[6] I don't have an opinion". 
+
+Using @lst-preprocess-ocper003 we can convert `OCPER003` items into a tidy format and calculate manually the proportion of respondents to visualise the overall pattern. Note, that we do this only for the first seven sub-question items, using the `num_range()` selector, in order to keep the resulting figure readable. 
 
 
 ```{r}
 #| lst-label: lst-preprocess-ocper003
-#| lst-cap: "Remove level 'I don't have an opinion' from factor and responses"
+#| lst-cap: "Calculate proportions of responses for OCERP003"
 #| code-fold: FALSE
 #| code-summary: Show code
 
-df.ocper003 <- df.geam02 |>
-  select(starts_with("OCPER003.SQ")) |>
-  mutate(across(everything(), ~ na_if(., "I don’t have an opinion") )) |>
+# calculate proportions
+df.ocper003.prop <- df.geam02 |>
+  select(num_range("OCPER003.SQ", range=1:5, width=3, suffix=".")) |>
+  #select(starts_with("OCPER003.SQ")) |> 
   drop_na() |>
-  mutate(across(everything(), fct_drop))
+  pivot_longer(cols=everything(), values_to = "Rating", names_to = "Item") |>
+  group_by(Item, Rating) |>
+  summarise(n = n(), .groups = "drop") |>
+  group_by(Item) |>
+  mutate(Prop = n/sum(n))
+
 ```
 
-Given that `OCPER003` has 12 sub-question it is hard to visualize all items in a single figure. Hence, we use the `num_range()` selector to given an overview of the first three sub-questions in @fig-ocper003-likert-overview. 
+Constructing a stacked bar chart of the proportional responses produces @fig-ocper003-likert-detail. The overall number of responses (N=77) have been scaled to the 100% given the 6 answer options for each question. This clearly shows the two dominant answer options "[3] I have not notice a difference" in yellow, and "[6] I don't have an opinion". Difference in the allocation of resources and responsibilities exist mainly with regards to student care which (mainly allocated to women) and access to senior positions (often allocated to men). 
 
 ```{r}
-#| label: fig-ocper003-likert-overview
-#| fig-cap: "Responses across sub-question items for OCPER003"
+#| label: fig-ocper003-likert-detail
+#| fig-cap: "Stacked bar chart proportional responses to OCPER003 subquestion 1 to 5"
 #| code-fold: true
 #| code-summary: Show code for figure
 
-cpal <- RColorBrewer::brewer.pal(4, "RdYlBu")
+cpal <- RColorBrewer::brewer.pal(6, "RdYlBu")
 
-df.ocper003 |>
-  select(num_range("OCPER003.SQ", range=c(1,2,3), width=3, suffix=".")) |>
-  plot_likert(values="hide", 
-              show.prc.sign = T, 
-              grid.range = c(1,1),
-              expand.grid = T, 
-              show.n = T, 
-              wrap.legend.labels = 20, 
-              wrap.labels = 20,
-              catcount = 4, 
-              cat.neutral = 3,
-              geom.colors = cpal, 
-              legend.pos = "all") + 
-  theme(legend.position="bottom")
+# do the chart   
+df.ocper003.prop |>
+  ggplot(aes(x=Item,y=Prop, fill=Rating)) + 
+    geom_bar(stat="identity") + 
+    scale_fill_manual(values = cpal) +
+    scale_y_continuous(labels = scales::percent_format()) + 
+    scale_x_discrete(labels = c("Mentoring", "Senior-Pos.", "StudentCare", "MngAtt", "InfCirc")) +
+    labs(x = "Sub-question item", y = "Proportion") + 
+    coord_flip()
 ```
-A first issue to note are the few remaining responses n=34 after having removed "[6] I don't have an opinion" in this example. Next, considering the gray bar in the first two sub-questions, the majority of respondents does not note a difference how mentoring or senior positions are allocated, with some indicating that senior positions are main/often allocated to men. At the same time, there is no doubt among respondents that responsibilities for student care (`SQ003`) is mainly allocated to women. 
+::: callout-note
+Please note the mismatch between the example data set and some of the default `OCPER003` sub-question items, as the organisation has added and adapted these. For example the question on "Responsibilities related to student care (e.g., providing support for students’ emotional wellbeing)" is not part of the default GEAM for employees. 
+:::
 
 
 ## Masculinity Contest Culture
