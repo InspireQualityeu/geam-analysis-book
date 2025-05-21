@@ -329,7 +329,7 @@ For larger strata, @evansTutorial2024 recommend to calculate the percentage of s
 
 Intersectional MAIHDA proceeds in two steps by first, specifing a *null model* and second a *main effects model*. The null model characterises the total inequality in our microaggression score between strata. It provides a global measure of intersectionality via the Variance Partition Coefficient (VPC see below), that measures the proportion of the total variance of the outcome that lies between-strata. 
 
-The second *main effects model* allows to quantify how much differences in inequality are due to overlapping axis of inequality. In the statistical model, this implies to parition the outcome/inequality variance into into 'additive' (fixed effects) and 'interaction' (random effects) part. As described by @evansClarifications2024, the *main effects* model enables the researcher to "consider inequality patterns in terms of *universality-versus-specifity*": are inequalities in outcomes due to universal category membership (e.g. being Black) or by by specific membership in overlapping categories (e.g. being a Black woman). The *main effects* model specifies to which degree a detected inequality (e.g. wage gap for women) is 'universal' across other axis of comparsion (e.g. is true for all women independent of age, race/ethnicity, socioeconomic status, etc.) or differs according to 'specific' combinatinos of those variables (e.g. black women having lower wages than white women, etc.). The statistic that describes the relative contribution of additive versus interaction effects is the Proportional Change in Variance (PCV see below). 
+The second *main effects model* allows to quantify how much differences in inequality are due to overlapping axis of inequality. In the statistical model, this implies to partition the outcome/inequality variance into into 'additive' (fixed effects) and 'interaction' (random effects) part. As described by @evansClarifications2024, the *main effects* model enables the researcher to "consider inequality patterns in terms of *universality-versus-specifity*": are inequalities in outcomes due to universal category membership (e.g. being Black) or by by specific membership in overlapping categories (e.g. being a Black woman). The *main effects* model specifies to which degree a detected inequality (e.g. wage gap for women) is 'universal' across other axis of comparsion (e.g. is true for all women independent of age, race/ethnicity, socioeconomic status, etc.) or differs according to 'specific' combinatinos of those variables (e.g. black women having lower wages than white women, etc.). The statistic that describes the relative contribution of additive versus interaction effects is the Proportional Change in Variance (PCV see below). 
 
 
 ### Model 1: null model
@@ -490,20 +490,6 @@ sjPlot::tab_model(model_1,
           show.reflvl = F,
           p.style="stars",
           dv.labels = c("Null model", "Main effects model"))
-
-
-# m1 <- model_1 |>
-#   tbl_regression(intercept=T)
-# 
-# m2 <- model_2 |>
-#   tbl_regression(tidy_fun = broom.mixed::tidy) |>
-#   add_global_p() |>
-#   add_significance_stars()
-# 
-# 
-# theme_gtsummary_compact()
-# tbl_merge(list(m1,m2),
-#           tab_spanner = c("Null Model", "Random Effects"))
 
 ```
 
