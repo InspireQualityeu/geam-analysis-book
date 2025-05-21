@@ -119,7 +119,8 @@ Since these stacked barchars between two categorical variables are quite frequen
 ```{r}
 #| lst-label: lst-crosstab-plot-code
 #| lst-cap: Code to calculate proportion of women and men by job positions and create stacked bar chart
-
+#| code-fold: true
+#| code-summary: Show code
 #  Calculate gender proportions
 df.prop.01 <- df.geam01 |> 
   filter(!is.na(WCJC001) & !is.na(SDEM004.bin)) |> 
@@ -375,15 +376,14 @@ The following table presents descriptive statistics for the mean flexibility sco
 #| echo: true
 #| label: tbl-stat-flexible-work-WCWI005-gender
 #| tbl-cap: "Summary statistics of flexible work scale by gender"
-#| cap-location: margin 
 
 df.geam01 |>
   filter(!is.na(SDEM004.bin)) |>
   group_by(SDEM004.bin) |>
   summarize(
     N = n(),
-    Mean_Flex = mean(FlexMean, na.rm = TRUE),
-    SD_Flex = sd(FlexMean, na.rm = TRUE),
+    Mean_Flex = round(mean(FlexMean, na.rm = TRUE),2),
+    SD_Flex = round(sd(FlexMean, na.rm = TRUE),2),
     Median_Flex = median(FlexMean, na.rm = TRUE),
     IQR_Flex = IQR(FlexMean, na.rm = TRUE),
     .groups = "drop"
@@ -595,14 +595,13 @@ Then, we will calculate summary statistics (n, mean, standard deviation) by grou
 ```{r}
 #| label: tbl-stat-job-satisfaction-gender-education-level
 #| tbl-cap: "Summary statistics of job satisfaction score by gender and education level"
-#| cap-location: margin
 
 df.sub.03 |>
   group_by(Gender, educ.level) |>
   summarize(
     N = n(),
-    Mean_Flex = mean(JobSF.score, na.rm = TRUE),
-    SD_Flex = sd(JobSF.score, na.rm = TRUE),
+    Mean_Flex = round(mean(JobSF.score, na.rm = TRUE),2),
+    SD_Flex = round(sd(JobSF.score, na.rm = TRUE),2),
     Median_Flex = median(JobSF.score, na.rm = TRUE),
     IQR_Flex = IQR(JobSF.score, na.rm = TRUE),
     .groups = "drop"
@@ -616,7 +615,6 @@ Now, a boxplot will illustrate the distribution of job satisfaction scores by ge
 ```{r}
 #| label: fig-boxplot-job-satisfaction-gender-education-level
 #| fig-cap: "Boxplot of job satisfaction by gender and education level"
-#| cap-location: margin
 
 cpal <- RColorBrewer::brewer.pal(3, "Set1")  
 
@@ -638,7 +636,6 @@ Prior to apply the  two-way analysis of variance (ANOVA), assumptions regarding 
 ```{r}
 #| label: fig-check-assumptions-anova-normality-graph
 #| fig-cap: "QQ plot of residuals ANOVA model"
-#| cap-location: margin
 
 # Build the linear model
 model  <- lm(JobSF.score ~ Gender * educ.level,
@@ -646,13 +643,11 @@ model  <- lm(JobSF.score ~ Gender * educ.level,
 
 # Create a QQ plot of residuals
 ggqqplot(residuals(model))
-
 ```
 
 ```{r}
 #| label: tbl-check-assumptions-anova-normality-test
 #| tbl-cap: "Shapiro-Wilk Test for Normality"
-#| cap-location: margin
 
 # Check normality assumption by groups
 df.sub.03 %>%
@@ -669,10 +664,8 @@ Moreover, the sample sizes within most groups—particularly those with medium a
 ```{r}
 #| label: tbl-check-assumptions-anova-variance-homogeneity
 #| tbl-cap: "Levene test for Homogeneity of Variances"
-#| cap-location: margin
 
 car::leveneTest(JobSF.score ~ Gender * educ.level, data=df.sub.03)
-
 ```
 
 The Levene’s test is not significant (p > 0.05). Therefore, we can assume the homogeneity of variances in the different groups.
@@ -680,7 +673,6 @@ The Levene’s test is not significant (p > 0.05). Therefore, we can assume the 
 ```{r}
 #| label: tbl-two-way-anova
 #| tbl-cap: "Two-Way ANOVA Summary: Effects of Gender and Education Level on Job Satisfaction"
-#| cap-location: margin
 
 anova_model <- aov(JobSF.score ~ Gender * educ.level, data = df.sub.03)
 summary(anova_model)
