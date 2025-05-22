@@ -8,13 +8,13 @@ Each chapter represents a collaboration between gender equality practitioners an
 
 The statistical analyses presented in this manual encompass methodologies ranging from univariate and bivariate analyses to describe general patterns, to more advanced techniques such as multivariate analysis, logistic and linear regressions, hypothesis testing, and others. Modern data visualisation tools are also covered, enabling results to be represented in a clear and accessible manner. All of this aims to equip users with analytical skills to extract meaningful and evidence-based conclusions, essential for implementing policies and actions to promote gender equality.
 
-The development of GEAM questionnaire framework began during the ACT project [Communities of PrACTice for Accelerating Gender Equality and Institutional Change in Research and Innovation across Europe (2018–2021)](https://www.act-on-gender.eu/).Subsequently, as part of the INSPIRE project [Building Europe’s Centre of Excellence on Inclusive Gender Equality in R&I](https://www.inspirequality.eu/), GEAM has adapted to better address the needs of academics, administrative staff, and university students across various organisations.
+The development of GEAM questionnaire began during the ACT project [Communities of PrACTice for Accelerating Gender Equality and Institutional Change in Research and Innovation across Europe (2018–2021)](https://www.act-on-gender.eu/). Subsequently, as part of the INSPIRE project [Building Europe’s Centre of Excellence on Inclusive Gender Equality in R&I](https://www.inspirequality.eu/), the GEAM tool has been adapted to better address the needs of academics, administrative staff, and university students across various organisations.
 
 In this manual, users will find not only a technical resource but also a starting point for fostering an organisational culture rooted in gender equality through informed analysis and evidence-based decision-making.
 
 ## Acknowledgements {.unnumbered}
 
-The editors want to thank especially the Municipality of Brescia, IBEC (Institute for Bioengineering of Catalonia) and Katherine Palomino Carrillo, and one additional anonymous organisation for conducting a GEAM survey and providing access to their data for the elaboration of this book.
+The editors want to thank especially the Municipality of Brescia and Katherine Palomino Carrillo from IBEC (Institute for Bioengineering of Catalonia), as well as one additional anonymous organisation for conducting a GEAM survey and providing access to their data for the elaboration of this book.
 
 ## License {.unnumbered}
 
