@@ -56,7 +56,7 @@ For the following chapter we use two real-world datasets, marked in the code as 
 
 As a preparatory step it makes sense to observe the number of partial submissions of the GEAM questionnaire. Partial submissions create many `NA` entries that can be filtered out before the start of the actual analysis. 
 
-A simple way of identifying incomplete questionnaires, consists of looking at the `lastpage` meta-data field in the questionnaire. 
+A simple way of identifying incomplete questionnaires, consists of looking at the `lastpage` meta-data field in the questionnaire. An alternative consists of examining the submission date variable `submitdate`. This field is set to `NA` if the respondent did not reach the final page and press the submit button of the questionnaire. 
 
 ```{r}
 #| lst-label: lst-check-partial
@@ -69,7 +69,7 @@ df.geam01 |>
   table_df()
 ```
 
-An alternative consists of examining the submission date variable `submitdate`. This field is set to `NA` if the respondent did not reach the final page and press the submit button of the questionnaire. 
+In a subsequent step, we can remove incomplete submissions, as shown in @lst-remove-partial
 
 ```{r}
 #| lst-label: lst-remove-partial
@@ -81,7 +81,7 @@ df.geam <- df.geam01 |>
 
 ### Gender {#sec-summary-ch02-gender}
 
-The GEAM includes a standard question about gender identity of the respondent which allows for four answer options. Compared to other recommended approaches to ask about gender especially in the context of health research [@stadlerDiversifiedInnovationsHealth2023], this is a relatively simple yet effective approach to capture the most important differences in an organisational context.
+The GEAM includes a standard question about gender identity of the respondent which has four answer options. Compared to other recommended approaches to ask about gender especially in the context of health research [@stadlerDiversifiedInnovationsHealth2023], this is a relatively simple yet effective approach to capture the most important gender identity options in an organisational context.
 
 +----------------+----------------+-----------------------------------+
 | Code           | Question       | Responses                         |
@@ -95,10 +95,10 @@ The GEAM includes a standard question about gender identity of the respondent wh
 
 Responses regarding gender ('SEM004') are then easily summarised with a frequency table or bar chart that demonstrates that answer option '\[2\] Non-binary' or '\[4\] Prefer not to say' or '\[5\] Prefer to self-identify as:" are comparatively few.
 
-As the simple frequency table for 'SDEM004' demonstrates, only 2 respondents have selected '\[4\] Prefer not to say' in this example dataset with answer options '\[2\] Non-binary' and '\[5\] Other' having received no responses.
+As the simple frequency @tbl-sdem004-gender for 'SDEM004' demonstrates, only 2 respondents have selected '\[4\] Prefer not to say' in this example dataset with answer options '\[2\] Non-binary' and '\[5\] Other' having received no responses.
 
 ::: column-margin
-The R code for producing simple frequency tables is shown for the first table of this chapter. A custom function `table_frq()` has been defined in the `util/common.R` file. All subsequent tables follow the same code but are hidden to improve readability of the text. 
+The R code for producing simple frequency tables is using a custom function `table_frq()` that has been defined in the `util/common.R` file. You can inspect the contents of this file on the [Github repository](https://github.com/InspireQualityeu/geam-analysis-book/blob/main/util/common.R) of this book. 
 :::
 
 ```{r}

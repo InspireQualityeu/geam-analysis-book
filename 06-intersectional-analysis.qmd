@@ -15,7 +15,7 @@ keywords:
   - MAIHDA
 ---
 
-# Intersectional Analysis using MAIHDA {#sec-ch06-intersectional}
+# Intersectional analysis using MAIHDA {#sec-ch06-intersectional}
 
 
 ```{r}
@@ -27,12 +27,7 @@ library(ggeffects)
 library(lme4)
 library(merTools)
 library(gtsummary)
-
-# library(sjmisc)
-# library(sjPlot)
-
 library(gpg)         # use encryption
-
 library(knitr)
 
 source("util/common.R")
@@ -509,6 +504,7 @@ A good way to present MAIHDA results illustrates the predicted microaggression s
 
 df.stratum_level |>
   dplyr::select(-m1Am, -micagg) |>
+  mutate(across(where(is.double), \(x) round(x,3))) |>
   arrange(desc(rank)) 
 ```
 As can be seen, the highest microaggression scores are consistenly reported by individuals which indicate a disability or health impairment, across different age groups and genders. A note of caution regarding the strata with small N < 10 - Junior women with disability and Junior men with disabilty. Both have rather high microaggression scores which could change considerably with additional respondents in this age and gender group.   

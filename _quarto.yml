@@ -27,7 +27,7 @@ book:
     - part: "Part II: Thematic Analysis"
       chapters: 
       - 07-geam-data-for-geps.qmd
-      - 08-careers.qmd
+      - 08-work-life-balance.qmd
       - 09-culture-climate.qmd
   appendices:  
     - 99-annex-i-desc-variables.qmd

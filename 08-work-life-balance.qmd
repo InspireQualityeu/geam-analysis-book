@@ -120,12 +120,11 @@ Women tend to have considerably more care responsibilities than men, both for ch
 |            |                                                                                | \[3\] Prefer not to say |
 +------------+--------------------------------------------------------------------------------+-------------------------+
 
-: GEAM questions covering care responsibilities for dependent adults and children {tbl-colwidths="[15,50,35]"}
+: GEAM questions covering care responsibilities for dependent adults and children {tbl-colwidths="\[15,50,35\]"}
 
-Gender gaps in care responsibilities can be explored quickly using code-recipies introduced in @sec-ch02-respondents and @sec-ch03-gaps. 
+Gender gaps in care responsibilities can be explored quickly using code-recipies introduced in @sec-ch02-respondents and @sec-ch03-gaps.
 
-
-For example, by using @lst-crosstab-plot-code, we can generate stacked barcharts to visualise the relative proportion of women and men with care responsibilities. Note that this uses a binary gender variable, applying @lst-binary-sdem004-gender  before printing the plot.   
+For example, by using @lst-crosstab-plot-code, we can generate stacked barcharts to visualise the relative proportion of women and men with care responsibilities. Note that this uses a binary gender variable, applying @lst-binary-sdem004-gender before printing the plot.
 
 ```{r}
 #| label: fig-care-adult
@@ -160,7 +159,7 @@ For many subsequent analysis (e.g. in relation to the work-family conflict scale
                                    WCWI008 == "Yes"), TRUE,FALSE))
 ```
 
-At this point we do not differentiate which type of care responsibilities respondents have. Using the newly created `CareResp` variable we check if there exist statistically significant gender differences for care responsibilities in our dataset (see @sec-ch03-gaps-categorical). 
+At this point we do not differentiate which type of care responsibilities respondents have. Using the newly created `CareResp` variable we check if there exist statistically significant gender differences for care responsibilities in our dataset (see @sec-ch03-gaps-categorical).
 
 ```{r}
 #| lst-label: lst-care-by-gender
@@ -199,7 +198,7 @@ df.sub.01 |>
   )
 ```
 
-As @tbl-care-by-gender shows, gender differences in care responsibilities tend to be significant at the p < 0.05 signifance level. As @fig-care-adult shows, the difference concerns mainly care responsibilities for dependent adults, where men have fewer care responsibilities than women. 
+As @tbl-care-by-gender shows, gender differences in care responsibilities tend to be significant at the p \< 0.05 signifance level. As @fig-care-adult shows, the difference concerns mainly care responsibilities for dependent adults, where men have fewer care responsibilities than women.
 
 ## Parental leave
 
@@ -221,7 +220,7 @@ The GEAM includes a series of questions regarding parental leave. To start with,
 |            |                                                                                                      | \[4\] Paid parental leave    |
 +------------+------------------------------------------------------------------------------------------------------+------------------------------+
 
-: Care responsibilities question {tbl-colwidths="[15,45,30]"}
+: Care responsibilities question {tbl-colwidths="\[15,45,30\]"}
 
 In addition, questions `WCWI016`, `WCWI020`, `WCWI021` gather further details regarding parental leave policies, return to work support measures and if they are preceived as useful.
 
@@ -236,9 +235,9 @@ df.geam03 |>
 
 ```
 
-The chart presents the distribution of parental leave uptake by gender, categorised into three response options: ‘Yes’, ‘No’, and ‘Prefer not to say’. Among men, 88% reported not having taken parental leave, 10% reported having taken it, and 2% preferred not to answer. Among women, 86% responded ‘No’, 12% responded ‘Yes’, and 1% selected ‘Prefer not to say’. The distribution indicates a slightly higher reported uptake of parental leave among women compared to men. While the overall proportions are similar, the small increase in reported uptake among women may reflect differences in access, eligibility, or social norms surrounding parental responsibilities. 
+The chart presents the distribution of parental leave uptake by gender, categorised into three response options: ‘Yes’, ‘No’, and ‘Prefer not to say’. Among men, 88% reported not having taken parental leave, 10% reported having taken it, and 2% preferred not to answer. Among women, 86% responded ‘No’, 12% responded ‘Yes’, and 1% selected ‘Prefer not to say’. The distribution indicates a slightly higher reported uptake of parental leave among women compared to men. While the overall proportions are similar, the small increase in reported uptake among women may reflect differences in access, eligibility, or social norms surrounding parental responsibilities.
 
-In a subsequent step, further statistical analysis shows whether the observed differences are statistically significant. For that we also remove the 'Prefer not to say' answer option from parental leave (`WCWI011a`) which contains too few respondents and all respondents with now answer.  
+In a subsequent step, further statistical analysis shows whether the observed differences are statistically significant. For that we also remove the 'Prefer not to say' answer option from parental leave (`WCWI011a`) which contains too few respondents. We also remove all respondents without an answer.
 
 ```{r}
 #| label: tbl-test-assoc-parent-leave-gender
@@ -286,38 +285,34 @@ Source: Breyer, B., and M. Bluemke. 2016. "Work-Family Conflict Scale (ISSP)." Z
 
 The variable (`WorkFamConfISSP`) is composed of four items which are subdivided in two dimensions to measure how **work interferences with family** (WF) and how **family interferes with work** (FW).
 
-+-------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+------------------------------+
-| Code        | Item                                                                                                               | Facet                            | Responses                    |
-+=============+====================================================================================================================+==================================+==============================+
-| SQ001       | I have come home from work too tired to do the chores which need to be done.                                       | WF - work interferes with family | \[1\] Several times a week\  |
-|             |                                                                                                                    |                                  | \[2\] Several times a month\ |
-|             |                                                                                                                    |                                  | \[3\] Once or twice\         |
-|             |                                                                                                                    |                                  | \[4\] Never                  |
-+-------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+------------------------------+
-| SQ002       | It has been difficult for me to fulfil my family responsibilities because of the amount of time I spent on my job. | WF - work interferes with family | \[1\] Several times a week\  |
-|             |                                                                                                                    |                                  | \[2\] Several times a month\ |
-|             |                                                                                                                    |                                  | \[3\] Once or twice\         |
-|             |                                                                                                                    |                                  | \[4\] Never                  |
-+-------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+------------------------------+
-| SQ003       | I have arrived at work too tired to function well because of the household work I had done.                        | FW - family interferes with work | \[1\] Several times a week\  |
-|             |                                                                                                                    |                                  | \[2\] Several times a month\ |
-|             |                                                                                                                    |                                  | \[3\] Once or twice\         |
-|             |                                                                                                                    |                                  | \[4\] Never                  |
-+-------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+------------------------------+
-| SQ004       | I have found it difficult to concentrate at work because of my family responsibilities.                            | FW - family interferes with work | \[1\] Several times a week\  |
-|             |                                                                                                                    |                                  | \[2\] Several times a month\ |
-|             |                                                                                                                    |                                  | \[3\] Once or twice\         |
-|             |                                                                                                                    |                                  | \[4\] Never                  |
-+-------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+------------------------------+
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
+| Code              | Item                                                                                                               | Facet                            |
++===================+====================================================================================================================+==================================+
+| `WorkFamConfISSP` | *How often has each of the following happened to you during the past three months?*                                |                                  |
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
+| `.SQ001.`         | I have come home from work too tired to do the chores which need to be done.                                       | WF - work interferes with family |
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
+| `.SQ002.`         | It has been difficult for me to fulfil my family responsibilities because of the amount of time I spent on my job. | WF - work interferes with family |
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
+| `.SQ003.`         | I have arrived at work too tired to function well because of the household work I had done.                        | FW - family interferes with work |
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
+| `.SQ004.`         | I have found it difficult to concentrate at work because of my family responsibilities.                            | FW - family interferes with work |
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
+|                   | **Answer options**                                                                                                 |                                  |
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
+|                   | \[1\] Several times a week\                                                                                        |                                  |
+|                   | \[2\] Several times a month\                                                                                       |                                  |
+|                   | \[3\] Once or twice\                                                                                               |                                  |
+|                   | \[4\] Never                                                                                                        |                                  |
++-------------------+--------------------------------------------------------------------------------------------------------------------+----------------------------------+
 
-: Work-family conflict scale {tbl-colwidths="[10,40,20,35]"}
+: Work-family conflict scale {tbl-colwidths="[15,60,25]"}
 
 ::: callout-note
 Note that for earlier version of the GEAM, the identification of sub-questions slightly changes from underscore "\_" to dot "." For example, to reference sub-question item one, the correct code for older version is `WorkFamConfISSP_SQ001` while for newer version it is `WorkFamConfISSP.SQ001.`
 :::
 
 In addition, there are national reference values available to deduce if respondents are below or above the national average of work conflict (see also [here](https://zis.gesis.org/skala/Breyer-Bluemke-Work-Family-Conflict-Scale-(ISSP)#Table6)).
-
 
 ### Preparation and pre-processing
 
@@ -352,7 +347,6 @@ df.geam03 <- df.geam03 |>
          WFCMean = (WorkFamMean+FamWorkMean)/2) 
 ```
 
-
 ### Exploring patterns
 
 Since the Work-family conflict scale includes four sub-question items that respondents rate on 4 answer options, we use a Likert plot to get an overview of the overall distribution.
@@ -363,7 +357,7 @@ Since the Work-family conflict scale includes four sub-question items that respo
 #| code-fold: true
 #| code-summary: Show code for figure
 
-cpal <- RColorBrewer::brewer.pal(4, "Set1")
+cpal <- RColorBrewer::brewer.pal(4, "RdYlBu")
 
 df.geam03 |>
   select(starts_with("WorkFamConfISSP")) |>  
@@ -408,6 +402,6 @@ df.geam03 |>
 
 The mean value for work-family conflict is considerablly higher (mean=1.8) compared to the mean value for family-work conflict (0.62).
 
-Builing upon these insights, a more in-depth exploration of gender differences regarding work-family conflict could follow, for example exploring work-family conflict scores in relation to gender, age, or maritial status. Other interesting variables to examine in this regard include of course care responsibilities, `WCJC001` (current position), type of contract `WCJC010` (full- or part-time), or socio-economic background (`SDEM017` and `SDEM018`).
+Builing upon these insights, a more in-depth exploration could follow, for example exploring work-family conflict scores in relation to different socio-demographic groups, including gender, age, marital status, or socio-economic background (`SDEM017` and `SDEM018`). Other interesting variables to examine in this regard include of course care responsibilities for dependent adults (`WCWI006`) and children (`WCWI008`), or type of contract `WCJC010` (full- or part-time). In addition, the effect of parental leave could be analysed, comparing ISSP scores between employees with children that have taken parental leave or those who have not. 
 
 ## References {.unnumbered}

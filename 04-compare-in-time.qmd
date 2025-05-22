@@ -62,7 +62,7 @@ keywords:
   - statistical analysis
 ---
 
-# Gender Equality at a Research Institute: A Comparative Analysis Over Time {#sec-ch04-compare-time}
+# A comparative analysis over time {#sec-ch04-compare-time}
 
 
 ```{r}
@@ -87,7 +87,7 @@ df.geam24 <- read_gpg("data/df.822152.en.rdata.gpg")
 
 ```
 
-## Introduction
+## Introduction - Gender equality at a research institute, a comparative analysis over time
 
 The National Information Processing Institute (OPI PIB) is a Polish research centre dedicated to supporting science and higher education policy. What sets OPI PIB apart as a scientific institution is its dual role: in addition to conducting research, it also operates as a software house, developing IT systems that are tailored to the needs of the Polish science and higher education sectors. As a result, the largest group of employees consists of engineering and technical staff, with men comprising nearly 60% of that group.
 

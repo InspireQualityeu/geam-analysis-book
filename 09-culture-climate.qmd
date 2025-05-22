@@ -58,21 +58,21 @@ In addition to work-life balance issues covered in @sec-ch08-career the GEAM que
 
 STEM fields are particularly affected by chilly climates, where women frequently report feelings of isolation, lack of recognition, and heightened scrutiny. The book *Women and the Challenge of STEM Professions* [@arredondoWomen2022] provides recent and compelling narratives from women in science, illustrating how these climates not only hinder professional advancement but also impact mental health and job satisfaction.
 
-Over the decades, the "chilly climate" concept has evolved from a focus on overt discrimination to include more nuanced understandings of microaggressions (see Chapter 10), implicit bias, and systemic exclusion. As summarised by @mullerDiversity2022, although overt discrimination has thus declined, subtle forms remain pervasive and equally harmful. Research shows these covert biases significantly impact individuals’ mental and physical health, job satisfaction, and organizational commitment. The resulting decline in employee well-being and performance can undermine overall organizational effectiveness. Because these forms of discrimination are harder to detect, they require a solid measurement approach as delineated in what follows.
+Over the decades, the "chilly climate" concept has evolved from a focus on overt discrimination to include more nuanced understandings of microaggressions, implicit bias, and systemic exclusion. As summarised by @mullerDiversity2022, although overt discrimination has thus declined, subtle forms remain pervasive and equally harmful. Differences in perceived discrimination are taken as a proxy for actual discrimination, with research showing that perceived discrimination significantly impact individuals’ mental and physical health, job satisfaction, and organizational commitment [@colellaEmployment2012; @trianaPerceived2019]. The resulting decline in employee well-being and performance can undermine overall organizational effectiveness. Because these forms of discrimination are harder to detect, they require a solid measurement approach as delineated in what follows.
 
 Organisational culture and climate is covered in two broad question groups in the GEAM, that cover the following issues:
 
--   **Perceptions of gender equality** inquires about the organisational commitment and general perceptions of gender equality (`OCPER001`)
+-   **Perceptions of gender equality** inquires about any differences in organizational commitment to gender equality or differences in the equal treatment and participation of women and men (`OCPER001`)
 
--   **Allocation of resources** is a further crucial question block. `OCPER003` asks about the perception regarding differential allocation of resources (e.g. funds) and recognition of intellectual contributions (e.g. during meetings or through awards).
+-   **Preferential treatment** is a further crucial question block. `OCPER003` asks about the perception regarding differential allocation of resources (e.g. funds) and recognition of intellectual contributions (e.g. during meetings or through awards).
 
 -   **Opportunities for career progression** `OCWC002` assembles an additional 9 items on opportunities usually associated with career progression such as access to seniors staff, decision-making positions, mentorship, encouragement, among others.
 
 -   **Promotion** Opportunities and obstacles to career promotion are covered in `BACD005`.
 
--   **Masculinity Contest Culture** measures how strongly an organization or organizational unit endorses masculine norms, thus producing a "chilly climate" for women and men `GlickMasculCont8`.
+-   **Masculinity Contest Culture** measures how strongly an organization or organizational unit endorses masculine norms, thus producing a "chilly climate" for women and men (`GlickMasculCont8`).
 
--   **Bias against women leaders** Although conceptualised as a specific measurement scale against women leaders, `DiehlBiasLeaderAgree` and `DiehlBiasLeaderFreq` capture several dimensions of gender bias more generally. 
+-   **Bias against women leaders** Although conceptualised as a specific measurement scale for women in leadership positions, `DiehlBiasLeaderAgree` and `DiehlBiasLeaderFreq` capture several dimensions of gender bias. In combination with question `WCJC027` "How many people do directly and indirectly report to you" and `SDEM004` on gender identity, specific bias against women leaders can be analysed.  
 
 In what follows we briefly introduce some of these measurement items and their relevant scientific literature. As it will become apparent, some questions and sub-question items do overlap to a certain extend. 
 
@@ -181,9 +181,9 @@ Note foonote 2 in @tbl-ocper001-mean indicating that the signifiance test has be
 The analysis therefore confirms our initial hypothesis, that the perception of gender (in)equalities within an organisation differs by gender itself. 
 
 
-## Allocation of resources
+## Preferential treatment
 
-Allocation of resources is captured in question `OCPER003` with its 12 sub-questions shown in the following table.  
+Preferential allocation of resources and responsibilities is captured in question `OCPER003` with its 12 sub-items shown in the following table.  
 
 +------------+-----------------------------------------------------------------------------------------------------+
 | Code       | Question & sub-question items                                                                       |
@@ -291,7 +291,7 @@ Please note the mismatch between the example data set and some of the default `O
 
 The aim of the Masculinity Contest Culture (MCC) scale is to assess how strongly an organization or organizational unit endorses masculine norms. Since the MCC is an organizational level variable, it correlates primarily with organizational level outcomes. A comparative analysis in the framework of the GEAM would be especially pertinent to explore differences between departments or faculties within one and the same organization (e.g. male dominated areas vs. female dominated areas). A possible proxy for this type of exploration could be disciplinary background of respondents (e.g. computer science or engineering versus arts & humanities.) As an organizational level measure, the MCC is a useful instrument to track the impact of organization level policies - when administered before and after the implementation of certain measures.
 
-The concepts and measurement scale is introduced in the following two articles [@BerdahlMCC2018] and [@GlickDevMCC2018]:
+The concepts and measurement scale is introduced in the following two articles @BerdahlMCC2018 and @GlickDevMCC2018:
 
 Glick, Peter, Jennifer L. Berdahl, and Natalya M. Alonso. 2018. “Development and Validation of the Masculinity Contest Culture Scale.” Journal of Social Issues 74 (3): 449–76. https://doi.org/10.1111/josi.12280.
 
@@ -413,6 +413,13 @@ df.geam02 |>
     #scale_y_continuous(limits = c(-2, 2)) +
     labs(x="", y="Mean job satisfaction", fill="Year")
 ```
+
+More in depth analysis could explore the following issues: 
+
+* differences in mean MCC scores between departments, faculties or other organisational units. This enables focused interventions in specific organisational units to improve working climate and culture 
+* correlations between MCC scores and experiences of bullying and harassment, by socio-demographic groups of employees. 
+* how MCC scores affect important outcome variables such as job satisfaction. This could be especially interesting from a cross-organisational comparison (see @sec-ch05-compare-org)
+* monitor change over time (see @sec-ch04-mcc) in mean MCC scores especially if targeted interventions have been put in place to improve overall working culture and climate
 
 
 ## Gender bias against women leaders
