@@ -6,6 +6,8 @@ It is intended for members of gender equality working groups, including professi
 
 Ideally, this book serves as a starting point for fostering dialogue among equality practitioners, data and statistical experts, employees, and students about gender and other forms of inequality within their organizations. We hope it will be both engaging and valuable—offering statisticians insights into gender issues, while supporting gender equality practitioners in developing their skills in quantitative data analysis.
 
+The most recent version of this book is available at: https://geamtool.eu/analysis  
+
 ## What is the GEAM tool?
 
 The **Gender Equality Audit and Monitoring (GEAM)** tool is a survey framework to collect robust and reliable data on gender equality from both employees (academic and administrative) and students in research and innovation organisations. Its goal is to analyse perceptions and experiences related to discrimination, working conditions, harassment, job satisfaction, and other key areas, complementing the information provided by traditional administrative data. More information on the GEAM tool and how to use it, please consult the [GEAM Manual](https://geamtool.eu/manual)

@@ -18,6 +18,12 @@ The editors want to thank especially the Municipality of Brescia and Katherine P
 
 ## License {.unnumbered}
 
-[![](images/cc-license.png){fig-alt="cc-by-nc-sa license" fig-align="left" width="114"}](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+|  |  |
+|----------------|--------------------------------------------------------|
+| ![](images/cc-license.png){width="114"} | The work contained in this document is subjected to a Creative Commons license https://creativecommons.org/licenses/by-nc-sa/4.0/ |
 
-The work contained in this document is subjected to a Creative Commons license (https://creativecommons.org/licenses/by-nc-sa/4.0/).
+## Funding {.unnumbered}
+
+|  |  |
+|---------------|---------------------------------------------------------|
+| ![](images/eu-flag.svg){width="59"} | This work has received funding under the European Union's Horizon Europe research and innovation programme under grant agreement No 101058537. See https://www.inspirequality.eu/ |
