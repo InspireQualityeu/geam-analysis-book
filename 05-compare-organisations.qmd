@@ -55,7 +55,7 @@ The following chapter will outline each step of the analytical process, from the
 
 This comparative framework is intended as a practical tool for those involved in designing and implementing gender equality plans. It enables practitioners to identify which organisations present more equitable conditions, where the most significant inequalities are found, and which individual or structural factors are associated with these outcomes. Furthermore, it supports the identification of good practices—such as effective work–life balance measures, inclusive policies, or positive organisational climates—that can serve as models for other institutions. Systematic comparison of results not only helps to expose gaps but also to recognise and disseminate successful approaches that contribute to more inclusive and equitable work environments.
 
-## Stage 1. Preparation and cleaning of multiple bases
+## Stage 1. Preparation and cleaning of multiple bases {#sec-ch04-stage01}
 
 This initial stage lays the foundation for any robust and meaningful comparative analysis. Before conducting any descriptive or inferential statistics, it is essential to ensure that the data from different organisations (or departments, faculties, etc.) are compatible, and harmonised. 
 
@@ -532,7 +532,7 @@ df.combined <- df.combined |>
 
 ## Stage 2. Descriptive analysis
 
-Once the datasets have been cleaned, harmonised and merged (Stage 1), the next step is to explore and describe the main features of each organisation’s data. Descriptive analysis such as that introduced in @sec-ch02-respondents provides a foundational understanding of how key variables are distributed across groups, and helps identify early patterns and potential inequalities in working conditions, perceptions, and experiences.
+Once the datasets have been cleaned, harmonised and merged (@sec-ch04-stage01), the next step is to explore and describe the main features of each organisation’s data. Descriptive analysis such as that introduced in @sec-ch02-respondents provides a foundational understanding of how key variables are distributed across groups, and helps identify early patterns and potential inequalities in working conditions, perceptions, and experiences.
 
 This stage is essential for both internal and cross-organisational comparisons and supports data-informed interpretation in later analytical stages.
 
@@ -555,7 +555,9 @@ The following table summarizes some descriptive statistical techniques could be 
 | Variable type           | Analysis                                  | Suggested Output                             |
 +=========================+===========================================+==============================================+
 | Continuous/Likert-type  | Mean, standard deviation, median          | Tables, bar plots, or boxplots               |
++-------------------------+-------------------------------------------+----------------------------------------------+
 | Categorical             | Frequencies and percentages               | Tables, bar charts, stacked column charts    |
++-------------------------+-------------------------------------------+----------------------------------------------+
 | Group comparisons       | Grouped summaries by organisation/gender  | Side-by-side bar graphs or comparative tables|
 +-------------------------+-------------------------------------------+----------------------------------------------+
 
@@ -575,5 +577,54 @@ df.combined |>
   ) |>
   bold_labels()
 ```
+
+```{r}
+df.combined |>
+  filter(!is.na(org) & !is.na(SDEM004.bin)) |>
+  crosstab_plot(SDEM004.bin,org, fillab="Gender")
+
+```
+
+```{r}
+df.combined |>
+  filter(!is.na(org) & !is.na(WCJC001)) |>
+  crosstab_plot(WCJC001,org, fillab="Job Position")
+
+```
+
+
+```{r}
+df.combined %>% 
+  select(org, SDEM004.bin, ses_3g, work_overload, MCC) %>% 
+  str()
+```
+
+
+```{r}
+df.combined <- df.combined %>%
+  mutate(
+    org = as.factor(org),
+    ses_3g = as.factor(ses_3g),
+    MCC = ifelse(is.nan(MCC), NA, MCC)  # replace NaN by NA
+  )
+```
+
+
+```{r}
+df.combined |>
+  tbl_summary(
+    by = org,
+    include = c(MCC, SDEM004.bin, ses_3g),
+    statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} / {N} ({p}%)"
+    ),
+    digits = all_continuous() ~ 2,
+    label = list(grade = "Tumor Grade"),
+    missing_text = "(Missing)"
+  )
+
+```
+
 
 
