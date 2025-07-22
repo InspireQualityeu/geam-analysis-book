@@ -1,7 +1,4 @@
 ---
-author:
-  - name: Jörg Müller
-  
 execute: 
     echo: true
     warning: false
@@ -13,6 +10,7 @@ abstract: >
 
 keywords:
   - Descriptive statistics
+  - Reporting template
 ---
 
 # Overview of GEAM Employee variables
@@ -22,12 +20,10 @@ keywords:
 #| echo: false
 
 library(tidyverse)
-
 library(sjPlot)
 library(sjmisc)
 
 library(gpg)         # use encryption
-
 library(knitr)
 
 
@@ -40,29 +36,128 @@ df.geam <-read_gpg("data/df.349312.en.rdata.gpg")
 
 ```
 
+The following annex provides an overview of all variables used in the GEAM employee version 3. Variables mirror question groups in the survey. 
+
+The document can be used as a standalone reporting template to produce frequency tables and bar charts of all variables. 
+
+
+**Instructions**
+
+1. Download the [source file](https://github.com/InspireQualityeu/geam-analysis-book/blob/main/90-annex-i-desc-variables.qmd) for this document and save it to your computer. 
+2. Do the same for the [two required utility files](https://github.com/InspireQualityeu/geam-analysis-book/tree/main/util), stored in the `util/` folder and update the path reference if necessary
+3. Correctly reference your GEAM Survey data
+4. Gender the document to Word or HTML
 
 
 ## Socio-demographic variables
 
-### Gender {#annex-i-sdem004-gender}
+### Gender - SDEM004 {#annex-i-soc-sdem004-gender}
 
 ```{r}
 #| label: tbl-annex-i-sdem004-gender
 #| tbl-cap: "Frequency table of SDEM004 - Gender"
-#| cap-location: margin
+#| code-fold: true
+#| code-summary: Show code 
 
 df.geam |>
   table_frq(SDEM004)
-
 ```
 
 
-### Sexual orienation
+```{r}
+#| label: fig-annex-i-sdem004-gender
+#| fig-cap: "Bar chart of SDEM004 - Gender"
+#| code-fold: true
+#| code-summary: Show code 
+
+df.geam |> 
+    ggplot(aes(x=SDEM004, fill=SDEM004)) + 
+    geom_bar(width=.8) + 
+    scale_fill_brewer(palette="Set1", na.value="gray") + 
+    guides(fill="none") +
+    labs(x="", y="") +
+    theme_light()
+```
+
+### Year of birth - SDEM001
+
+```{r}
+#| label: fig-annex-i-sdem001-year
+#| fig.cap: "Frequency chart of SDEM001 - year of birth"
+#| code-fold: true
+#| code-summary: Show code 
+df.geam |>  
+  filter(!is.na(SDEM001)) |>
+  ggplot(aes(x=SDEM001)) + 
+  geom_bar(width=0.8) + 
+  labs(x="", y="") +
+  theme_light()
+  
+```
+
+### Current marital or partnership status
+
+```{r}
+#| label: tbl-annex-i-sdem006-partnership
+#| tbl-cap: "Frequency table of SDEM006 - Martial and partnership status"
+#| code-fold: true
+#| code-summary: Show code
+df.geam |>
+  table_frq(SDEM006) 
+```
+
+
+```{r}
+#| label: fig-annex-i-sdem006-martial
+#| fig-cap: "Bar chart of SDEM006 - Martial and partnership status"
+#| code-fold: true
+#| code-summary: Show code
+
+df.geam |> 
+  ggplot(aes(x=SDEM006, fill=SDEM006)) + 
+  geom_bar(width=.8) + 
+  scale_fill_brewer(palette="Set1", na.value="gray") + 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+  guides(fill="none") +
+  labs(x="", y="") + 
+  theme_light()
+```
+
+### Ethnic or minority status - SDEM002
+
+```{r}
+#| label: tbl-annex-i-ethnic-sdem002
+#| tbl-cap: "Frequency table of SDEM002 - Ethnic minority / majority status"
+#| code-fold: true
+#| code-summary: Show code
+
+df.geam |>
+  table_frq(SDEM002) 
+```
+
+
+```{r}
+#| label: fig-annex-i-ethnic-sdem002
+#| fig-cap: "Bar chart of SDEM002 - Ethnic minority / majority status"
+#| code-fold: true
+#| code-summary: Show code
+
+df.geam |> 
+  ggplot(aes(x=SDEM002, fill=SDEM002)) + 
+  geom_bar(width=.8) + 
+  scale_fill_brewer(palette="Set1", na.value="gray") + 
+  guides(fill="none") +
+  labs(x="", y="") + 
+  theme_light()
+```
+
+
+
+### Sexual orienation - SDEM007
 
 ```{r}
 #| label: tbl-annex-i-sdem007-sexorient
 #| tbl-cap: "Frequency table of SDEM007 - Sexual orientation"
-#| cap-location: margin
 
 df.geam |>
   table_frq(SDEM007)

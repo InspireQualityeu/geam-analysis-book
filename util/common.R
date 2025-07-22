@@ -29,6 +29,53 @@ options(
 ggplot2::theme_set(ggplot2::theme_light())
 
 
+
+#' Custom functions 
+#' 
+
+
+
+#' @title Check if variable name exists in data frame. 
+#' 
+#' @description Useful to avoid error messages before generating figures and tables. Performs exact match.  
+#' 
+#' @param needle String of one or more column names.  
+#' @param stack String of all column names
+#' 
+#' @return logit 
+#' 
+col_exists <- function(data, needle){
+  
+  # get all column names
+  stack <- names(data)
+  
+  # if column name is an object, conver to string
+  needle <- deparse(substitute(needle))
+  
+  # if column name was in string, remove double quotes
+  needle <- str_remove_all(needle, "\"")
+  
+  # check if in data frame
+  exists <- all(needle %in% stack)
+  
+  exists
+}
+
+
+
+#' Custom function to calculate cramer's v on the fly from gtsummary calls
+#' 
+#' @param data data frame object, passed implicitly
+#' @param var variable name to use for frequency table
+#' @param by second variable for crosstab
+#'
+get_cramer_v <- function(data, var, by, ...) {
+  table(data[[var]], data[[by]]) |>
+    rstatix::cramer_v()
+}
+
+
+
 #' Custom frequency table function
 #' 
 #' @param data data frame object, passed implicitly
@@ -37,6 +84,11 @@ ggplot2::theme_set(ggplot2::theme_light())
 #' @param fsize numeric font size for word tables
 #' 
 table_frq <- function(data, var, digits=2, fsize=11){
+
+  # if (! data |> col_exists({{var}})) {
+  #   msg <- paste0("Variable does not exist in data frame - skipping frequency table")
+  #   return(msg)
+  # }
   
   headertxt <- c("N", "Raw%", "Valid%", "Cum%")
   
@@ -131,7 +183,8 @@ crosstab_stats <- function(data, var, by, ...){
   
   # Perform statistical tests
   chi_test <- chisq.test(contingency_table)
-  cramers_v <- sjstats::cramer(contingency_table)
+  #cramers_v <- sjstats::cramer(contingency_table)
+  cramers_v <- rstatix::cramer_v(contingency_table)
   fisher_test <- fisher.test(contingency_table)
   
   # put it all in one string

@@ -17,6 +17,9 @@ keywords:
   - Microaggressions
 ---
 
+# Microaggressions, Bullying, Sexual harassment {#sec-ch10-gbv}
+
+
 ```{r}
 #| label: setup 
 #| echo: false
@@ -33,6 +36,7 @@ df.geam <- df.geam03 |>
   filter(!is.na(submitdate))
 
 ```
+
 
 
 Diel leader 1 

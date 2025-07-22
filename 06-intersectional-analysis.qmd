@@ -230,15 +230,13 @@ Finally, as *outcome variable* we use items that form part of the **microaggress
 ```{r}
 #| label: code-mean-microaggression
 # calculate mean microaggression scores for each respondent
-df.tmp <- df.geam |>
-  select(starts_with("BIMA001.SQ"))|>
-  map_df(~ {if_else(.x == "Not applicable", NA, .x)}) |>  # replace "Not applicable" with NA
-  map_df(~ {as.numeric(.x) - 1}) |> # recode scores to 0:3 instead 1:4
-  mutate(micagg = rowMeans(across(everything()), na.rm=T)) |>
+tmp <- df.geam |>
+  select(starts_with("BIMA001.SQ"))  |>
+  mutate(across(everything(), ~ as.numeric(.x) - 1 )) |> # recode scores to 0:3 instead 1:4
+  mutate(micagg = rowMeans(across(everything()), na.rm=T)) |> # calculate row means
   select(micagg)
 
-# incorporate to main data frame
-df.geam$micagg <- df.tmp$micagg
+df.geam$micagg <- tmp$micagg
 ```
 
 This provides the following summary statistics in @tbl-stats-sample on our three main socio-demographic variables and the mean score for our outcome variable, namely experiences of microaggressions.   

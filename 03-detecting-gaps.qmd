@@ -221,6 +221,7 @@ df.sub.01 |>
     columns = last_col(), 
     replace=F
   )
+
 ```
 
 @tbl-test-assoc-job-position-gender displays the absolute frequencies, the corresponding row percentages for each category, and several statistical test.
@@ -325,7 +326,6 @@ df.sub.02 |>
 A Chi-squared test was conducted to examine whether a significant association exists between gender and contract type. The results indicate no statistically significant relationship between these variables, χ²= 0.181, p = 0.67. Furthermore, the Cramér's V value (0.072) suggests no association, and Fisher’s exact test (p = 0.629) confirms the lack of statistical significance.
 
 These findings imply that contract type does not significantly differ by gender within this sample.
-
 
 
 ## Gender gaps and continuous variables  {#sec-ch03-gaps-continuous}
